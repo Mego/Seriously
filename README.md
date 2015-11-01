@@ -1,2 +1,2 @@
 # Seriously
-A golfing language that is probably terrible
+A golfing language that is probably terrible. Currently being designed.
