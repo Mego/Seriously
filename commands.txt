@@ -91,12 +91,12 @@ When possible, the character at each code point is listed in parentheses followi
 74 (J):
 75 (K): pop a: push ceil(a)
 76 (L): pop a: push floor(a)
-77 (M):
+77 (M): pop Ÿ: pop [a] n times where n is the arity of Ÿ, execute R n times using Ÿ and each [a], push each [a] (similar to map(Ÿ,[a]))
 78 (N): if stack is empty: print the lyrics to "99 Bottles of Beer" to stdout
 79 (O):
 80 (P): pop a: push the a-th prime (zero-indexed)
 81 (Q): if stack is empty: print the program's source code to stdout
-82 (R):
+82 (R): pop Ÿ,[a]: call Ÿ, using [a] as a temporary stack, push [a] (similar to reduce(Ÿ,[a]))
 83 (S): pop a: push sin(a)
 84 (T): pop a: push tan(a)
 85 (U): pop [a],[b]: push union of [a] and [b]
