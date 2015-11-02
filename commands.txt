@@ -9,6 +9,7 @@ z represents a complex value. Complex values are a proper subset of numeric valu
 Some commands have fixed arity. Others have variable arity. This is denoted by the number of values listed in the pop. Those commands that are not functional commands (such as delimiters) do not have arities, and so do not pop from the stack.
 Each functional command operates differently based on the data types of the values popped from the stack. In some cases, that order matters. In others, it does not. Each operation will be denoted by the different data types popped. If there is a conflict, the most restrictive applicable definition is used.
 When possible, the character at each code point is listed in parentheses following the ordinal. For non-printing characters (ordinals 1-31), this is not possible, so a description is provided instead.
+If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] are treated as string literals, and are pushed to the stack when encounted. Their normal functions replace those of the characters 128 code points higher, and those characters' original functions can be used by prepending a ?.
 
 1 (SOH):
 2 (STX):
@@ -41,7 +42,7 @@ When possible, the character at each code point is listed in parentheses followi
 29 (GS):
 30 (RS):
 31 (US):
-32 ( ):
+32 ( ): push the # of elements on the stack (push len(stack))
 33 (!): pop a: push a! (factorial(a))
 34 ("): string literal, reads until next " and pushes value onto stack. An implied " is present at EOF if needed.
 35 (#): read list from stdin and push
@@ -104,7 +105,7 @@ When possible, the character at each code point is listed in parentheses followi
 87 (W): loop delimiter: peek top of stack, repeat code in loop while a evaluates to true
 88 (X):
 89 (Y):
-90 (Z):
+90 (Z): pop [a],[b]: push zip([a],[b])
 91 ([): begin list literal, values are delimited by commas (,)
 92 (\): pop a,b: push a/b (integer division)
         pop [a]: rotate [a] left by 1, push [a]
@@ -122,11 +123,12 @@ When possible, the character at each code point is listed in parentheses followi
 104 (h): pop a,b: push sqrt(a*a+b*b) (Euclidean norm)
 105 (i): pop "a": push atof(a)
          pop [a]: pop each element from [a] and push (flatten in reverse order)
-106 (j):
+106 (j): pop "a",[b]: push "a".join([b])
 107 (k):
 108 (l): pop "a" or [a]: push len(a)
 109 (m): pop a: push int(a),frac(a) (modf(a))
 110 (n): pop a,b: push a b times
+         pop Ÿ,b: call Ÿ b times
 111 (o): pop [a],b: push b to [a], push [a]
 112 (p): pop a: push 1 if a is prime else 0
          pop [a]: pop b from [a], push [a],b
