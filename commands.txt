@@ -1,12 +1,12 @@
 Notes:
-There are 5 data types in Seriously: numeric, string, list, complex, and function.
-a represents a numeric value.
+There are 4 data types in Seriously: numeric, string, list, and function.
+a represents any value. This usually means numeric values, but can represent any value of a type not specified in an alternate command definition.
 "a" represents a string value.
 [a] represents a list value.
-z represents a complex value.
+z represents a complex value. Complex values are a proper subset of numeric values.
 ü represents a function value.
 Some commands have fixed arity. Others have variable arity. This is denoted by the number of values listed in the pop. Those commands that are not functional commands (such as delimiters) do not have arities, and so do not pop from the stack.
-Each functional command operates differently based on the data types of the values popped from the stack. In some cases, that order matters. In others, it does not. Each operation will be denoted by the different data types popped.
+Each functional command operates differently based on the data types of the values popped from the stack. In some cases, that order matters. In others, it does not. Each operation will be denoted by the different data types popped. If there is a conflict, the most restrictive applicable definition is used.
 When possible, the character at each code point is listed in parentheses following the ordinal. For non-printing characters (ordinals 1-31), this is not possible, so a description is provided instead.
 
 1 (SOH):
@@ -41,8 +41,8 @@ When possible, the character at each code point is listed in parentheses followi
 30 (RS):
 31 (US):
 32 ( ):
-33 (!): pop a: push not a
-34 ("): string literal, reads until next " and pushes value onto stack
+33 (!): pop a: push a! (factorial(a))
+34 ("): string literal, reads until next " and pushes value onto stack. An implied " is present at EOF if needed.
 35 (#): read list from stdin and push
 36 ($): read string from stdin and push
 37 (%): pop a,b: push a%b
@@ -51,11 +51,16 @@ When possible, the character at each code point is listed in parentheses followi
 40 ((): rotates stack right by 1
 41 ()): rotates stack left by 1
 42 (*): pop a,b: push a*b
+        pop "a",b: repeat "a" b times, push "a" ("a"*b)
 43 (+): pop a,b: push a+b
+        pop "a","b": push concatenation of "a" and "b"
+        pop [a],[b]: push [a][b] (append [b] to [a])
 44 (,): read numeric from stdin and push
 45 (-): pop a,b: push a-b
 46 (.): pop a: write a to stdout
+        pop ü: ü. (call ü and execute . recursively)
 47 (/): pop a,b: push a/b (float division)
+        pop [a]: rotate [a] right by 1, push [a]
 48 (0): push 0
 49 (1): push 1
 50 (2): push 2
@@ -66,18 +71,18 @@ When possible, the character at each code point is listed in parentheses followi
 55 (7): push 7
 56 (8): push 8
 57 (9): push 9
-58 (:): begin numeric literal: interprets following symbols as a numeric until a non-digit is found, and pushes that value. If the non-digit is a period, and is followed by more digits, the period is interpreted as the decimal point and the rest of the digits are used, allowing for floating-point values
+58 (:): begin numeric literal: interprets following symbols as a numeric until a non-digit is found, and pushes that value. If the non-digit is a period, and is followed by more digits, the period is interpreted as the decimal point and the rest of the digits are used, allowing for floating-point values. An implied : is present at EOF if needed.
 59 (;): pop a: push a,a
 60 (<): pop a,b: push 1 if a<b else 0
 61 (=): pop a,b: push 1 if a==b else 0
 62 (>): pop a,b: push 1 if a>b else 0
 63 (?): NOP, extended expressions if -e flag is passed
 64 (@): pop a,b: push b,a
-65 (A):
+65 (A): pop a: push abs(a)
 66 (B):
 67 (C): pop a: push cos(a)
 68 (D):
-69 (E):
+69 (E): pop a: push erf(a)
 70 (F): pop a: push Fib(a) (zero-indexed)
 71 (G):
 72 (H): if stack is empty: print "Hello, World!" to stdout
@@ -101,29 +106,32 @@ When possible, the character at each code point is listed in parentheses followi
 90 (Z):
 91 ([): begin list literal, values are delimited by commas (,)
 92 (\): pop a,b: push a/b (integer division)
+        pop [a]: rotate [a] left by 1, push [a]
 93 (]): end list literal
 94 (^): pop a,b: push pow(a,b)
 95 (_): pop a: push ln(a)
-96 (`): function literal delimiter, pushes function whose body contains all of the commands until the next `
+96 (`): function literal delimiter, pushes function whose body contains all of the commands until the next `. An implied ` is present at EOF if needed.
 97 (a):
 98 (b): pop a: push 0 if a==0 else 1; pop "a" or [a]: push 0 if len(a)==0 else 1
 99 (c): pop a: push character at ordinal a%256 (CP437)
-100 (d):
+100 (d): pop [a]: dequeue b from [a], push [a],b
 101 (e): pop a: push exp(a)
 102 (f): pop a: push the Fibonacci index of a if a is a Fibonacci number, else -1
-103 (g):
-104 (h):
+103 (g): pop a,b: push gcd(a,b)
+104 (h): pop a,b: push sqrt(a*a+b*b) (Euclidean norm)
 105 (i): pop "a": push atof(a)
+         pop [a]: pop each element from [a] and push (flatten in reverse order)
 106 (j):
 107 (k):
 108 (l): pop "a" or [a]: push len(a)
-109 (m):
-110 (n):
-111 (o):
+109 (m): pop a: push int(a),frac(a) (modf(a))
+110 (n): pop a,b: push a b times
+111 (o): pop [a],b: push b to [a], push [a]
 112 (p): pop a: push 1 if a is prime else 0
-113 (q):
+         pop [a]: pop b from [a], push [a],b
+113 (q): pop [a],b: enqueue b in [a], push [a]
 114 (r):
-115 (s): 
+115 (s): pop a: push sgn(a)
 116 (t):
 117 (u):
 118 (v):
@@ -163,8 +171,8 @@ When possible, the character at each code point is listed in parentheses followi
 152 (ò):
 153 (ô):
 154 (ö):
-155 (õ):
-156 (ú):
+155 (õ): pop a,b: push abs(a)*sgn(b)
+156 (ú): pop ü,a: fix first argument of ü to a, decrease ü's arity by one, push ü (partial(ü,a))
 157 (ù):
 158 (û): pop z: push phase(z)
 159 (ü): pop ü: call ü
@@ -174,7 +182,7 @@ When possible, the character at each code point is listed in parentheses followi
 163 (£):
 164 (§):
 165 (•):
-166 (¶):
+166 (¶): pop a: push a*a
 167 (ß): pop a: push degrees(a)
 168 (®):
 169 (©): pop a: push a+2
@@ -211,8 +219,8 @@ When possible, the character at each code point is listed in parentheses followi
 200 (»):
 201 (…):
 202 ( ):
-203 (À):
-204 (Ã):
+203 (À): push pi
+204 (Ã): push e
 205 (Õ):
 206 (Œ):
 207 (œ):
