@@ -69,16 +69,16 @@
 69 (E):
 70 (F): pop a: push Fib(a) (zero-indexed)
 71 (G):
-72 (H):
+72 (H): print "Hello, World!" to stdout
 73 (I):
 74 (J):
 75 (K):
 76 (L):
 77 (M):
-78 (N):
+78 (N): print the lyrics to "99 Bottles of Beer" to stdout
 79 (O):
 80 (P): pop a: push the a-th prime (zero-indexed)
-81 (Q):
+81 (Q): print the program's source code to stdout
 82 (R):
 83 (S): pop a: push sin(a)
 84 (T): pop a: push tan(a)
