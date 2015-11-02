@@ -1,34 +1,45 @@
-1:
-2:
-3:
-4:
-5:
-6:
-7:
-8:
-9:
-10:
-11:
-12:
-13:
-14:
-15:
-16:
-17:
-18:
-19:
-20:
-21:
-22:
-23:
-24:
-25:
-26:
-27:
-28:
-29:
-30:
-31:
+Notes:
+There are 5 data types in Seriously: numeric, string, list, complex, and function.
+a represents a numeric value.
+"a" represents a string value.
+[a] represents a list value.
+z represents a complex value.
+ü represents a function value.
+Some commands have fixed arity. Others have variable arity. This is denoted by the number of values listed in the pop. Those commands that are not functional commands (such as delimiters) do not have arities, and so do not pop from the stack.
+Each functional command operates differently based on the data types of the values popped from the stack. In some cases, that order matters. In others, it does not. Each operation will be denoted by the different data types popped.
+When possible, the character at each code point is listed in parentheses following the ordinal. For non-printing characters (ordinals 1-31), this is not possible, so a description is provided instead.
+
+1 (SOH):
+2 (STX):
+3 (ETX):
+4 (EOT):
+5 (ENQ):
+6 (ACK):
+7 (bell):
+8 (backspace):
+9 (tab):
+10 (line feed):
+11 (vertical tab):
+12 (form feed):
+13 (carriage return):
+14 (SO):
+15 (SI):
+16 (DLE):
+17 (DC1):
+18 (DC2):
+19 (DC3):
+20 (DC4):
+21 (NAK):
+22 (SYN):
+23 (ETB):
+24 (CAN):
+25 (EM):
+26 (SUB):
+27 (ESC):
+28 (FS):
+29 (GS):
+30 (RS):
+31 (US):
 32 ( ):
 33 (!): pop a: push not a
 34 ("): string literal, reads until next " and pushes value onto stack
@@ -69,16 +80,16 @@
 69 (E):
 70 (F): pop a: push Fib(a) (zero-indexed)
 71 (G):
-72 (H): print "Hello, World!" to stdout
+72 (H): if stack is empty: print "Hello, World!" to stdout
 73 (I):
 74 (J):
-75 (K):
-76 (L):
+75 (K): pop a: push ceil(a)
+76 (L): pop a: push floor(a)
 77 (M):
-78 (N): print the lyrics to "99 Bottles of Beer" to stdout
+78 (N): if stack is empty: print the lyrics to "99 Bottles of Beer" to stdout
 79 (O):
 80 (P): pop a: push the a-th prime (zero-indexed)
-81 (Q): print the program's source code to stdout
+81 (Q): if stack is empty: print the program's source code to stdout
 82 (R):
 83 (S): pop a: push sin(a)
 84 (T): pop a: push tan(a)
@@ -93,7 +104,7 @@
 93 (]): end list literal
 94 (^): pop a,b: push pow(a,b)
 95 (_): pop a: push ln(a)
-96 (`):
+96 (`): function literal delimiter, pushes function whose body contains all of the commands until the next `
 97 (a):
 98 (b): pop a: push 0 if a==0 else 1; pop "a" or [a]: push 0 if len(a)==0 else 1
 99 (c): pop a: push character at ordinal a%256 (CP437)
@@ -119,29 +130,29 @@
 119 (w):
 120 (x):
 121 (y):
-122 (z):
+122 (z): pop a: repeat . a times (pop a times and print to stdout)
 123 ({): pop a: rotate stack right a times
 124 (|): pop a,b: push (a or b)
 125 (}): pop a: rotate stack left a times
 126 (~): pop a: push ~a (unary negate)
-127 ():
-128 (Ä):
-129 (Å):
-130 (Ç):
-131 (É):
-132 (Ñ):
-133 (Ö):
-134 (Ü):
-135 (á):
-136 (à):
-137 (â):
+127 (): terminate the program
+128 (Ä): pop a,b: push a+ib
+129 (Å): pop entire stack and print to stdout
+130 (Ç): pop entire stack (clear stack)
+131 (É): pop a: push asin(a)
+132 (Ñ): pop a: push acos(a)
+133 (Ö): pop a: push atan(a)
+134 (Ü): pop a,b: push atan2(a,b)
+135 (á): pop a: push asinh(a)
+136 (à): pop a: push acosh(a)
+137 (â): pop a: push atanh(a)
 138 (ä):
 139 (ã):
 140 (å):
 141 (ç):
-142 (é):
-143 (è):
-144 (ê):
+142 (é): pop a: push sinh(a)
+143 (è): pop a: push cosh(a)
+144 (ê): pop a: push tanh(a)
 145 (ë):
 146 (í):
 147 (ì):
@@ -155,9 +166,9 @@
 155 (õ):
 156 (ú):
 157 (ù):
-158 (û):
-159 (ü):
-160 (†):
+158 (û): pop z: push phase(z)
+159 (ü): pop ü: call ü
+160 (†): pop z: push arg(z)
 161 (°):
 162 (¢):
 163 (£):
@@ -244,7 +255,7 @@
 244 (Ù):
 245 (ı):
 246 (ˆ):
-247 (˜): pop a: push floor(a)
+247 (˜): pop a: push int(a)
 248 (¯): pop a: push radians(a)
 249 (˘):
 250 (˙):
