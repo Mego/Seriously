@@ -45,8 +45,8 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 32 ( ): push the # of elements on the stack (push len(stack))
 33 (!): pop a: push a! (factorial(a))
 34 ("): string literal, reads until next " and pushes value onto stack. An implied " is present at EOF if needed.
-35 (#): read list from stdin and push
-36 ($): read string from stdin and push
+35 (#):
+36 ($):
 37 (%): pop a,b: push a%b
 38 (&): pop a,b: push (a and b)
 39 ('): pushes next character onto stack as character literal (length-1 string)
@@ -57,7 +57,7 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 43 (+): pop a,b: push a+b
         pop "a","b": push concatenation of "a" and "b"
         pop [a],[b]: push [a][b] (append [b] to [a])
-44 (,): read numeric from stdin and push
+44 (,): read value from stdin and push
 45 (-): pop a,b: push a-b
 46 (.): pop a: write a to stdout
         pop Ÿ: Ÿ. (call Ÿ and execute . recursively)
@@ -256,7 +256,7 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 234 (ê):
 235 (ë):
 236 (ì):
-237 (í):
+237 (í): push phi (golden ratio)
 238 (î):
 239 (ï): pop [a],[b]: push intersection of [a] and [b]
 240 (ð):
