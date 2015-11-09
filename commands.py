@@ -12,17 +12,17 @@ primes = [2,3]
 def is_prime(x):
     global primes
     if x in primes:
-        return True
+        return 1
     if x<2:
-        return False
+        return 0
     for p in filter(lambda p:p*p<=x,primes):
         if x%p==0:
-            return False
+            return 0
     n = max(primes)+2
     while n*n<=x:
         if x%n==0:
-            return False
-    return True
+            return 0
+    return 1
 
 def init_primes_up_to(n):
     global primes
@@ -210,7 +210,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           107:to_list_fn,
           108:lambda x:x.push(len(x.pop())),
           109:lambda x:map(x.push,math.modf(x.pop())),
-          110:lambda x:map(x.push,(lambda y:[y for _ in range(y)])(x.pop())),
+          110:lambda x:map(x.push,(lambda y,z:[y for _ in range(z)])(x.pop(),x.pop())),
           111:psh_fn,
           112:p_fn,
           113:enq_fn,
