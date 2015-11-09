@@ -165,6 +165,13 @@ def dupe_each_fn(srs):
         tmp.append(a)
         tmp.append(a)
     srs.stack=tmp[:]
+    
+def r_fn(srs):
+    a=srs.pop()
+    if type(a) is StringType:
+        map(srs.push,a.split('')[::-1])
+    elif type(a) in [IntType, LongType]:
+        srs.push(range(a))
         
 fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
@@ -191,6 +198,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           75:lambda x:x.push(ceil(x.pop())),
           76:lambda x:x.push(floor(x.pop())),
           80:lambda x:x.push(nth_prime(x.pop())),
+          82:lambda x:x.push(range(1,x.pop()+1)),
           83:lambda x:x.push(math.sin(x.pop())),
           84:lambda x:x.push(math.tan(x.pop())),
           85:lambda x:x.push(list(set(x.pop()).union(x.pop()))),
@@ -214,7 +222,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           111:psh_fn,
           112:p_fn,
           113:enq_fn,
-          114:lambda x:map(x.push,x.pop().split('')[::-1]),
+          114:r_fn,
           115:lambda x:x.push(math.sgn(x.pop())),
           116:flat_explode_fn,
           122:lambda x:map(x.eval,(lambda y:['.' for _ in range(y)])(x.pop())),
