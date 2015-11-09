@@ -46,7 +46,7 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 33 (!): pop a: push a! (factorial(a))
 34 ("): string literal, reads until next " and pushes value onto stack. An implied " is present at EOF if needed.
 35 (#):
-36 ($):
+36 ($): pop a: push str(a)
 37 (%): pop a,b: push a%b
 38 (&): pop a,b: push (a & b)
 39 ('): pushes next character onto stack as character literal (length-1 string)

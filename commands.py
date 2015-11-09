@@ -179,6 +179,7 @@ def if_fn(srs):
         
 fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
+          36:lambda x:x.push(str(x.pop())),
           37:lambda x:x.push(x.pop()%x.pop()),
           38:lambda x:x.push(x.pop() & x.pop()),
           40:lambda x:x.push(x.stack.pop(-1)),
