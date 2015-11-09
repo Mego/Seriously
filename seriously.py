@@ -29,6 +29,7 @@ class SeriousFunction(object):
 class Seriously(object):
     def __init__(self):
         self.stack = []
+        self.repl_mode = False
         self.fn_table = commands.fn_table
     def push(self,val):
         self.stack=[val]+self.stack
@@ -96,12 +97,14 @@ class Seriously(object):
                 except:
                     self.stack = old_stack[:]
             i+=1
-        while len(self.stack) > 0:
-            print self.pop()
+        if not self.repl_mode:
+            while len(self.stack) > 0:
+                print self.pop()
 
 if __name__ == '__main__':
     srs = Seriously()
     if len(sys.argv) < 2:
+        srs.repl_mode = True
         while 1:
             try:
                 srs.eval(raw_input('>>> '))
