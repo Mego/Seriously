@@ -170,13 +170,13 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
           37:lambda x:x.push(x.pop()%x.pop()),
           38:lambda x:x.push(x.pop() & x.pop()),
-          40:lambda x:x.push(x.stack.pop(-1))
-          41:lambda x:x.append(x.pop())
+          40:lambda x:x.push(x.stack.pop(-1)),
+          41:lambda x:x.append(x.pop()),
           42:lambda x:x.push(x.pop()*x.pop()),
           43:lambda x:x.push(x.pop()+x.pop()),
           44:lambda x:x.push(input()),
           45:lambda x:x.push(x.pop()-x.pop()),
-          46:lambda x:print(x.pop())
+          46:lambda x:print(x.pop()),
           47:div_fn,
           59:dupe_fn,
           60:lambda x:x.push(int(x.pop()<x.pop())),
