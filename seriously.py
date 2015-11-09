@@ -99,11 +99,18 @@ class Seriously(object):
 
 if __name__ == '__main__':
     srs = Seriously()
-    while 1:
-        try:
-            srs.eval(raw_input('>>> '))
-        except EOFError:
-            exit()
-        finally:
-            print
-            print srs.stack
+    if len(sys.argv) < 2:
+        while 1:
+            try:
+                srs.eval(raw_input('>>> '))
+            except EOFError:
+                exit()
+            finally:
+                print
+                print srs.stack
+    else:
+        if sys.argv[1] == '-c':
+            srs.eval(sys.argv[2])
+        else:
+            with open(sys.argv[2]) as f:
+                srs.eval(f.read())
