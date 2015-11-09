@@ -3,6 +3,8 @@ A golfing language that is probably terrible. It is currently being developed. S
 
 All strings are valid programs. There is no such thing as a syntax error, and anything that appears to be a runtime error is actually a no-op (NOP). If you call a command that expects a string on top of the stack, but the top value is an integer, instead of throwing an error, it silently performs a NOP. Eventually, this will not be seen, as the goal for Seriously is for every character and stack state to map to a command.
 
+The name was inspired by [this challenge](http://codegolf.stackexchange.com/questions/58522/seriously-golfscript-cjam-or-pyth).
+
 # Commands
 
 See [commands.txt](https://github.com/Mego/Seriously/blob/master/commands.txt)
