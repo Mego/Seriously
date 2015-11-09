@@ -173,6 +173,10 @@ def r_fn(srs):
     elif type(a) in [IntType, LongType]:
         srs.push(range(a))
         
+def if_fn(srs):
+    a,b,c=srs.pop(),srs.pop(),srs.pop()
+    srs.push(b if a else c)
+        
 fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
           37:lambda x:x.push(x.pop()%x.pop()),
@@ -195,6 +199,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           67:lambda x:x.push(math.cos(x.pop())),
           69:lambda x:x.push(math.erf(x.pop())),
           70:lambda x:x.push(Fib(x.pop())),
+          73:if_fn,
           75:lambda x:x.push(ceil(x.pop())),
           76:lambda x:x.push(floor(x.pop())),
           80:lambda x:x.push(nth_prime(x.pop())),

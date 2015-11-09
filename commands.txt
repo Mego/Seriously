@@ -88,7 +88,7 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 70 (F): pop a: push Fib(a) (Fib(0)=0, Fib(1)=Fib(2)=1)
 71 (G):
 72 (H): if stack is empty: print "Hello, World!" to stdout
-73 (I):
+73 (I): pop a,b,c: push b if a is truthy, else push c
 74 (J):
 75 (K): pop a: push ceil(a)
 76 (L): pop a: push floor(a)
