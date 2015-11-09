@@ -98,7 +98,8 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 80 (P): pop a: push the a-th prime (zero-indexed)
 81 (Q): if stack is empty: print the program's source code to stdout
 82 (R): pop Ÿ,[a]: call Ÿ, using [a] as a temporary stack, push [a] (similar to reduce(Ÿ,[a]))
-        pop "a", push reverse("a")
+        pop "a": push reverse("a")
+        pop a: push [1,2,...,a] (range(1,a+1))
 83 (S): pop a: push sin(a)
 84 (T): pop a: push tan(a)
 85 (U): pop [a],[b]: push union of [a] and [b]
@@ -134,7 +135,8 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 112 (p): pop a: push 1 if a is prime else 0
          pop [a]: pop b from [a], push [a],b
 113 (q): pop [a],b: enqueue b in [a], push [a]
-114 (r): pop "a"; push each character in "a", starting from the end (explode string)
+114 (r): pop "a": push each character in "a", starting from the end (explode string)
+         pop a: push [0,1,...,a-1] (range(0,a))
 115 (s): pop a: push sgn(a)
 116 (t): pop all elements from stack, flatten any lists and explode any strings, and push them in the same order they were popped (full stack flatten/explode)
 117 (u):
@@ -146,7 +148,7 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 123 ({): pop a: rotate stack right a times
 124 (|): pop a,b: push (a | b)
 125 (}): pop a: rotate stack left a times
-126 (~): pop a: push ~a (unary negate)
+126 (~): pop a: push ~a (unary bitwise negate)
 127 (): terminate the program
 128 (€): pop a,b: push a+ib
 129 (): pop entire stack and print to stdout
@@ -176,7 +178,7 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 153 (™):
 154 (š):
 155 (›): pop a,b: push abs(a)*sgn(b)
-156 (œ): pop Ÿ,a: fix first argument of Ÿ to a, decrease Ÿ's arity by one, push Ÿ (partial(Ÿ,a))
+156 (œ):
 157 ():
 158 (ž): pop z: push phase(z)
 159 (Ÿ): pop Ÿ: call Ÿ
@@ -261,7 +263,7 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 238 (î):
 239 (ï): pop [a],[b]: push intersection of [a] and [b]
 240 (ð):
-241 (ñ): pop a: push 0-a
+241 (ñ): pop a: push -a (unary negate)
 242 (ò): pop a,b: push a>=b
 243 (ó): pop a,b: push a<=b
 244 (ô):
