@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 
+from __future__ import print_function, division
 import math, cmath, operator
 from types import *
-from __future__ import print_function, division
 
 phi = (1+5**.5)/2
 Fib = lambda n:int(phi**n/5**.5+.5)
