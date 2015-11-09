@@ -96,6 +96,8 @@ class Seriously(object):
                 except:
                     self.stack = old_stack[:]
             i+=1
+        while len(self.stack) > 0:
+            print self.pop()
 
 if __name__ == '__main__':
     srs = Seriously()
@@ -106,7 +108,7 @@ if __name__ == '__main__':
             except EOFError:
                 exit()
             finally:
-                print
+                print '\n'
                 print srs.stack
     else:
         if sys.argv[1] == '-c':
