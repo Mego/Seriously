@@ -1,13 +1,29 @@
 #!/usr/bin/env python
 
 from __future__ import print_function, division
-import math, cmath, operator
+import operator, cmath
+import math as rmath
 from types import *
 
 phi = (1+5**.5)/2
 Fib = lambda n:int(phi**n/5**.5+.5)
 
 primes = [2,3]
+
+class MathSelector(object):
+    def __init__(self, fn):
+        self.fn = fn
+    def __call__(self,*args):
+        try:
+            return getattr(rmath,self.fn)(*args)
+        except:
+            return getattr(cmath,self.fn)(*args)
+
+class Math(object):
+    def __getattr__(self, fn):
+        return MathSelector(fn)
+        
+math = Math()
 
 def is_prime(x):
     global primes
@@ -176,6 +192,22 @@ def r_fn(srs):
 def if_fn(srs):
     a,b,c=srs.pop(),srs.pop(),srs.pop()
     srs.push(b if a else c)
+    
+def invert_fn(srs):
+    srs.stack=srs.stack[::-1]
+    
+def comp_fn(srs):
+    a=srs.pop()
+    if type(a) is ListType:
+        a = a+[0] if a%2 else a
+        while len(a) > 0:
+            r,i = a.pop(0),a.pop(0)
+            srs.push(complex(r,i))
+    elif type(a) in [IntType, LongType, FloatType]:
+        b=srs.pop()
+        srs.push(complex(a,b))
+    else:
+        srs.push(a)
         
 fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
@@ -203,6 +235,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           73:if_fn,
           75:lambda x:x.push(ceil(x.pop())),
           76:lambda x:x.push(floor(x.pop())),
+          79:lambda x:map(lambda y:map(x.push,map(ord,y)[::-1]),x.pop()[::-1]),
           80:lambda x:x.push(nth_prime(x.pop())),
           82:lambda x:x.push(range(1,x.pop()+1)),
           83:lambda x:x.push(math.sin(x.pop())),
@@ -212,6 +245,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           92:idiv_fn,
           94:lambda x:x.push(math.pow(x.pop(),x.pop())),
           95:lambda x:x.push(math.log(x.pop())),
+          97:invert_fn,
           98:lambda x:x.push(int(bool(x))),
           99:lambda x:x.push(chr(x.pop()%256)),
           100:deq_fn,
@@ -220,7 +254,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           103:lambda x:x.push(math.gcd(x.pop(),x.pop())),
           104:lambda x:x.push(math.hypot(x.pop(),x.pop())),
           105:i_fn,
-          106:lambda x:x.push(str.join(x.pop(),x.pop())),
+          106:lambda x:x.push(str.join(x.pop(),map(str,x.pop()))),
           107:to_list_fn,
           108:lambda x:x.push(len(x.pop())),
           109:lambda x:map(x.push,math.modf(x.pop())),
@@ -237,6 +271,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           125:nlrot_fn,
           126:lambda x:x.push(~x.pop()),
           127:lambda x:exit(),
+          128:comp_fn,
           129:lambda x:map(print,[x.pop() for _ in len(x.stack)]),
           131:lambda x:x.push(math.asin(x.pop())),
           132:lambda x:x.push(math.acos(x.pop())),
@@ -245,10 +280,14 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           135:lambda x:x.push(math.asinh(x.pop())),
           136:lambda x:x.push(math.acosh(x.pop())),
           137:lambda x:x.push(math.atanh(x.pop())),
+          139:lambda x:x.push(complex(0,1)),
+          140:lambda x:x.push(complex(0,x.pop())),
           142:lambda x:x.push(math.sinh(x.pop())),
           143:lambda x:x.push(math.cosh(x.pop())),
           144:lambda x:x.push(math.tanh(x.pop())),
           155:lambda x:x.push(math.copysign(x.pop(),x.pop())),
+          158:lambda x:x.push(cmath.phase(x.pop())),
+          160:lambda x:x.push((lambda z:complex(z.real,-z.imag))(x.pop())),
           166:lambda x:x.push(x.pop()**2),
           167:lambda x:x.push(math.degrees(x.pop())),
           169:lambda x:x.push(x.pop()+2),

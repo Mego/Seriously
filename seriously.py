@@ -1,14 +1,16 @@
 #!/usr/bin/python
 
 import sys, math, cmath, itertools, functools
+from types import *
 import commands
 
 def NinetyNineBottles():
     x = 99
     for i in range(99):
-        w = 'Take one down and pass it around, '+str((x-(i+1)))+' bottle of beer on the wall.'
-        y = str((x-i))+' bottles of beer on the wall, '+str((x-i))+' bottles of beer'
-        z = 'Go to the Store and buy some more, '+str(x)+' bottle of beer on the wall.'
+        w = 'Take one down and pass it around, '+str((x-(i+1)))+' bottle{0} of beer on the wall.'.format(['s',''][x-i==2])
+        y = str((x-i))+' bottle{0} of beer on the wall, '+str((x-i))+' bottle{0} of beer'
+        y=y.format(['s',''][x-i==1])
+        z = 'Go to the Store and buy some more, '+str(x)+' bottles of beer on the wall.'
         if i == (x-1):
             print(y + '\n' + z)
         else:
@@ -25,6 +27,8 @@ class SeriousFunction(object):
         return '`%s`'%code
     def __repr__(self):
         self.__call__()
+    def __len__(self):
+        return len(str(self))
 
 class Seriously(object):
     def __init__(self):
@@ -52,12 +56,18 @@ class Seriously(object):
                 i+=1
                 self.push(code[i])
             elif c == ':':
-                v = ''
+                v = ""
                 i+=1
                 while i<len(code) and code[i]!=':':
                     v+=code[i]
                     i+=1
-                self.push(int(v))
+                val = 0
+                try:
+                    val = eval(v)
+                except:
+                    pass
+                val = val if type(val) in [IntType,LongType,FloatType,ComplexType] else 0
+                self.push(val)
             elif c == 'W':
                 inner = ''
                 i+=1
@@ -87,7 +97,7 @@ class Seriously(object):
             elif c == 'H' and len(self.stack) == 0:
                 print 'Hello, World!'
             elif c == 'N' and len(self.stack) == 0:
-                print NinetyNineBottles()
+                NinetyNineBottles()
             elif ord(c) == 130:
                 self.stack = []
             else:

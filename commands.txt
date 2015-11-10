@@ -73,7 +73,7 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 55 (7): push 7
 56 (8): push 8
 57 (9): push 9
-58 (:): begin numeric literal: interprets following symbols as a numeric until a non-digit is found, and pushes that value. If the non-digit is a period, and is followed by more digits, the period is interpreted as the decimal point and the rest of the digits are used, allowing for floating-point values. An implied : is present at EOF if needed.
+58 (:): numeric literal delimiter: pushes the string between it and the following : as a numeric value, or 0 if it cannot be converted. An implicit : is present at EOF if needed.
 59 (;): pop a: push a,a
 60 (<): pop a,b: push 1 if a<b else 0
 61 (=): pop a,b: push 1 if a==b else 0
@@ -94,11 +94,11 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 76 (L): pop a: push floor(a)
 77 (M): pop ü: pop [a] n times where n is the arity of ü, execute R n times using ü and each [a], push each [a] (similar to map(ü,[a]))
 78 (N): if stack is empty: print the lyrics to "99 Bottles of Beer" to stdout
-79 (O):
+79 (O): pop "a" or [a]: push ord(c) for each c in "a" or [a], starting from the end. If a list is popped and it contains strings of length > 1, the strings are exploded in-place (["ABC"] -> [65,66,67], [["A","B","C"]] -> [65,66,67])
 80 (P): pop a: push the a-th prime (zero-indexed)
 81 (Q): if stack is empty: print the program's source code to stdout
 82 (R): pop ü,[a]: call ü, using [a] as a temporary stack, push [a] (similar to reduce(ü,[a]))
-        pop "a": push reverse("a")
+        pop "a" or [a]: push reversed value ("a".reverse() or [a][::-1])
         pop a: push [1,2,...,a] (range(1,a+1))
 83 (S): pop a: push sin(a)
 84 (T): pop a: push tan(a)
@@ -115,7 +115,7 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 94 (^): pop a,b: push pow(a,b)
 95 (_): pop a: push ln(a)
 96 (`): function literal delimiter, pushes function whose body contains all of the commands until the next `. An implied ` is present at EOF if needed.
-97 (a):
+97 (a): invert the stack ([a,b,c,d] -> [d,c,b,a])
 98 (b): pop a: push 0 if a==0 else 1; pop "a" or [a]: push 0 if len(a)==0 else 1
 99 (c): pop a: push character at ordinal a%256
 100 (d): pop [a]: dequeue b from [a], push [a],b
@@ -125,7 +125,7 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 104 (h): pop a,b: push sqrt(a*a+b*b) (Euclidean norm)
 105 (i): pop "a": push atof(a)
          pop [a]: push each element from [a], starting from end (flatten)
-106 (j): pop "a",[b]: push "a".join([b])
+106 (j): pop "a",[b]: push "a".join([b]) (converting values in [b] to strings with $ if necessary)
 107 (k): pop all elements from stack, convert to list (in the order they were on the stack), and push
 108 (l): pop "a" or [a]: push len(a)
 109 (m): pop a: push int(a),frac(a) (modf(a))
@@ -142,7 +142,7 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 117 (u):
 118 (v):
 119 (w):
-120 (x):
+120 (x): pop a,b: push [a,b) (range(a,b))
 121 (y):
 122 (z): pop a: repeat . a times (pop a times and print to stdout)
 123 ({): pop a: rotate stack right a times
@@ -150,7 +150,8 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 125 (}): pop a: rotate stack left a times
 126 (~): pop a: push ~a (unary bitwise negate)
 127 (): terminate the program
-128 (Ä): pop a,b: push a+ib
+128 (Ä): pop a,b: push a+bi
+         pop [a]: pop pairs of real numerics b,c from [a] and push b+ci
 129 (Å): pop entire stack and print to stdout
 130 (Ç): pop entire stack (clear stack)
 131 (É): pop a: push asin(a)
@@ -161,8 +162,8 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 136 (à): pop a: push acosh(a)
 137 (â): pop a: push atanh(a)
 138 (ä):
-139 (ã):
-140 (å):
+139 (ã): push i, the imaginary unit (sqrt(-1) or 0+1i)
+140 (å): pop a, push 0+ai
 141 (ç):
 142 (é): pop a: push sinh(a)
 143 (è): pop a: push cosh(a)
