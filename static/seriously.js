@@ -5,13 +5,7 @@ function genUni() {
 };
 
 function getByteCount(s) {
-	var count = 0, stringLength = s.length;
-	s = String(s || "");
-	for (var i = 0; i < stringLength; i++) {
-		var partCount = encodeURI(s[i]).split("%").length;
-		count += partCount == 1 ? 1 : partCount - 1;
-	}
-	return count;
+	return s.length;
 }
 
 function t(s){for(var i=0;i<s.length;i++){console.log(s.charCodeAt(i));}}
@@ -25,7 +19,7 @@ function updateByteCount() {
 }
 
 function getStrippedCode() {
-	var stripped = $('#code').val().replace(/\s/g, '');
+	var stripped = $('#code').val();
 	$('#stripped').html(
 			'Stripped code: <code>' + stripped + '</code> Byte count: '
 					+ getByteCount(stripped));
@@ -36,16 +30,15 @@ var codeBlock = false;
 var math = false;
 var file = false;
 
-function getExplanantion() {
+function getExplanation() {
 	$('#explanation').html('');
-	var code = $('#code').val().replace(/\s/g, '');
+	var code = $('#code').val();
 	for (var x = 0, c = ''; c = code.charAt(x); x++) {
 		var original = $('#explanation').html();
-		var spaces = "";
 		$('#explanation').html(
 				original
 						+ " "
-                        + explanations[c]
+                        + explanations[c.charCodeAt()]
 								+ "\r\n");
 	}
 
@@ -54,7 +47,7 @@ function getExplanantion() {
 function updateUtils() {
 	updateByteCount();
 	getStrippedCode();
-	getExplanantion();
+	getExplanation();
 }
 
 updateUtils();
