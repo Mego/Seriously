@@ -17,11 +17,11 @@ See [commands.txt](https://github.com/Mego/Seriously/blob/master/commands.txt)
 
 If you prefer a more interesting version:
 
-<pre>"Hello, World!".</pre>
+<pre>"Hello, World!"</pre>
 
 ## Primality Test
 
-<pre>,p.</pre>
+<pre>,p</pre>
 
 ## 99 Bottles of Beer
 
@@ -29,4 +29,4 @@ If you prefer a more interesting version:
 
 ## Coprimality Test
 
-<pre>,,g1=.</pre>
+<pre>,,g1=</pre>
