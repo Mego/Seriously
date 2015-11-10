@@ -1,0 +1,19 @@
+<html>
+  <head>
+    <title>Seriously Language IDE</title>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://cdn.rawgit.com/mgalante/jquery.redirect/master/jquery.redirect.js"></script>
+  </head>
+  <body>
+    <script>
+    $(document).ready(function() {
+      //alert("{{ link }}");
+      var s = decodeURIComponent("{{ link }}".replace(/\+/g, ' '));
+      var sCode = s.split("&")[0].split("=")[1];
+      var sInput = s.split("&")[1].split("=")[1];
+      var url = "http://" + window.location.hostname + "/";
+      $.redirect(url, {code: sCode, input: sInput});
+    });
+    </script>
+  </body>
+</html>
