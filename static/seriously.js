@@ -46,7 +46,7 @@ function getExplanantion() {
 				original
 						+ " "
                         + explanations[c]
-								+ "\r\n"));
+								+ "\r\n");
 	}
 
 }
