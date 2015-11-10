@@ -22,7 +22,10 @@ class MathSelector(object):
 
 class Math(object):
     def __getattr__(self, fn):
-        return MathSelector(fn)
+        if fn in ['pi','e']:
+            return getattr(rmath,fn)
+        else:
+            return MathSelector(fn)
         
 math = Math()
 
@@ -245,7 +248,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           85:lambda x:x.push(list(set(x.pop()).union(x.pop()))),
           90:lambda x:x.push(zip(x.pop(),x.pop())),
           92:idiv_fn,
-          94:lambda x:x.push(math.pow(x.pop(),x.pop())),
+          94:lambda x:x.push(pow(x.pop(),x.pop())),
           95:lambda x:x.push(math.log(x.pop())),
           97:invert_fn,
           98:lambda x:x.push(int(bool(x))),
