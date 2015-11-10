@@ -29,6 +29,17 @@ class Math(object):
         
 math = Math()
 
+class SeriousFunction(object):
+    def __init__(self, code):
+        self.code = code
+    def __call__(self,srs):
+        srs.eval(self.code,print_at_end=False)
+    def __str__(self):
+        return '`%s`'%self.code
+    __repr__ = __str__
+    def __len__(self):
+        return len(self.code)
+
 def is_prime(x):
     global primes
     if x in primes:
@@ -186,7 +197,7 @@ def dupe_each_fn(srs):
         tmp.append(a)
     srs.stack=tmp[:]
     
-def r_fn(srs):
+def lr_fn(srs):
     a=srs.pop()
     if type(a) is StringType:
         map(srs.push,a.split('')[::-1])
@@ -213,6 +224,35 @@ def comp_fn(srs):
     else:
         srs.push(a)
         
+def map_fn(srs):
+    f,l=srs.pop(),srs.pop()
+    res=[]
+    for x in l:
+        s = srs.make_new(x)
+        f(s)
+        res+=s.stack
+    srs.push(res)
+    
+def r_fn(srs):
+    a=srs.pop()
+    if isinstance(a,SeriousFunction):
+        b=srs.pop()
+        s=srs.make_new(*b)
+        a(s)
+        srs.push(s.stack)
+    elif type(a) in [StringType,ListType]:
+        srs.push(a[::-1])
+    else:
+        srs.push(range(1,a+1))
+        
+def n_fn(srs):
+    a,b=srs.pop(),srs.pop()
+    for i in range(b):
+        if isinstance(a, SeriousFunction):
+            a(srs)
+        else:
+            srs.push(a)
+        
 fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
           36:lambda x:x.push(str(x.pop())),
@@ -224,7 +264,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           43:lambda x:x.push(x.pop()+x.pop()),
           44:lambda x:x.push(input()),
           45:lambda x:x.push(x.pop()-x.pop()),
-          46:lambda x:print(x.pop()),
+          46:lambda x:(lambda y:print(y) if not isinstance(y,SeriousFunction) else y(x) or print(x.pop()))(x.pop()),
           47:div_fn,
           59:dupe_fn,
           60:lambda x:x.push(int(x.pop()<x.pop())),
@@ -240,9 +280,10 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           73:if_fn,
           75:lambda x:x.push(ceil(x.pop())),
           76:lambda x:x.push(floor(x.pop())),
+          77:map_fn,
           79:lambda x:map(lambda y:map(x.push,map(ord,y)[::-1]),x.pop()[::-1]),
           80:lambda x:x.push(nth_prime(x.pop())),
-          82:lambda x:x.push(range(1,x.pop()+1)),
+          82:r_fn,
           83:lambda x:x.push(math.sin(x.pop())),
           84:lambda x:x.push(math.tan(x.pop())),
           85:lambda x:x.push(list(set(x.pop()).union(x.pop()))),
@@ -263,11 +304,11 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           107:to_list_fn,
           108:lambda x:x.push(len(x.pop())),
           109:lambda x:map(x.push,math.modf(x.pop())),
-          110:lambda x:map(x.push,(lambda y,z:[y for _ in range(z)])(x.pop(),x.pop())),
+          110:n_fn,
           111:psh_fn,
           112:p_fn,
           113:enq_fn,
-          114:r_fn,
+          114:lr_fn,
           115:lambda x:x.push(math.sgn(x.pop())),
           116:flat_explode_fn,
           117:lambda x:x.push(x.pop()+1),
@@ -293,6 +334,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           144:lambda x:x.push(math.tanh(x.pop())),
           155:lambda x:x.push(math.copysign(x.pop(),x.pop())),
           158:lambda x:x.push(cmath.phase(x.pop())),
+          159:lambda x:x.pop()(x),
           160:lambda x:x.push((lambda z:complex(z.real,-z.imag))(x.pop())),
           166:lambda x:x.push(x.pop()**2),
           167:lambda x:x.push(math.degrees(x.pop())),
