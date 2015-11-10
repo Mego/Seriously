@@ -30,7 +30,5 @@ def link(link='code=%22Error+in+linking+code%22o&input='):
     return render_template('link.html', link=link)
 
 if __name__ == '__main__':
-    print('Compiling O...')
-    check_call(['gcc', 'o.c', '-DIDE', '-o', 'o-ide', '-lm'])
     print('Starting server...')
     app.run(host='0.0.0.0',port=80)
