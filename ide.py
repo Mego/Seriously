@@ -12,7 +12,7 @@ def index():
         input = request.form['input']
         print('Got code:', code, 'input:', input)
         print('Running Seriously code...')
-        p = Popen(['./seriously.py', '-c', code], stdout=PIPE, stderr=PIPE)
+        p = Popen(['./seriously.py', '-c', code], stdout=PIPE, stderr=PIPE, stdin=PIPE)
         output, error = map(lambda s: s.decode('utf-8'), p.communicate(input))
         print('Output:', output, 'error:', error)
         if p.returncode:
