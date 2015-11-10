@@ -1,0 +1,1 @@
+If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] are treated as string literals, and are pushed to the stack when encounted. Their normal functions replace those of the characters 128 code points higher, and those characters' original functions can be used by prepending a ?.
