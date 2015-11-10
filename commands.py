@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from __future__ import print_function, division
+from fractions import gcd
 import operator, cmath
 import math as rmath
 from types import *
@@ -251,7 +252,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           100:deq_fn,
           101:lambda x:x.push(math.exp(x.pop())),
           102:lambda x:x.push(Fib_index(x.pop())),
-          103:lambda x:x.push(math.gcd(x.pop(),x.pop())),
+          103:lambda x:x.push(gcd(x.pop(),x.pop())),
           104:lambda x:x.push(math.hypot(x.pop(),x.pop())),
           105:i_fn,
           106:lambda x:x.push(str.join(x.pop(),map(str,x.pop()))),
