@@ -82,7 +82,7 @@ When possible, the character at each code point is listed in parentheses followi
 65 (A): pop a: push abs(a)
 66 (B):
 67 (C): pop a: push cos(a)
-68 (D):
+68 (D): pop a: push a-1
 69 (E): pop a: push erf(a)
 70 (F): pop a: push Fib(a) (Fib(0)=0, Fib(1)=Fib(2)=1)
 71 (G):
@@ -138,7 +138,7 @@ When possible, the character at each code point is listed in parentheses followi
          pop a: push [0,1,...,a-1] (range(0,a))
 115 (s): pop a: push sgn(a)
 116 (t): pop all elements from stack, flatten any lists and explode any strings, and push them in the same order they were popped (full stack flatten/explode)
-117 (u):
+117 (u): pop a: push a+1
 118 (v):
 119 (w):
 120 (x): pop a,b: push [a,b) (range(a,b))
