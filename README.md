@@ -29,4 +29,4 @@ If you prefer a more interesting version:
 
 ## Coprimality Test
 
-<pre>,,g1=.</pre>
+<pre>,,g1=</pre>
