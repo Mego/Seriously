@@ -9,7 +9,6 @@ z represents a complex value. Complex values are a proper subset of numeric valu
 Some commands have fixed arity. Others have variable arity. This is denoted by the number of values listed in the pop. Those commands that are not functional commands (such as delimiters) do not have arities, and so do not pop from the stack.
 Each functional command operates differently based on the data types of the values popped from the stack. In some cases, that order matters. In others, it does not. Each operation will be denoted by the different data types popped. If there is a conflict, the most restrictive applicable definition is used.
 When possible, the character at each code point is listed in parentheses following the ordinal. For non-printing characters (ordinals 1-31), this is not possible, so a description is provided instead.
-If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] are treated as string literals, and are pushed to the stack when encounted. Their normal functions replace those of the characters 128 code points higher, and those characters' original functions can be used by prepending a ?.
 
 1 (SOH):
 2 (STX):
@@ -116,7 +115,7 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 95 (_): pop a: push ln(a)
 96 (`): function literal delimiter, pushes function whose body contains all of the commands until the next `. An implied ` is present at EOF if needed.
 97 (a): invert the stack ([a,b,c,d] -> [d,c,b,a])
-98 (b): pop a: push 0 if a==0 else 1; pop "a" or [a]: push 0 if len(a)==0 else 1
+98 (b): pop a: push 0 if a==0 else 1; pop "a" or [a]: push 0 if len(a)==0 else 1; pop ü: push 0 if len(ü)==0 else 1
 99 (c): pop a: push character at ordinal a%256
 100 (d): pop [a]: dequeue b from [a], push [a],b
 101 (e): pop a: push exp(a)
@@ -126,8 +125,8 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 105 (i): pop "a": push atof(a)
          pop [a]: push each element from [a], starting from end (flatten)
 106 (j): pop "a",[b]: push "a".join([b]) (converting values in [b] to strings with $ if necessary)
-107 (k): pop all elements from stack, convert to list (in the order they were on the stack), and push
-108 (l): pop "a" or [a]: push len(a)
+107 (k): pop all elements from stack, convert to list (in the order they were on the stack, starting from the top), and push
+108 (l): pop "a" or [a] or ü: push len(a) (or len(ü))
 109 (m): pop a: push int(a),frac(a) (modf(a))
 110 (n): pop a,b: push a b times
          pop ü,b: call ü b times
@@ -151,7 +150,7 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 126 (~): pop a: push ~a (unary bitwise negate)
 127 (): terminate the program
 128 (Ä): pop a,b: push a+bi
-         pop [a]: pop pairs of real numerics b,c from [a] and push b+ci
+         pop [a]: pop pairs of real numerics b,c from [a] and push b+ci (appending 0 to [a] if len([a]) is odd)
 129 (Å): pop entire stack and print to stdout
 130 (Ç): pop entire stack (clear stack)
 131 (É): pop a: push asin(a)
@@ -183,7 +182,7 @@ If the -e flag is passed, consecutive runs of characters in [a-zA-Z0-9.,'"() ] a
 157 (ù):
 158 (û): pop z: push phase(z)
 159 (ü): pop ü: call ü
-160 (†): pop z: push arg(z)
+160 (†): pop z: push the complex conjugate of z
 161 (°):
 162 (¢):
 163 (£):
