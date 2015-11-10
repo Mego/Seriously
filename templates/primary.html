@@ -1,0 +1,47 @@
+<html>
+  <head>
+    <title>Seriously Language IDE</title>
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://bootswatch.com/flatly/bootstrap.min.css">
+    <link href="static/logo.ico" rel="shortcut icon" type="image/vnd.microsoft.icon">
+  </head>
+  <body>
+  <div class="container">
+  <div class="row">
+  <div class="col-xs-6">
+    <h1>Seriously Online IDE</h1>
+    <p>This is an IDE for the <a href="http://seriously.readthedocs.org/">Seriously programming language</a>. 
+    Seriously and this site were made by <a href="https://github.com/Mego">Mego</a>!</p>
+    <br/>
+    <p id="byteCount">0 bytes and 0 chars long.</p>
+    <form id="o" action="" method="post">
+      <fieldset>
+        <input type="submit" value="Run!">
+       </fieldset>
+    </form>
+    <p>Code</p>
+    <textarea rows="4" cols="50" name="code" id="code" form="o">{{ code }}</textarea>
+    <p>Input (each line is a different input)</p>
+    <textarea rows="4" cols="50" name="input" id="input" form="o">{{ input }}</textarea>
+    <br/>
+    {% block body %}{% endblock %}
+    <input id="permalink" type="submit" value="Permalink"/>
+  </div>
+  <div class="col-xs-6">
+    <h3>Utilities</h3>
+    <p>These are some utilities that can be used when coding in Seriously.</p>
+    <p id="stripped"></p>
+    <br/>
+    <button id="util.genuni" onclick="genUni()">Generate Unicode</button>
+    <br/>
+    <h4>General Explanation <small>(not always correct)</small>:</h4>
+    <div class="container" style="margin-top: 5%;margin-right: 5%;">
+      <pre id="explanation"></pre>
+    </div>
+  </div>
+  </div>
+  </div>
+  <script src="{{ url_for('static', filename='explanations.js') }}"></script>
+  <script src="{{ url_for('static', filename='o.js') }}"></script>
+  </body>
+</html>
