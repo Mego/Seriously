@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, request
 from subprocess import Popen, PIPE, check_call
 import os, string
+from make_explanations import make_explanations
 
 app = Flask(__name__)
 
@@ -31,6 +32,6 @@ def link(link='code=%22Error+in+linking+code%22o&input='):
 
 if __name__ == '__main__':
     print('Generating explanations...')
-    check_call(['python','make_explanations.py'])
+    make_explanations()
     print('Starting server...')
     app.run(host='0.0.0.0',port=80)
