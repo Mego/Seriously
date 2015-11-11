@@ -97,8 +97,8 @@ When possible, the character at each code point is listed in parentheses followi
 85 (U): pop [a],[b]: push union of [a] and [b]
 86 (V):
 87 (W): loop delimiter: peek top of stack, repeat code in loop while a evaluates to true
-88 (X):
-89 (Y):
+88 (X): pop a: discard
+89 (Y): pop a: push !bool(a) (logical negate, opposite of b)
 90 (Z): pop [a],[b]: push zip([a],[b])
 91 ([): begin list literal, values are delimited by commas (,)
 92 (\): pop a,b: push a/b (integer division); pop [a]: rotate [a] left by 1, push [a]
