@@ -5,7 +5,13 @@ function genUni() {
 };
 
 function getByteCount(s) {
-	return s.length;
+    var count = 0, stringLength = s.length;
+    s = String(s || "");
+    for (var i = 0; i < stringLength; i++) {
+        var partCount = encodeURI(s[i]).split("%").length;
+        count += partCount == 1 ? 1 : partCount - 1;
+    }
+    return count;
 }
 
 function t(s){for(var i=0;i<s.length;i++){console.log(s.charCodeAt(i));}}
@@ -31,19 +37,30 @@ var codeBlock = false;
 function getExplanation() {
 	$('#explanation').html('');
 	var code = $('#code').val();
+    var explain = '';
+    var indent = '   ';
 	for (var x = 0, c = ''; c = code.charAt(x); x++) {
         if(c === '"') {
             string = !string;
-        }
-        else if(c === '`') {
+        } else if(c === '`') {
             codeBlock = !codeBlock;
+        }
+        if(string) {
+            explain = '';
+        } else {
+            explain = explanations[c.charCodeAt()]
+        }
+        if(codeBlock) {
+            indent = '    ';
+        } else {
+            indent = '';
         }
 		var original = $('#explanation').html();
 		$('#explanation').html(
 				original
 						+ " "
-                        + codeBlock?'    ':''
-                        + string?'':explanations[c.charCodeAt()]
+                        + indent
+                        + explain
 								+ "\r\n");
 	}
 
