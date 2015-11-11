@@ -7,8 +7,7 @@
   <body>
     <script>
     $(document).ready(function() {
-      //alert("{{ link }}");
-      var s = decodeURIComponent("{{ link }}".replace(/\+/g, ' '));
+      var s = $('<textarea/>').html("{{ link }}").text();
       var sCode = s.split("&")[0].split("=")[1];
       var sInput = s.split("&")[1].split("=")[1];
       var url = "http://" + window.location.hostname + "/";
