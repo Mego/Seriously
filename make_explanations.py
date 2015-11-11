@@ -2,7 +2,8 @@
 
 lines = []
 with open('commands.txt','rb') as f:
-    map(lines.append,f)
+    for line in f:
+        lines.append(line)
 i=0
 while not lines[i][0].isdigit():
     i+=1
