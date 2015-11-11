@@ -264,11 +264,27 @@ def full_factor(n):
     
 def factors(n):
     return [a for a,b in full_factor(n)]
+    
+def mod_fn(srs):
+    a=srs.pop()
+    b=srs.pop()
+    if type(a) is StringType:
+        srs.push(a%tuple(b))
+    else:
+        srs.push(a%b)
+        
+def f_fn(srs):
+    a=srs.pop()
+    if type(a) is StringType:
+        b=srs.pop()
+        srs.push(a.format(*b))
+    else:
+        srs.push(Fib_index(a))
         
 fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
           36:lambda x:x.push(str(x.pop())),
-          37:lambda x:x.push(x.pop()%x.pop()),
+          37:mod_fn,
           38:lambda x:x.push(x.pop() & x.pop()),
           40:lambda x:x.push(x.stack.pop(-1)),
           41:lambda x:x.append(x.pop()),
