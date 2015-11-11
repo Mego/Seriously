@@ -40,15 +40,20 @@ function getExplanation() {
     var explain = '';
     var indent = '   ';
 	for (var x = 0, c = ''; c = code.charAt(x); x++) {
+        string = false;
         if(c === '"') {
-            string = !string;
+            x++;
+            var start = x;
+            while(code.charAt(x) !== '"') {
+                x++;
+            }
+            explain = 'push string literal "'+code.slice(start,x)+'"';
+            string = true;
         } else if(c === '`') {
             codeBlock = !codeBlock;
         }
-        if(string) {
-            explain = '';
-        } else {
-            explain = explanations[c.charCodeAt()]
+        if(!string) {
+            explain = explanations[c.charCodeAt(x)];
         }
         if(codeBlock) {
             indent = '    ';
