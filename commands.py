@@ -281,8 +281,18 @@ def f_fn(srs):
     else:
         srs.push(Fib_index(a))
         
+def make_list_fn(srs):
+    a=srs.pop()
+    res=a
+    try:
+        res=list(a)
+    except:
+        res=[a]
+    srs.push(res)
+        
 fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
+          35:make_list_fn,
           36:lambda x:x.push(str(x.pop())),
           37:mod_fn,
           38:lambda x:x.push(x.pop() & x.pop()),
