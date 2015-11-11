@@ -27,18 +27,23 @@ function getStrippedCode() {
 
 var string = false;
 var codeBlock = false;
-var math = false;
-var file = false;
 
 function getExplanation() {
 	$('#explanation').html('');
 	var code = $('#code').val();
 	for (var x = 0, c = ''; c = code.charAt(x); x++) {
+        if(c === '"') {
+            string = !string;
+        }
+        else if(c === '`') {
+            codeBlock = !codeBlock;
+        }
 		var original = $('#explanation').html();
 		$('#explanation').html(
 				original
 						+ " "
-                        + explanations[c.charCodeAt()]
+                        + codeBlock?'    ':''
+                        + string?'':explanations[c.charCodeAt()]
 								+ "\r\n");
 	}
 
