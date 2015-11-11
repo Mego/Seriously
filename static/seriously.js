@@ -29,6 +29,8 @@ function updateByteCount() {
 function getExplanation() {
     var string = false;
     var codeBlock = false;
+    var listBlock = false;
+    var numBlock = false;
     var code = $('#code').val();
     var explain = '';
     for(var x=0; x < code.length; x++) {
@@ -43,14 +45,30 @@ function getExplanation() {
             continue;
         } else if(c === '`') {
             if(codeBlock) {
-                var prev = code.lastIndexOf('"',x-1);
+                var prev = code.lastIndexOf('`',x-1);
                 var strval = code.slice(prev+1,x);
                 explain += 'push the function value `'+strval+'`\r\n'
             }
             codeBlock = !codeBlock;
             continue;
+        } else if(c === '[') {
+            listBlock = true;
+            continue;
+        } else if(c === ':') {
+            if(numBlock) {
+                var prev = code.lastIndexOf(':',x-1);
+                var strval = code.slice(prev+1,x);
+                explain += 'push the numeric value "'+strval+'"\r\n'
+            }
+            numBlock = !numBlock;
+            continue;
+        } else if(c === ']') {
+            listBlock = false;
+            var prev = code.lastIndexOf('[',x-1);
+            var strval = code.slice(prev+1,x);
+            explain += 'push the list value "'+strval+'"\r\n'
         }
-        if(codeBlock || string) {
+        if(codeBlock || string || listBlock || numBlock) {
             continue;
         }
         explain += explanations[cp437.enc[c]] +'\r\n';
@@ -63,6 +81,14 @@ function getExplanation() {
         var prev = code.lastIndexOf('"',x-1);
         var strval = code.slice(prev+1,x);
         explain += 'push the function value `'+strval+'`\r\n'
+    } else if(listBlock) {
+        var prev = code.lastIndexOf('[',x-1);
+        var strval = code.slice(prev+1,x);
+        explain += 'push the list value "'+strval+'"\r\n'
+    } else if(numBlock) {
+        var prev = code.lastIndexOf(':',x-1);
+        var strval = code.slice(prev+1,x);
+        explain += 'push the numeric value "'+strval+'"\r\n'
     }
     $('#explanation').html(explain);
 }
