@@ -44,7 +44,7 @@ function getExplanation() {
         if(c === '"') {
             x++;
             var start = x;
-            while(code.charAt(x) !== '"') {
+            while(code.charAt(x) !== '"' and x < code.length) {
                 x++;
             }
             explain = 'push string literal "'+code.slice(start,x)+'"';
