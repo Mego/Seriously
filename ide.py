@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from flask import Flask, render_template, url_for, request
 from subprocess import Popen, PIPE, check_call
 import os, string
@@ -13,7 +14,7 @@ def index():
         input = request.form['input']
         print('Got code:', code, 'input:', input)
         print('Running Seriously code...')
-        p = Popen(['./seriously.py', '-c', code], stdout=PIPE, stderr=PIPE, stdin=PIPE)
+        p = Popen(['./seriously.py', '-c', code.encode('cp437')], stdout=PIPE, stderr=PIPE, stdin=PIPE)
         output, error = map(lambda s: s.decode('utf-8'), p.communicate(input))
         print('Output:', output, 'error:', error)
         if p.returncode:
@@ -34,4 +35,4 @@ if __name__ == '__main__':
     print('Generating explanations...')
     make_explanations()
     print('Starting server...')
-    app.run(host='0.0.0.0',port=80)
+    app.run(host='0.0.0.0',port=8080)
