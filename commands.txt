@@ -5,7 +5,7 @@ a represents any value. This usually means numeric values, but can represent any
 "a" represents a string value.
 [a] represents a list value.
 z represents a complex value. Complex values are a proper subset of numeric values.
-ü represents a function value.
+f represents a function value.
 Some commands have fixed arity. Others have variable arity. This is denoted by the number of values listed in the pop. Those commands that are not functional commands (such as delimiters) do not have arities, and so do not pop from the stack.
 Each functional command operates differently based on the data types of the values popped from the stack. In some cases, that order matters. In others, it does not. Each operation will be denoted by the different data types popped. If there is a conflict, the most restrictive applicable definition is used.
 When possible, the character at each code point is listed in parentheses following the ordinal. For non-printing characters (ordinals 1-31), this is not possible, so a description is provided instead.
@@ -55,7 +55,7 @@ When possible, the character at each code point is listed in parentheses followi
 43 (+): pop a,b: push a+b; pop "a","b": push concatenation of "a" and "b"; pop [a],[b]: push [a][b] (append [b] to [a])
 44 (,): read value from stdin and push
 45 (-): pop a,b: push a-b
-46 (.): pop a: write a to stdout; pop ü: ü. (call ü and execute . recursively)
+46 (.): pop a: write a to stdout; pop f: f. (call f and execute . recursively)
 47 (/): pop a,b: push a/b (float division); pop [a]: rotate [a] right by 1, push [a]
 48 (0): push 0
 49 (1): push 1
@@ -86,12 +86,12 @@ When possible, the character at each code point is listed in parentheses followi
 74 (J):
 75 (K): pop a: push ceil(a)
 76 (L): pop a: push floor(a)
-77 (M): pop ü,[a], execute ü for each element in [a], using the element as a temporary stack, push [a] (similar to map(ü,[a]))
+77 (M): pop f,[a], execute f for each element in [a], using the element as a temporary stack, push [a] (similar to map(f,[a]))
 78 (N): if stack is empty: print the lyrics to "99 Bottles of Beer" to stdout
 79 (O): pop "a" or [a]: push ord(c) for each c in "a" or [a], starting from the end. If a list is popped and it contains strings of length > 1, the strings are exploded in-place (["ABC"] -> [65,66,67], [["A","B","CD"]] -> [65,66,67,68])
 80 (P): pop a: push the a-th prime (zero-indexed)
 81 (Q): if stack is empty: print the program's source code to stdout
-82 (R): pop ü,[a]: call ü, using [a] as a temporary stack, push [a] (similar to reduce(ü,[a])); pop "a" or [a]: push reversed value ("a".reverse() or [a][::-1]); pop a: push [1,2,...,a] (range(1,a+1))
+82 (R): pop f,[a]: call f, using [a] as a temporary stack, push [a] (similar to reduce(f,[a])); pop "a" or [a]: push reversed value ("a".reverse() or [a][::-1]); pop a: push [1,2,...,a] (range(1,a+1))
 83 (S): pop a: push sin(a)
 84 (T): pop a: push tan(a)
 85 (U): pop [a],[b]: push union of [a] and [b]
@@ -107,7 +107,7 @@ When possible, the character at each code point is listed in parentheses followi
 95 (_): pop a: push ln(a)
 96 (`): function literal delimiter, pushes function whose body contains all of the commands until the next `. An implied ` is present at EOF if needed.
 97 (a): invert the stack ([a,b,c,d] -> [d,c,b,a])
-98 (b): pop a: push 0 if a==0 else 1; pop "a" or [a]: push 0 if len(a)==0 else 1; pop ü: push 0 if len(ü)==0 else 1
+98 (b): pop a: push 0 if a==0 else 1; pop "a" or [a]: push 0 if len(a)==0 else 1; pop f: push 0 if len(f)==0 else 1
 99 (c): pop a: push character at ordinal a%256
 100 (d): pop [a]: dequeue b from [a], push [a],b
 101 (e): pop a: push exp(a)
@@ -117,9 +117,9 @@ When possible, the character at each code point is listed in parentheses followi
 105 (i): pop "a": push atof(a); pop [a]: push each element from [a], starting from end (flatten)
 106 (j): pop "a",[b]: push "a".join([b]) (converting values in [b] to strings with $ if necessary)
 107 (k): pop all elements from stack, convert to list (in the order they were on the stack, starting from the top), and push
-108 (l): pop "a" or [a] or ü: push len(a) (or len(ü))
+108 (l): pop "a" or [a] or f: push len(a) (or len(f))
 109 (m): pop a: push int(a),frac(a) (modf(a))
-110 (n): pop a,b: push a b times; pop ü,b: call ü b times
+110 (n): pop a,b: push a b times; pop f,b: call f b times
 111 (o): pop [a],b: push b to [a], push [a]
 112 (p): pop a: push 1 if a is prime else 0; pop [a]: pop b from [a], push [a],b
 113 (q): pop [a],b: enqueue b in [a], push [a]
@@ -168,7 +168,7 @@ When possible, the character at each code point is listed in parentheses followi
 156 (ú):
 157 (ù):
 158 (û): pop z: push phase(z)
-159 (ü): pop ü: call ü
+159 (ü): pop f: call f
 160 (†): pop z: push the complex conjugate of z
 161 (°):
 162 (¢):
