@@ -252,6 +252,18 @@ def n_fn(srs):
             a(srs)
         else:
             srs.push(a)
+            
+def full_factor(n):
+    global primes
+    init_primes_up_to(n)
+    res=[]
+    for p in filter(lambda x:x<=n,primes):
+        if n%p==0:
+            res += [p,n//p]
+    return res
+    
+def factors(n):
+    return [a for a,b in full_factor(n)]
         
 fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
@@ -314,6 +326,9 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           115:lambda x:x.push(math.sgn(x.pop())),
           116:flat_explode_fn,
           117:lambda x:x.push(x.pop()+1),
+          119:lambda x:x.push(full_factor(x.pop())),
+          120:lambda x:x.push(range(x.pop(),x.pop())),
+          121:lambda x:x.push(factor(x.pop())),
           122:lambda x:map(x.eval,(lambda y:['.' for _ in range(y)])(x.pop())),
           123:nrrot_fn,
           124:lambda x:x.push(x.pop() | x.pop()),

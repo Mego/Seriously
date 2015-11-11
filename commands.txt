@@ -128,9 +128,9 @@ When possible, the character at each code point is listed in parentheses followi
 116 (t): pop all elements from stack, flatten any lists and explode any strings, and push them in the same order they were popped (full stack flatten/explode)
 117 (u): pop a: push a+1
 118 (v):
-119 (w):
+119 (w): pop a: push the full factorization of a (18 -> [[2,1],[3,2]])
 120 (x): pop a,b: push [a,b) (range(a,b))
-121 (y):
+121 (y): pop a: push the prime factors of a (18 -> [2,3])
 122 (z): pop a: repeat . a times (pop a times and print to stdout)
 123 ({): pop a: rotate stack right a times
 124 (|): pop a,b: push (a | b)
