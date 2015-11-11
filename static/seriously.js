@@ -35,45 +35,7 @@ var string = false;
 var codeBlock = false;
 
 function getExplanation() {
-	$('#explanation').html('');
-	var code = $('#code').val();
-    var explain = '';
-    var indent = '   ';
-	for (var x = 0, c = ''; c = code.charAt(x); x++) {
-        string = false;
-        if(c === '"') {
-            x++;
-            var start = x;
-            var str_lit = '';
-            if(x < code.length) {
-                str_lit = code.charAt(x);
-            }
-            while(code.charAt(x) !== '"' && x < code.length) {
-                x++;
-                str_lit += code.charAt(x);
-            }
-            explain = 'push string literal "'+str_lit+'"';
-            string = true;
-        } else if(c === '`') {
-            codeBlock = !codeBlock;
-        }
-        if(!string) {
-            explain = explanations[c.charCodeAt(x)];
-        }
-        if(codeBlock) {
-            indent = '    ';
-        } else {
-            indent = '';
-        }
-		var original = $('#explanation').html();
-		$('#explanation').html(
-				original
-						+ " "
-                        + indent
-                        + explain
-								+ "\r\n");
-	}
-
+	$('#explanation').html("This doesn't work right now.");
 }
 
 function updateUtils() {
