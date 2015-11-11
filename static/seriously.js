@@ -44,10 +44,15 @@ function getExplanation() {
         if(c === '"') {
             x++;
             var start = x;
-            while(code.charAt(x) !== '"' and x < code.length) {
-                x++;
+            var str_lit = '';
+            if(x < code.length) {
+                str_lit = code.charAt(x);
             }
-            explain = 'push string literal "'+code.slice(start,x)+'"';
+            while(code.charAt(x) !== '"' && x < code.length) {
+                x++;
+                str_lit += code.charAt(x);
+            }
+            explain = 'push string literal "'+str_lit+'"';
             string = true;
         } else if(c === '`') {
             codeBlock = !codeBlock;
