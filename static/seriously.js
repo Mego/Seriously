@@ -67,6 +67,7 @@ function getExplanation() {
             var prev = code.lastIndexOf('[',x-1);
             var strval = code.slice(prev+1,x);
             explain += 'push the list value "'+strval+'"\r\n'
+            continue;
         }
         if(codeBlock || string || listBlock || numBlock) {
             continue;
