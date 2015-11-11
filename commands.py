@@ -4,6 +4,7 @@ from __future__ import print_function, division
 from fractions import gcd
 import operator, cmath
 import math as rmath
+import random
 from types import *
 
 phi = (1+5**.5)/2
@@ -311,11 +312,14 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           63:lambda x:x,
           64:rot2_fn,
           65:lambda x:x.push(abs(x.pop())),
+          66:lambda x:x.push(random.randrange(x.pop(),x.pop())),
           67:lambda x:x.push(math.cos(x.pop())),
           68:lambda x:x.push(x.pop()-1),
           69:lambda x:x.push(math.erf(x.pop())),
           70:lambda x:x.push(Fib(x.pop())),
+          71:lambda x:x.push(random.random()),
           73:if_fn,
+          74:lambda x:x.push(random.randrange(x.pop())),
           75:lambda x:x.push(ceil(x.pop())),
           76:lambda x:x.push(floor(x.pop())),
           77:map_fn,
@@ -325,6 +329,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           83:lambda x:x.push(math.sin(x.pop())),
           84:lambda x:x.push(math.tan(x.pop())),
           85:lambda x:x.push(list(set(x.pop()).union(x.pop()))),
+          86:lambda x:x.push(random.uniform(x.pop(),x.pop())),
           88:lambda x:x.pop(),
           89:lambda x:x.push(int(not bool(x.pop()))),
           90:lambda x:x.push(zip(x.pop(),x.pop())),
@@ -352,6 +357,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           115:lambda x:x.push(math.sgn(x.pop())),
           116:flat_explode_fn,
           117:lambda x:x.push(x.pop()+1),
+          118:lambda x:random.seed(x.pop())
           119:lambda x:x.push(full_factor(x.pop())),
           120:lambda x:x.push(range(x.pop(),x.pop())),
           121:lambda x:x.push(factor(x.pop())),
