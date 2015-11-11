@@ -75,15 +75,15 @@ When possible, the character at each code point is listed in parentheses followi
 63 (?): NOP, extended expressions if -e flag is passed
 64 (@): pop a,b: push a,b (rotate top 2 elements)
 65 (A): pop a: push abs(a)
-66 (B):
+66 (B): pop a,b: push a random integer in [a,b) (randrange(a,b))
 67 (C): pop a: push cos(a)
 68 (D): pop a: push a-1
 69 (E): pop a: push erf(a)
 70 (F): pop a: push Fib(a) (Fib(0)=0, Fib(1)=Fib(2)=1)
-71 (G):
+71 (G): push a random float in the range [0,1) (push random())
 72 (H): if stack is empty: print "Hello, World!" to stdout
 73 (I): pop a,b,c: push b if a is truthy, else push c
-74 (J):
+74 (J): pop a: push a random integer in [0,a) (randrange(a))
 75 (K): pop a: push ceil(a)
 76 (L): pop a: push floor(a)
 77 (M): pop f,[a], execute f for each element in [a], using the element as a temporary stack, push [a] (similar to map(f,[a]))
@@ -95,7 +95,7 @@ When possible, the character at each code point is listed in parentheses followi
 83 (S): pop a: push sin(a)
 84 (T): pop a: push tan(a)
 85 (U): pop [a],[b]: push union of [a] and [b]
-86 (V):
+86 (V): pop a,b: push uniform(a,b) (random float between a and b)
 87 (W): loop delimiter: peek top of stack, repeat code in loop while a evaluates to true
 88 (X): pop a: discard
 89 (Y): pop a: push !bool(a) (logical negate, opposite of b)
