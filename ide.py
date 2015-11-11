@@ -30,5 +30,7 @@ def link(link='code=%22Error+in+linking+code%22o&input='):
     return render_template('link.html', link=link)
 
 if __name__ == '__main__':
+    print('Generating explanations...')
+    check_call(['python','make_explanations.py'])
     print('Starting server...')
     app.run(host='0.0.0.0',port=80)
