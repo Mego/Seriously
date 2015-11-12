@@ -149,12 +149,12 @@ When possible, the character at each code point is listed in parentheses followi
 137 (â): pop a: push atanh(a)
 138 (ä):
 139 (ã): push i, the imaginary unit (sqrt(-1) or 0+1i)
-140 (å): pop a, push 0+ai
+140 (å): pop a, push 0+ai; pop [a], push [a] with every element multiplied by i
 141 (ç): pop a: push 1/a
 142 (é): pop a: push sinh(a)
 143 (è): pop a: push cosh(a)
 144 (ê): pop a: push tanh(a)
-145 (ë):
+145 (ë): pop [a]: push mean(a)
 146 (í): pop "a","b","c": push "a".replace("b","c")
 147 (ì): pop "a": push "a".strip()
 148 (î): pop "a": push "a".lstrip()
@@ -163,7 +163,7 @@ When possible, the character at each code point is listed in parentheses followi
 151 (ó): pop "a": push "a".lower()
 152 (ò): pop "a": push "a".title()
 153 (ô): pop "a": push "a".swapcase()
-154 (ö):
+154 (ö): pop [a]: push mode(a)
 155 (õ): pop a,b: push abs(a)*sgn(b)
 156 (ú):
 157 (ù):
@@ -177,7 +177,7 @@ When possible, the character at each code point is listed in parentheses followi
 165 (•):
 166 (¶): pop a: push a*a
 167 (ß): pop a: push degrees(a)
-168 (®): pop a,b: push int(b,a)
+168 (®): pop a,b: push int(a,b) (interpret a as a base-b int)
 169 (©): pop a: push a+2
 170 (™): pop a: push a-2
 171 (´): pop a: push a/2 (division style determined by if a is integer or float)
@@ -195,7 +195,7 @@ When possible, the character at each code point is listed in parentheses followi
 183 (∑):
 184 (∏):
 185 (π):
-186 (∫):
+186 (∫): pop [a]: push median([a])
 187 (ª):
 188 (º):
 189 (Ω):
