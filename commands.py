@@ -290,6 +290,13 @@ def make_list_fn(srs):
     except:
         res=[a]
     srs.push(res)
+    
+def j_fn(srs):
+    a=srs.pop()
+    if type(a) in [ListType, StringType]:
+        srs.push(random.choice(a))
+    else:
+        srs.push(random.randrange(a))
         
 fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
@@ -319,7 +326,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           70:lambda x:x.push(Fib(x.pop())),
           71:lambda x:x.push(random.random()),
           73:if_fn,
-          74:lambda x:x.push(random.randrange(x.pop())),
+          74:j_fn,
           75:lambda x:x.push(ceil(x.pop())),
           76:lambda x:x.push(floor(x.pop())),
           77:map_fn,

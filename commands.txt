@@ -83,7 +83,7 @@ When possible, the character at each code point is listed in parentheses followi
 71 (G): push a random float in the range [0,1) (push random())
 72 (H): if stack is empty: print "Hello, World!" to stdout
 73 (I): pop a,b,c: push b if a is truthy, else push c
-74 (J): pop a: push a random integer in [0,a) (randrange(a))
+74 (J): pop a: push a random integer in [0,a) (randrange(a)); pop [a]: push a random element from [a] (random.choice([a]))
 75 (K): pop a: push ceil(a)
 76 (L): pop a: push floor(a)
 77 (M): pop f,[a], execute f for each element in [a], using the element as a temporary stack, push [a] (similar to map(f,[a]))
