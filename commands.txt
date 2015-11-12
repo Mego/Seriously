@@ -218,7 +218,7 @@ When possible, the character at each code point is listed in parentheses followi
 206 (Î):
 207 (Ï):
 208 (Ð):
-209 (Ñ):
+209 (Ñ): pop a: push 10**a
 210 (Ò):
 211 (Ó):
 212 (Ô):
