@@ -16,8 +16,6 @@ function getByteCount(s) {
     return count;
 }
 
-function t(s){for(var i=0;i<s.length;i++){console.log(s.charCodeAt(i));}}
-
 function updateByteCount() {
 	var c = $('#code').val();
 	var byteCount = c.length;
