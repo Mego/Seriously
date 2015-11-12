@@ -364,7 +364,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           115:lambda x:x.push(math.sgn(x.pop())),
           116:flat_explode_fn,
           117:lambda x:x.push(x.pop()+1),
-          118:lambda x:random.seed(x.pop())
+          118:lambda x:random.seed(x.pop()),
           119:lambda x:x.push(full_factor(x.pop())),
           120:lambda x:x.push(range(x.pop(),x.pop())),
           121:lambda x:x.push(factor(x.pop())),
