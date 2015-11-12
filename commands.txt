@@ -208,7 +208,7 @@ When possible, the character at each code point is listed in parentheses followi
 196 (Ä):
 197 (Å): duplicate each element on stack ([a,b,c] => [a,a,b,b,c,c])
 198 (Æ):
-199 (Ç):
+199 (Ç): pop a: pop a elements and push a list containing those elements in their original order
 200 (È):
 201 (É):
 202 (Ê):
