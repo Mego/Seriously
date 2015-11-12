@@ -51,7 +51,7 @@ When possible, the character at each code point is listed in parentheses followi
 39 ('): pushes next character onto stack as character literal (length-1 string)
 40 ((): rotates stack right by 1
 41 ()): rotates stack left by 1
-42 (*): pop a,b: push a*b; pop "a",b: repeat "a" b times, push "a" ("a"*b)
+42 (*): pop a,b: push a*b; pop "a",b: repeat "a" b times, push "a" ("a"*b); pop a,[b] or [b],a: apply a* to each element in the array
 43 (+): pop a,b: push a+b; pop "a","b": push concatenation of "a" and "b"; pop [a],[b]: push [a][b] (append [b] to [a])
 44 (,): read value from stdin and push
 45 (-): pop a,b: push a-b
