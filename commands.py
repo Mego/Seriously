@@ -318,6 +318,19 @@ def plus_fn(srs):
     else:
         srs.push(a+b)
         
+def digit_to_char(digit):
+    if digit < 10:
+        return str(digit)
+    return chr(ord('a') + digit - 10)
+
+def str_base(number,base):
+    if number < 0:
+        return '-' + str_base(-number, base)
+    (d, m) = divmod(number, base)
+    if d > 0:
+        return str_base(d, base) + digit_to_char(m)
+    return digit_to_char(m)
+        
 fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
           35:make_list_fn,
@@ -409,16 +422,26 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           142:lambda x:x.push(math.sinh(x.pop())),
           143:lambda x:x.push(math.cosh(x.pop())),
           144:lambda x:x.push(math.tanh(x.pop())),
+          146:lambda x:x.push(x.pop().replace(x.pop(),x.pop())),
+          147:lambda x:x.push(x.pop().strip()),
+          148:lambda x:x.push(x.pop().lstrip()),
+          149:lambda x:x.push(x.pop().rstrip()),
+          150:lambda x:x.push(x.pop().upper()),
+          151:lambda x:x.push(x.pop().lower()),
+          152:lambda x:x.push(x.pop().title()),
+          153:lambda x:x.push(x.pop().swapcase()),
           155:lambda x:x.push(math.copysign(x.pop(),x.pop())),
           158:lambda x:x.push(cmath.phase(x.pop())),
           159:lambda x:x.pop()(x),
-          160:lambda x:x.push((lambda z:complex(z.real,-z.imag))(x.pop())),
+          160:lambda x:x.push(x.pop().conjugate()),
           166:lambda x:x.push(x.pop()**2),
           167:lambda x:x.push(math.degrees(x.pop())),
+          168:lambda x:x.push(int(x.pop(),x.pop())),
           169:lambda x:x.push(x.pop()+2),
           170:lambda x:x.push(x.pop()-2),
           171:lambda x:x.push(x.pop()/2),
           172:lambda x:x.push(x.pop()/4),
+          173:lambda x:str_base(x.pop(),x.pop()),
           174:ins_bot_fn,
           175:ins_top_fn,
           179:dupe_all_fn,
