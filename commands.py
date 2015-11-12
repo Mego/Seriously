@@ -298,6 +298,26 @@ def j_fn(srs):
     else:
         srs.push(random.randrange(a))
         
+def star_fn(srs):
+    a=srs.pop()
+    b=srs.pop()
+    if type(a) is ListType:
+        srs.push(map(lambda x:x*b,a))
+    elif type(b) is ListType:
+        srs.push(map(lambda x:x*a,b))
+    else:
+        srs.push(a*b)
+        
+def plus_fn(srs):
+    a=srs.pop()
+    b=srs.pop()
+    if type(a) is ListType:
+        srs.push(map(lambda x:x+b,a))
+    elif type(b) is ListType:
+        srs.push(map(lambda x:x+a,b))
+    else:
+        srs.push(a+b)
+        
 fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
           35:make_list_fn,
@@ -306,8 +326,8 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           38:lambda x:x.push(x.pop() & x.pop()),
           40:lambda x:x.push(x.stack.pop(-1)),
           41:lambda x:x.append(x.pop()),
-          42:lambda x:x.push(x.pop()*x.pop()),
-          43:lambda x:x.push(x.pop()+x.pop()),
+          42:star_fn,
+          43:plus_fn,
           44:lambda x:x.push(input()),
           45:lambda x:x.push(x.pop()-x.pop()),
           46:lambda x:(lambda y:print(y) if not isinstance(y,SeriousFunction) else y(x) or print(x.pop()))(x.pop()),
@@ -385,6 +405,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           137:lambda x:x.push(math.atanh(x.pop())),
           139:lambda x:x.push(complex(0,1)),
           140:lambda x:x.push(complex(0,x.pop())),
+          141:lambda x:x.push(1/x.pop()),
           142:lambda x:x.push(math.sinh(x.pop())),
           143:lambda x:x.push(math.cosh(x.pop())),
           144:lambda x:x.push(math.tanh(x.pop())),
