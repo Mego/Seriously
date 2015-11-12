@@ -330,6 +330,13 @@ def str_base(number,base):
     if d > 0:
         return str_base(d, base) + digit_to_char(m)
     return digit_to_char(m)
+    
+def i_mul_fn(srs):
+    a=srs.pop()
+    if type(a) is ListType:
+        srs.push(map(lambda x:complex(0,x),a))
+    else:
+        srs.push(complex(0,a))
         
 fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
@@ -417,11 +424,12 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           136:lambda x:x.push(math.acosh(x.pop())),
           137:lambda x:x.push(math.atanh(x.pop())),
           139:lambda x:x.push(complex(0,1)),
-          140:lambda x:x.push(complex(0,x.pop())),
+          140:i_mul_fn,
           141:lambda x:x.push(1/x.pop()),
           142:lambda x:x.push(math.sinh(x.pop())),
           143:lambda x:x.push(math.cosh(x.pop())),
           144:lambda x:x.push(math.tanh(x.pop())),
+          145:lambda x:x.push((lambda y:sum(y)/len(y) if y else 0)(x.pop())),
           146:lambda x:x.push(x.pop().replace(x.pop(),x.pop())),
           147:lambda x:x.push(x.pop().strip()),
           148:lambda x:x.push(x.pop().lstrip()),
@@ -430,6 +438,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           151:lambda x:x.push(x.pop().lower()),
           152:lambda x:x.push(x.pop().title()),
           153:lambda x:x.push(x.pop().swapcase()),
+          154:lambda x:x.push((lambda y:max(y,key=y.count))(x.pop())),
           155:lambda x:x.push(math.copysign(x.pop(),x.pop())),
           158:lambda x:x.push(cmath.phase(x.pop())),
           159:lambda x:x.pop()(x),
@@ -445,6 +454,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           174:ins_bot_fn,
           175:ins_top_fn,
           179:dupe_all_fn,
+          186:lambda x:x.push((lambda y:y[len(y)//2] if len(y)%2 else sum(y[len(y)//2:len(y)//2+1])/2)(x.pop())),
           197:dupe_each_fn,
           199:lambda x:x.push((lambda y:[x.pop() for _ in range(y)])(x.pop())),
           203:lambda x:x.push(math.pi),
