@@ -4,7 +4,7 @@ from __future__ import print_function, division
 from fractions import gcd
 import operator, cmath
 import math as rmath
-import random
+import random, itertools
 from types import *
 
 phi = (1+5**.5)/2
@@ -440,6 +440,8 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           153:lambda x:x.push(x.pop().swapcase()),
           154:lambda x:x.push((lambda y:max(y,key=y.count))(x.pop())),
           155:lambda x:x.push(math.copysign(x.pop(),x.pop())),
+          156:lambda x:x.push(SeriousFunction(x.pop())),
+          157:lambda x:x.push(map(operator.add,itertools.izip_longest(x.pop(),x.pop(),fillvalue=0))),
           158:lambda x:x.push(cmath.phase(x.pop())),
           159:lambda x:x.pop()(x),
           160:lambda x:x.push(x.pop().conjugate()),
@@ -450,9 +452,10 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           170:lambda x:x.push(x.pop()-2),
           171:lambda x:x.push(x.pop()/2),
           172:lambda x:x.push(x.pop()/4),
-          173:lambda x:str_base(x.pop(),x.pop()),
+          173:lambda x:x.push(str_base(x.pop(),x.pop())),
           174:ins_bot_fn,
           175:ins_top_fn,
+          176:lambda x:x.push(itertools.compress(x.pop(),x.pop())),
           179:dupe_all_fn,
           186:lambda x:x.push((lambda y:y[len(y)//2] if len(y)%2 else sum(y[len(y)//2:len(y)//2+1])/2)(x.pop())),
           197:dupe_each_fn,

@@ -3,7 +3,7 @@ This file should be viewed with code page 437 encoding (CP437, OEM-437, and OEM-
 There are 4 data types in Seriously: numeric, string, list, and function.
 a represents any value. This usually means numeric values, but can represent any value of a type not specified in an alternate command definition.
 "a" represents a string value.
-[a] represents a list value.
+[a] represents a list value (in most cases, a string value is also acceptable).
 z represents a complex value. Complex values are a proper subset of numeric values.
 f represents a function value.
 Some commands have fixed arity. Others have variable arity. This is denoted by the number of values listed in the pop. Those commands that are not functional commands (such as delimiters) do not have arities, and so do not pop from the stack.
@@ -154,7 +154,7 @@ When possible, the character at each code point is listed in parentheses followi
 142 (Ž): pop a: push sinh(a)
 143 (): pop a: push cosh(a)
 144 (): pop a: push tanh(a)
-145 (‘): pop [a]: push mean(a)
+145 (‘): pop [a]: push mean([a])
 146 (’): pop "a","b","c": push "a".replace("b","c")
 147 (“): pop "a": push "a".strip()
 148 (”): pop "a": push "a".lstrip()
@@ -163,10 +163,10 @@ When possible, the character at each code point is listed in parentheses followi
 151 (—): pop "a": push "a".lower()
 152 (˜): pop "a": push "a".title()
 153 (™): pop "a": push "a".swapcase()
-154 (š): pop [a]: push mode(a)
+154 (š): pop [a]: push mode([a])
 155 (›): pop a,b: push abs(a)*sgn(b)
-156 (œ):
-157 ():
+156 (œ): pop "a": push a function whose code is "a"
+157 (): pop [a],[b]: push the result of pairwise addition of [a] and [b], padding the shorter with 0s
 158 (ž): pop z: push phase(z)
 159 (Ÿ): pop f: call f
 160 ( ): pop z: push the complex conjugate of z
@@ -185,7 +185,7 @@ When possible, the character at each code point is listed in parentheses followi
 173 (­): pop a,b: push a string representing a in base b
 174 (®): pop a,b: insert b at position a, indexed from the bottom of the stack
 175 (¯): pop a,b: insert b at position a, indexed from the top of the stack
-176 (°):
+176 (°): pop [a],[b]: push [[a][i] if [b][i] for i in len(a)], pads [b] with 0s if necessary
 177 (±):
 178 (²):
 179 (³): duplicate stack ([a,b,c] => [a,b,c,a,b,c])
