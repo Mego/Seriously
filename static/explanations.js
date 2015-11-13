@@ -67,7 +67,7 @@ var explanations = {
 66:'pop a,b: push a random integer in [a,b) (randrange(a,b))',
 67:'pop a: push cos(a)',
 68:'pop a: push a-1',
-69:'pop a: push erf(a)',
+69:'pop a: push erf(a); pop [a],b: push [a][b] (bth item in [a]) (also works for strings)',
 70:'pop a: push Fib(a) (Fib(0)=0, Fib(1)=Fib(2)=1)',
 71:'push a random float in the range [0,1) (push random())',
 72:'if stack is empty: print "Hello, World!" to stdout',
