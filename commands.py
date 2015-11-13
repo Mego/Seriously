@@ -36,7 +36,7 @@ class SeriousFunction(object):
     def __call__(self,srs):
         srs.eval(self.code,print_at_end=False)
     def __str__(self):
-        return '`%s`'%self.code
+        return '%s'%self.code
     __repr__ = __str__
     def __len__(self):
         return len(self.code)
