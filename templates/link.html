@@ -7,9 +7,8 @@
   <body>
     <script>
     $(document).ready(function() {
-      var s = $('<textarea/>').html("{{ link }}").text();
-      var sInput = s.split("&",2).reverse()[0].split("=")[1];
-      var sCode = s.split("&",2).reverse()[1].split("=")[1];
+      var sCode = $('<textarea/>').html("{{ code }}").text();
+      var sInput = $('<textarea/>').html("{{ input_str }}").text();
       var url = "http://" + window.location.hostname + "/";
       $.redirect(url, {code: sCode, input: sInput});
     });
