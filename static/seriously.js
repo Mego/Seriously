@@ -124,10 +124,10 @@ $(document).ready(
 		function() {
 			$("#permalink").click(
 					function() {
-						var code = utf8_to_b64(window.JSON.stringify({
+						var code = encodeURIComponent(utf8_to_b64(window.JSON.stringify({
 							code : $('#code').val(),
 							input : $('#input').val()
-						}));
+						})));
 						prompt("Permalink:", "http://"
 								+ window.location.hostname + "/link/" + code);
 						window.location.pathname = "/link/" + code;
