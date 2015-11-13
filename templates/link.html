@@ -3,13 +3,14 @@
     <title>Seriously Language IDE</title>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="https://cdn.rawgit.com/mgalante/jquery.redirect/master/jquery.redirect.js"></script>
+    <script src="{{ url_for('static', filename='utf8_b64.js') }}"></script>
   </head>
   <body>
     <script>
     $(document).ready(function() {
       var s = window.JSON.parse("{{ link }}");
-      var sCode = window.atob(s.code);
-      var sInput = window.atob(s.input);
+      var sCode = b64_to_utf8(s.code);
+      var sInput = b64_to_utf8(s.input);
       var url = "http://" + window.location.hostname + "/";
       $.redirect(url, {code: sCode, input: sInput});
     });
