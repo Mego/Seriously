@@ -25,7 +25,7 @@ def index():
 
 @app.route('/link/')
 @app.route('/link/<link>')
-def link(link='code=%22Error+in+linking+code%22o&input='):
+def link(link='code=%22Error+in+linking+code%22&input='):
     url_for('static', filename='logo.ico')
     print('Link:', link)
     return render_template('link.html', link=link)
