@@ -116,11 +116,12 @@ $(document).ready(
 		function() {
 			$("#permalink").click(
 					function() {
-						var code = $('#code').val();
-						var	input = $('#input').val();
-						prompt("Permalink:", "http://"
+						var code = encodeURIComponent($('#code').val());
+						var	input = encodeURIComponent($('#input').val());
+						var resp = prompt("Permalink:", "http://"
 								+ window.location.hostname + "/link/" + code + "/" + input);
-						window.location.pathname = "/link/" + code + "/" + input;
+                        if(resp != null)
+                            window.location.pathname = "/link/" + code + "/" + input;
 					});
 			$('#code').on('input propertychange paste', function() {
 				updateUtils();

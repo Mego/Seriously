@@ -29,7 +29,7 @@ def index():
 def link(code='',input_str=''):
     url_for('static', filename='logo.ico')
     print('Code: %s Input: %s'%(code,input_str))
-    return render_template('link.html', code=urllib.quote(code,safe=''), input_str=urllib.quote(input_str,safe=''))
+    return render_template('link.html', code=urllib.unquote(code), input_str=urllib.unquote(input_str))
 
 if __name__ == '__main__':
     print('Starting server...')
