@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from flask import Flask, render_template, url_for, request
 from subprocess import Popen, PIPE, check_call
-import os, string, urllib
+import os, string
 
 app = Flask(__name__)
 
@@ -24,12 +24,12 @@ def index():
         return render_template('primary.html')
 
 @app.route('/link/')
-@app.route('/link/<code>/')
-@app.route('/link/<code>/<input_str>')
-def link(code='',input_str=''):
+@app.route('/link/<link>')
+def link(link='code=%22Error+in+linking+code%22&input='):
     url_for('static', filename='logo.ico')
-    print('Code: %s Input: %s'%(code,input_str))
-    return render_template('link.html', code=urllib.unquote(code), input_str=urllib.unquote(input_str))
+    print('Link:', link)
+    code,inp = map(lambda x:x.split('=')[1],link.split('&'))
+    return render_template('link.html', code=code,inp=inp)
 
 if __name__ == '__main__':
     print('Starting server...')
