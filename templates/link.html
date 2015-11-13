@@ -8,7 +8,7 @@
   <body>
     <script>
     $(document).ready(function() {
-      var s = window.JSON.parse(b64_to_utf8("{{ link }}"));
+      var s = window.JSON.parse(b64_to_utf8(decodeURIComponent("{{ link }}")));
       var sCode = s.code;
       var sInput = s.input;
       var url = "http://" + window.location.hostname + "/";
