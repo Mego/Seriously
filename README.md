@@ -5,6 +5,8 @@ All strings are valid programs. There is no such thing as a syntax error, and an
 
 The name was inspired by [this challenge](http://codegolf.stackexchange.com/questions/58522/seriously-golfscript-cjam-or-pyth).
 
+Try the [online interpreter](https://seriouslylang.herokuapp.com).
+
 # Commands
 
 See [commands.txt](https://github.com/Mego/Seriously/blob/master/commands.txt)
