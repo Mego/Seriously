@@ -110,16 +110,24 @@ function updateUtils() {
 	getExplanation();
 }
 
+function utf8_to_b64(str) {
+    return window.btoa(unescape(encodeURIComponent(str)));
+}
+
+function b64_to_utf8(str) {
+    return decodeURIComponent(escape(window.atob(str)));
+}
+
 updateUtils();
 
 $(document).ready(
 		function() {
 			$("#permalink").click(
 					function() {
-						var code = $.param({
+						var code = encodeURIComponent(utf8_to_b64(window.JSON.stringify({
 							code : $('#code').val(),
 							input : $('#input').val()
-						});
+						})));
 						prompt("Permalink:", "http://"
 								+ window.location.hostname + "/link/" + code);
 						window.location.pathname = "/link/" + code;
