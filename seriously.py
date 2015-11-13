@@ -85,7 +85,7 @@ class Seriously(object):
                     i+=1
                 self.push(commands.SeriousFunction(f))
             elif c == 'Q' and len(self.stack) == 0:
-                print code
+                self.push(code)
             elif ord(c) in range(48,58):
                 self.push(int(c))
             elif c == 'H' and len(self.stack) == 0:

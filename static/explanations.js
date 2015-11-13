@@ -79,7 +79,7 @@ var explanations = {
 78:'if stack is empty: print the lyrics to "99 Bottles of Beer" to stdout',
 79:'pop "a" or [a]: push ord(c) for each c in "a" or [a], starting from the end. If a list is popped and it contains strings of length > 1, the strings are exploded in-place (["ABC"] -> [65,66,67], [["A","B","CD"]] -> [65,66,67,68])',
 80:'pop a: push the a-th prime (zero-indexed)',
-81:"if stack is empty: print the program's source code to stdout",
+81:"if stack is empty: push the program's source code",
 82:'pop f,[a]: call f, using [a] as a temporary stack, push [a] (similar to reduce(f,[a])); pop "a" or [a]: push reversed value ("a".reverse() or [a][::-1]); pop a: push [1,2,...,a] (range(1,a+1))',
 83:'pop a: push sin(a)',
 84:'pop a: push tan(a)',
