@@ -8,8 +8,8 @@
     <script>
     $(document).ready(function() {
       var s = window.JSON.parse("{{ link }}");
-      var sCode = s.code;
-      var sInput = s.input;
+      var sCode = window.atob(s.code);
+      var sInput = window.atob(s.input);
       var url = "http://" + window.location.hostname + "/";
       $.redirect(url, {code: sCode, input: sInput});
     });

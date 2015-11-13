@@ -117,8 +117,8 @@ $(document).ready(
 			$("#permalink").click(
 					function() {
 						var code = window.JSON.stringify({
-							code : $('#code').val(),
-							input : $('#input').val()
+							code : window.btoa($('#code').val()),
+							input : window.btoa($('#input').val())
 						});
 						prompt("Permalink:", "http://"
 								+ window.location.hostname + "/link/" + code);
