@@ -45,7 +45,7 @@ def is_prime(x):
     global primes
     if x in primes:
         return 1
-    if x<2:
+    if x<2 or (max(primes) > x):
         return 0
     for p in filter(lambda p:p*p<=x,primes):
         if x%p==0:
@@ -65,6 +65,8 @@ def init_primes_up_to(n):
         if is_prime(x):
             primes.append(x)
         x+=2
+        
+init_primes_up_to(100)
 
 def nth_prime(n):
     global primes
@@ -338,6 +340,13 @@ def i_mul_fn(srs):
     else:
         srs.push(complex(0,a))
         
+def npop_list_fn(srs):
+    a=srs.pop()
+    res=[]
+    for _ in range(a):
+        res.append(srs.pop())
+    srs.push(res)
+        
 fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
           35:make_list_fn,
@@ -378,8 +387,8 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           85:lambda x:x.push(list(set(x.pop()).union(x.pop()))),
           86:lambda x:x.push(random.uniform(x.pop(),x.pop())),
           88:lambda x:x.pop(),
-          89:lambda x:x.push(int(not bool(x.pop()))),
-          90:lambda x:x.push(zip(x.pop(),x.pop())),
+          89:lambda x:x.push(0 if x.pop() else 1),
+          90:lambda x:x.push(map(list,zip(x.pop(),x.pop()))),
           92:idiv_fn,
           94:lambda x:x.push(pow(x.pop(),x.pop())),
           95:lambda x:x.push(math.log(x.pop())),
@@ -459,7 +468,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           179:dupe_all_fn,
           186:lambda x:x.push((lambda y:y[len(y)//2] if len(y)%2 else sum(y[len(y)//2:len(y)//2+1])/2)(x.pop())),
           197:dupe_each_fn,
-          199:lambda x:x.push((lambda y:[x.pop() for _ in range(y)])(x.pop())),
+          199:npop_list_fn,
           203:lambda x:x.push(math.pi),
           204:lambda x:x.push(math.e),
           209:lambda x:x.push(10**x.pop()),
