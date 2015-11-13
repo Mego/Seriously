@@ -2,4 +2,3 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.bak
-static/explanations.js
