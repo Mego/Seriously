@@ -11,11 +11,11 @@ cp437.decode = function(c) {
 }
 
 function genChar() {
-	var code = prompt("Generate CP437 Character:");
+    var code = prompt("Generate CP437 Character:");
     if(!code)
         return;
-	$('#code').val($('#code').val() + cp437.encode(parseInt(code)));
-	updateByteCount();
+    $('#code').val($('#code').val() + cp437.encode(parseInt(code)));
+    updateByteCount();
 };
 
 function getByteCount(s) {
@@ -29,11 +29,11 @@ function getByteCount(s) {
 }
 
 function updateByteCount() {
-	var c = $('#code').val();
-	var byteCount = c.length;
-	var charCount = c.length;
-	var s = byteCount + " bytes and " + charCount + " chars long.";
-	$('#byteCount').html(s);
+    var c = $('#code').val();
+    var byteCount = c.length;
+    var charCount = c.length;
+    var s = byteCount + " bytes and " + charCount + " chars long.";
+    $('#byteCount').html(s);
 }
 
 function getExplanation() {
@@ -106,8 +106,8 @@ function getExplanation() {
 }
 
 function updateUtils() {
-	updateByteCount();
-	getExplanation();
+    updateByteCount();
+    getExplanation();
 }
 
 function utf8_to_b64(str) {
@@ -121,24 +121,24 @@ function b64_to_utf8(str) {
 updateUtils();
 
 $(document).ready(
-		function() {
-			$("#permalink").click(
-					function() {
-						var code = encodeURIComponent(utf8_to_b64(window.JSON.stringify({
-							code : $('#code').val(),
-							input : $('#input').val()
-						})));
-						prompt("Permalink:", "http://"
-								+ window.location.hostname + "/link/" + code);
-						window.location.pathname = "/link/" + code;
-					});
-			$('#code').on('input propertychange paste', function() {
-				updateUtils();
-			});
+        function() {
+            $("#permalink").click(
+                    function() {
+                        var code = encodeURIComponent(utf8_to_b64(window.JSON.stringify({
+                            code : $('#code').val(),
+                            input : $('#input').val()
+                        })));
+                        prompt("Permalink:", "http://"
+                                + window.location.hostname + "/link/" + code);
+                        window.location.pathname = "/link/" + code;
+                    });
+            $('#code').on('input propertychange paste', function() {
+                updateUtils();
+            });
             $("input").keypress(function(e){
                 var charCode = !e.charCode ? e.which : e.charCode;
                 var c = String.fromCharCode(charCode);
                 if(cp437.decode(c) < 0)
                     e.preventDefault();
             });
-		});
+        });
