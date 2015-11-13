@@ -82,7 +82,8 @@ function getExplanation() {
         if(codeBlock || string || listBlock || numBlock) {
             continue;
         }
-        explain += explanations[cp437.enc[c]] +'\r\n';
+        if(cp437.decode(c) > -1)
+            explain += explanations[cp437.decode(c)] +'\r\n';
     }
     if(string) {
         var prev = code.lastIndexOf('"',x-1);
