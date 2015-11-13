@@ -24,11 +24,11 @@ def index():
         return render_template('primary.html')
 
 @app.route('/link/')
-@app.route('/link/<link>')
-def link(link='code=%22Error+in+linking+code%22o&input='):
+@app.route('/link/<code>/<input_str>')
+def link(code='',input_str=''):
     url_for('static', filename='logo.ico')
-    print('Link:', link)
-    return render_template('link.html', link=link)
+    print('Code: %s Input: %s'%(code,input_str))
+    return render_template('link.html', code=code, input_str=input_str)
 
 if __name__ == '__main__':
     print('Starting server...')
