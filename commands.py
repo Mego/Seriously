@@ -346,6 +346,14 @@ def npop_list_fn(srs):
     for _ in range(a):
         res.append(srs.pop())
     srs.push(res)
+    
+def E_fn(srs):
+    a=srs.pop()
+    if type(a) in [IntType,LongType,FloatType,ComplexType]:
+        srs.push(math.erf(a))
+    else:
+        b=srs.pop()
+        srs.push(a[b])
         
 fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
@@ -371,7 +379,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           66:lambda x:x.push(random.randrange(x.pop(),x.pop())),
           67:lambda x:x.push(math.cos(x.pop())),
           68:lambda x:x.push(x.pop()-1),
-          69:lambda x:x.push(math.erf(x.pop())),
+          69:E_fn,
           70:lambda x:x.push(Fib(x.pop())),
           71:lambda x:x.push(random.random()),
           73:if_fn,

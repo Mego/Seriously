@@ -78,7 +78,7 @@ When possible, the character at each code point is listed in parentheses followi
 66 (B): pop a,b: push a random integer in [a,b) (randrange(a,b))
 67 (C): pop a: push cos(a)
 68 (D): pop a: push a-1
-69 (E): pop a: push erf(a)
+69 (E): pop a: push erf(a); pop [a],b: push [a][b] (bth item in [a]) (also works for strings)
 70 (F): pop a: push Fib(a) (Fib(0)=0, Fib(1)=Fib(2)=1)
 71 (G): push a random float in the range [0,1) (push random())
 72 (H): if stack is empty: print "Hello, World!" to stdout
