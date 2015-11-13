@@ -8,9 +8,9 @@
   <body>
     <script>
     $(document).ready(function() {
-      var s = window.JSON.parse("{{ link }}");
-      var sCode = b64_to_utf8(s.code);
-      var sInput = b64_to_utf8(s.input);
+      var s = window.JSON.parse(b64_to_utf8("{{ link }}"));
+      var sCode = s.code;
+      var sInput = s.input;
       var url = "http://" + window.location.hostname + "/";
       $.redirect(url, {code: sCode, input: sInput});
     });
