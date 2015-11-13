@@ -116,7 +116,7 @@ $(document).ready(
 		function() {
 			$("#permalink").click(
 					function() {
-						var code = $.param({
+						var code = window.JSON.stringify({
 							code : $('#code').val(),
 							input : $('#input').val()
 						});

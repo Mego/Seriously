@@ -28,8 +28,7 @@ def index():
 def link(link='code=%22Error+in+linking+code%22&input='):
     url_for('static', filename='logo.ico')
     print('Link:', link)
-    code,inp = map(lambda x:x.split('=')[1],link.split('&'))
-    return render_template('link.html', code=code,inp=inp)
+    return render_template('link.html', link=link)
 
 if __name__ == '__main__':
     print('Starting server...')
