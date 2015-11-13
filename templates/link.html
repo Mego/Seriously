@@ -8,8 +8,8 @@
     <script>
     $(document).ready(function() {
       var s = $('<textarea/>').html("{{ link }}").text();
-      var sCode = s.split("&")[0].split("=")[1];
-      var sInput = s.split("&")[1].split("=")[1];
+      var sInput = s.split("&",1).reverse()[0].split("=")[1];
+      var sCode = s.split("&",1).reverse()[1].split("=")[1];
       var url = "http://" + window.location.hostname + "/";
       $.redirect(url, {code: sCode, input: sInput});
     });
