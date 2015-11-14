@@ -107,16 +107,17 @@ class Seriously(object):
             while len(self.stack) > 0:
                 print self.pop()
 
-def srs_repl(debug_mode=False):
+def srs_repl(debug_mode=False, quiet_mode=False):
     srs = Seriously(repl_mode=True, debug_mode=debug_mode)
     while 1:
         try:
-            srs.eval(raw_input('>>> '))
+            srs.eval(raw_input('' if quiet_mode else '>>> '))
         except EOFError:
             exit()
         finally:
-            print '\n'
-            print srs.stack
+            if not quiet_mode:
+                print '\n'
+                print srs.stack
             
 def srs_exec(debug_mode=False, file_obj=None, code=None):
     srs = Seriously(debug_mode=debug_mode)
@@ -129,6 +130,7 @@ def srs_exec(debug_mode=False, file_obj=None, code=None):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run the Seriously interpreter")
     parser.add_argument("-d", "--debug", help="turn on debug mode", action="store_true")
+    parser.add_argument("-q", "--quiet", help="turn off REPL prompts and automatic stack printing, only print code STDOUT output", action="store_true")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-c", "--code", help="run the specified code")
     group.add_argument("-f", "--file", help="specify an input file", type=file)
@@ -136,5 +138,5 @@ if __name__ == '__main__':
     if args.code or args.file:
         srs_exec(args.debug, args.file, args.code)
     else:
-        srs_repl(args.debug)
+        srs_repl(args.debug, args.quiet)
     
