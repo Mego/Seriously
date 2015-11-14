@@ -373,6 +373,11 @@ def E_fn(srs):
         
 def peek_print_fn(srs):
     print ' '.join(map(repr, srs.stack))
+    
+def while_fn(srs):
+    f=srs.pop()
+    while srs.peek():
+        f(srs)
         
 fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
@@ -505,6 +510,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           199:npop_list_fn,
           203:lambda x:x.push(math.pi),
           204:lambda x:x.push(math.e),
+          206:while_fn,
           209:lambda x:x.push(10**x.pop()),
           226:lambda x:x.push(math.gamma(x.pop())),
           227:lambda x:x.push(reduce(operator.mul,x.pop(),1)),
