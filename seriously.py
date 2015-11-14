@@ -68,8 +68,10 @@ class Seriously(object):
                 while i<len(code) and code[i]!='W':
                     inner+=code[i]
                     i+=1
-                while len(self.stack)>0 and self.stack[0]:
-                    self.eval(inner)
+                if self.debug_mode:
+                    print "while loop code: %s"%inner
+                while self.stack and self.stack[0]:
+                    self.eval(inner, print_at_end=False)
             elif c == '[':
                 l = ''
                 i+=1
