@@ -180,8 +180,8 @@ When possible, the character at each code point is listed in parentheses followi
 168 (¨): pop a,b: push int(a,b) (interpret a as a base-b int)
 169 (©): pop a: push a+2
 170 (ª): pop a: push a-2
-171 («): pop a: push a/2 (division style determined by if a is integer or float)
-172 (¬): pop a: push a/4 (division style determined by if a is integer or float)
+171 («): pop a: push a/2 (float division)
+172 (¬): pop a: push a/4 (float division)
 173 (­): pop a,b: push a string representing a in base b
 174 (®): pop a,b: insert b at position a, indexed from the bottom of the stack
 175 (¯): pop a,b: insert b at position a, indexed from the top of the stack
@@ -219,9 +219,9 @@ When possible, the character at each code point is listed in parentheses followi
 207 (Ï):
 208 (Ð):
 209 (Ñ): pop a: push 10**a
-210 (Ò):
-211 (Ó):
-212 (Ô):
+210 (Ò): pop a: push log(a) (log base 10)
+211 (Ó): pop a: push 2**a
+212 (Ô): pop a: push lg(a) (log base 2)
 213 (Õ):
 214 (Ö):
 215 (×):
