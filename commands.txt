@@ -215,7 +215,7 @@ When possible, the character at each code point is listed in parentheses followi
 203 (Ë): push pi
 204 (Ì): push e
 205 (Í):
-206 (Î):
+206 (Î): pop f: while value on top of stack is truthy (peek), call f
 207 (Ï):
 208 (Ð):
 209 (Ñ): pop a: push 10**a

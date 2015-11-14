@@ -204,7 +204,7 @@ var explanations = {
 203:'push pi',
 204:'push e',
 205:'',
-206:'',
+206:'pop f: while value on top of stack is truthy (peek), call f',
 207:'',
 208:'',
 209:'pop a: push 10**a',

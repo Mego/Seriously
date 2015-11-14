@@ -21,6 +21,8 @@ class Seriously(object):
         self.stack=[val]+self.stack
     def pop(self):
         return self.stack.pop(0)
+    def peek(self):
+        return self.stack[0] if self.stack else None
     def append(self, val):
         self.stack+=[val]
     def eval(self, code, print_at_end=True):
@@ -62,7 +64,7 @@ class Seriously(object):
                     i+=1
                 if self.debug_mode:
                     print "while loop code: %s"%inner
-                while self.stack and self.stack[0]:
+                while self.peek():
                     self.eval(inner, print_at_end=False)
             elif c == '[':
                 l = ''
