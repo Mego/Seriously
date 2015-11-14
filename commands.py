@@ -37,9 +37,25 @@ class SeriousFunction(object):
         srs.eval(self.code,print_at_end=False)
     def __str__(self):
         return '%s'%self.code
-    __repr__ = __str__
+    def __repr__(self):
+        return '`%s`'%self.code
     def __len__(self):
         return len(self.code)
+        
+def NinetyNineBottles():
+    x = 99
+    res = ''
+    for i in range(99):
+        w = 'Take one down and pass it around, '+str((x-(i+1)))+' bottle{0} of beer on the wall.'.format(['s',''][x-i==2])
+        y = str((x-i))+' bottle{0} of beer on the wall, '+str((x-i))+' bottle{0} of beer'
+        y=y.format(['s',''][x-i==1])
+        z = 'Go to the Store and buy some more, '+str(x)+' bottles of beer on the wall.'
+        if i == (x-1):
+            res += y + '\n' + z
+        else:
+            res += y + '\n' + w
+        i += 1
+    return res
 
 def is_prime(x):
     global primes
@@ -355,6 +371,14 @@ def E_fn(srs):
         b=srs.pop()
         srs.push(a[b])
         
+def peek_print_fn(srs):
+    print ' '.join(map(repr, srs.stack))
+    
+def while_fn(srs):
+    f=srs.pop()
+    while srs.peek():
+        f(srs)
+        
 fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
           35:make_list_fn,
@@ -382,13 +406,16 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           69:E_fn,
           70:lambda x:x.push(Fib(x.pop())),
           71:lambda x:x.push(random.random()),
+          72:lambda x:x.push("Hello, World!"),
           73:if_fn,
           74:j_fn,
           75:lambda x:x.push(ceil(x.pop())),
           76:lambda x:x.push(floor(x.pop())),
           77:map_fn,
+          78:lambda x:x.push(NinetyNineBottles()),
           79:lambda x:map(lambda y:map(x.push,map(ord,y)[::-1]),x.pop()[::-1]),
           80:lambda x:x.push(nth_prime(x.pop())),
+          81:lambda x:x.push(x.code),
           82:r_fn,
           83:lambda x:x.push(math.sin(x.pop())),
           84:lambda x:x.push(math.tan(x.pop())),
@@ -433,6 +460,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           127:lambda x:exit(),
           128:comp_fn,
           129:lambda x:map(print,[x.pop() for _ in len(x.stack)]),
+          130:lambda x:map(lambda y:x.pop(), range(len(x.stack))),
           131:lambda x:x.push(math.asin(x.pop())),
           132:lambda x:x.push(math.acos(x.pop())),
           133:lambda x:x.push(math.atan(x.pop())),
@@ -472,7 +500,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           173:lambda x:x.push(str_base(x.pop(),x.pop())),
           174:ins_bot_fn,
           175:ins_top_fn,
-          176:lambda x:x.push(itertools.compress(x.pop(),x.pop())),
+          176:lambda x:x.push(list(itertools.compress(x.pop(),x.pop()))),
           177:lambda x:x.push((lambda y:sum([1 if gcd(i,y)==1 else 0 for i in range(1,y+1)]))(x.pop())),
           178:lambda x:x.push(sum([is_prime(i) for i in range(1,x.pop()+1)])),
           179:dupe_all_fn,
@@ -482,16 +510,18 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           199:npop_list_fn,
           203:lambda x:x.push(math.pi),
           204:lambda x:x.push(math.e),
+          206:while_fn,
           209:lambda x:x.push(10**x.pop()),
           226:lambda x:x.push(math.gamma(x.pop())),
           227:lambda x:x.push(reduce(operator.mul,x.pop(),1)),
           228:lambda x:x.push(sum(x.pop())),
           237:lambda x:x.push(phi),
-          239:lambda x:x.push(set(x.pop()).intersection(x.pop())),
+          239:lambda x:x.push(list(set(x.pop()).intersection(x.pop()))),
           241:lambda x:x.push(-x.pop()),
           242:lambda x:x.push(x.pop()>=x.pop()),
           243:lambda x:x.push(x.pop()<=x.pop()),
           247:lambda x:x.push(int(x.pop())),
           248:lambda x:x.push(math.radians(x.pop())),
           251:lambda x:x.push(x.pop()**.5),
+          254:peek_print_fn,
           }

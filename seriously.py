@@ -4,19 +4,6 @@ import sys, math, cmath, itertools, functools, traceback, argparse
 from types import *
 import commands
 
-def NinetyNineBottles():
-    x = 99
-    for i in range(99):
-        w = 'Take one down and pass it around, '+str((x-(i+1)))+' bottle{0} of beer on the wall.'.format(['s',''][x-i==2])
-        y = str((x-i))+' bottle{0} of beer on the wall, '+str((x-i))+' bottle{0} of beer'
-        y=y.format(['s',''][x-i==1])
-        z = 'Go to the Store and buy some more, '+str(x)+' bottles of beer on the wall.'
-        if i == (x-1):
-            print(y + '\n' + z)
-        else:
-            print(y + '\n' + w)
-        i += 1
-
 class Seriously(object):
     @classmethod
     def _make_new(cls,init_stack=[], debug_mode=False, repl_mode=False):
@@ -29,14 +16,21 @@ class Seriously(object):
         self.debug_mode=debug_mode
         self.repl_mode = repl_mode
         self.fn_table = commands.fn_table
+        self.code = ''
     def push(self,val):
         self.stack=[val]+self.stack
     def pop(self):
         return self.stack.pop(0)
+    def peek(self):
+        return self.stack[0] if self.stack else None
     def append(self, val):
         self.stack+=[val]
     def eval(self, code, print_at_end=True):
         i=0
+        if self.repl_mode:
+            self.code += code
+        else:
+            self.code = code
         while i < len(code):
             c = code[i]
             if c == '"':
@@ -68,8 +62,10 @@ class Seriously(object):
                 while i<len(code) and code[i]!='W':
                     inner+=code[i]
                     i+=1
-                while len(self.stack)>0 and self.stack[0]:
-                    self.eval(inner)
+                if self.debug_mode:
+                    print "while loop code: %s"%inner
+                while self.peek():
+                    self.eval(inner, print_at_end=False)
             elif c == '[':
                 l = ''
                 i+=1
@@ -84,16 +80,8 @@ class Seriously(object):
                     f+=code[i]
                     i+=1
                 self.push(commands.SeriousFunction(f))
-            elif c == 'Q' and len(self.stack) == 0:
-                self.push(code)
             elif ord(c) in range(48,58):
                 self.push(int(c))
-            elif c == 'H' and len(self.stack) == 0:
-                print 'Hello, World!'
-            elif c == 'N' and len(self.stack) == 0:
-                NinetyNineBottles()
-            elif ord(c) == 130:
-                self.stack = []
             else:
                 old_stack = self.stack[:]
                 try:
