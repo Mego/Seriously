@@ -219,9 +219,9 @@ When possible, the character at each code point is listed in parentheses followi
 207 (Ï):
 208 (Ð):
 209 (Ñ): pop a: push 10**a
-210 (Ò):
-211 (Ó):
-212 (Ô):
+210 (Ò): pop a: push log(a) (log base 10)
+211 (Ó): pop a: push 2**a
+212 (Ô): pop a: push lg(a) (log base 2)
 213 (Õ):
 214 (Ö):
 215 (×):
