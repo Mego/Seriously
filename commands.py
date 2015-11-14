@@ -37,7 +37,8 @@ class SeriousFunction(object):
         srs.eval(self.code,print_at_end=False)
     def __str__(self):
         return '%s'%self.code
-    __repr__ = __str__
+    def __repr__(self):
+        return '`%s`'%self.code
     def __len__(self):
         return len(self.code)
         
@@ -370,6 +371,9 @@ def E_fn(srs):
         b=srs.pop()
         srs.push(a[b])
         
+def peek_print_fn(srs):
+    print ' '.join(map(repr, srs.stack))
+        
 fn_table={32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
           35:make_list_fn,
@@ -513,4 +517,5 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           247:lambda x:x.push(int(x.pop())),
           248:lambda x:x.push(math.radians(x.pop())),
           251:lambda x:x.push(x.pop()**.5),
+          254:peek_print_fn,
           }

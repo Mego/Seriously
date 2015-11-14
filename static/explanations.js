@@ -252,6 +252,6 @@ var explanations = {
 251:'pop a: push sqrt(a)',
 252:'',
 253:'',
-254:'',
+254:'print the entire stack without popping, separated by spaces',
 255:''
 };

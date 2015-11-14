@@ -263,5 +263,5 @@ When possible, the character at each code point is listed in parentheses followi
 251 (û): pop a: push sqrt(a)
 252 (ü):
 253 (ý):
-254 (þ):
+254 (þ): print the entire stack without popping, separated by spaces
 255 (ÿ):
