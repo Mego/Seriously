@@ -40,6 +40,21 @@ class SeriousFunction(object):
     __repr__ = __str__
     def __len__(self):
         return len(self.code)
+        
+def NinetyNineBottles():
+    x = 99
+    res = ''
+    for i in range(99):
+        w = 'Take one down and pass it around, '+str((x-(i+1)))+' bottle{0} of beer on the wall.'.format(['s',''][x-i==2])
+        y = str((x-i))+' bottle{0} of beer on the wall, '+str((x-i))+' bottle{0} of beer'
+        y=y.format(['s',''][x-i==1])
+        z = 'Go to the Store and buy some more, '+str(x)+' bottles of beer on the wall.'
+        if i == (x-1):
+            res += y + '\n' + z
+        else:
+            res += y + '\n' + w
+        i += 1
+    return res
 
 def is_prime(x):
     global primes
@@ -382,13 +397,16 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           69:E_fn,
           70:lambda x:x.push(Fib(x.pop())),
           71:lambda x:x.push(random.random()),
+          72:lambda x:x.push("Hello, World!"),
           73:if_fn,
           74:j_fn,
           75:lambda x:x.push(ceil(x.pop())),
           76:lambda x:x.push(floor(x.pop())),
           77:map_fn,
+          78:lambda x:x.push(NinetyNineBottles()),
           79:lambda x:map(lambda y:map(x.push,map(ord,y)[::-1]),x.pop()[::-1]),
           80:lambda x:x.push(nth_prime(x.pop())),
+          81:lambda x:x.push(x.code),
           82:r_fn,
           83:lambda x:x.push(math.sin(x.pop())),
           84:lambda x:x.push(math.tan(x.pop())),
@@ -433,6 +451,7 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           127:lambda x:exit(),
           128:comp_fn,
           129:lambda x:map(print,[x.pop() for _ in len(x.stack)]),
+          130:lambda x:map(lambda y:x.pop(), range(len(x.stack))),
           131:lambda x:x.push(math.asin(x.pop())),
           132:lambda x:x.push(math.acos(x.pop())),
           133:lambda x:x.push(math.atan(x.pop())),
