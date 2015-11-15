@@ -15,7 +15,7 @@ function genChar() {
     if(!code)
         return;
     $('#code').val($('#code').val() + cp437.encode(parseInt(code)));
-    updateByteCount();
+    updateUtils();
 };
 
 function getByteCount(s) {
@@ -109,7 +109,9 @@ function updateHexDump() {
     var hex = '';
     var code = $('#code').val();
     for(var i = 0; i < code.length; i++) {
-        hex += cp437.decode(code.charAt(i)).toString(16);
+        var hexi = cp437.decode(code.charAt(i)).toString(16);
+        if(hexi.length < 2) hexi = "0" + hexi;
+        hex+=hexi;
     }
     $('#hexdump').val(hex);
 }
