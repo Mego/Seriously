@@ -8,8 +8,9 @@ z represents a complex value. Complex values are a proper subset of numeric valu
 f represents a function value.
 Some commands have fixed arity. Others have variable arity. This is denoted by the number of values listed in the pop. Those commands that are not functional commands (such as delimiters) do not have arities, and so do not pop from the stack.
 Each functional command operates differently based on the data types of the values popped from the stack. In some cases, that order matters. In others, it does not. Each operation will be denoted by the different data types popped. If there is a conflict, the most restrictive applicable definition is used.
-When possible, the character at each code point is listed in parentheses following the ordinal. For non-printing characters (ordinals 1-31), this is not possible, so a description is provided instead.
+When possible, the character at each code point is listed in parentheses following the ordinal. For non-printing characters (ordinals 0-31), this is not possible, so a description is provided instead.
 
+0 (NUL):
 1 (SOH):
 2 (STX):
 3 (ETX):
@@ -230,8 +231,8 @@ When possible, the character at each code point is listed in parentheses followi
 218 (Ú):
 219 (Û):
 220 (Ü):
-221 (Ý):
-222 (Þ):
+221 (Ý): pop "a": push b64decode("a")
+222 (Þ): pop "a": push b64encode("a")
 223 (ß):
 224 (à):
 225 (á):
