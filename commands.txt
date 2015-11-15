@@ -230,8 +230,8 @@ When possible, the character at each code point is listed in parentheses followi
 218 (Ú):
 219 (Û):
 220 (Ü):
-221 (Ý):
-222 (Þ):
+221 (Ý): pop "a": push b64decode("a")
+222 (Þ): pop "a": push b64encode("a")
 223 (ß):
 224 (à):
 225 (á):
