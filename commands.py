@@ -6,6 +6,7 @@ import operator, cmath
 import math as rmath
 import random, itertools
 from types import *
+from base64 import *
 
 phi = (1+5**.5)/2
 Fib = lambda n:int(phi**n/5**.5+.5)
@@ -515,6 +516,8 @@ fn_table={32:lambda x:x.push(len(x.stack)),
           210:lambda x:x.push(math.log(x.pop(),10)),
           211:lambda x:x.push(pow(2,x.pop())),
           212:lambda x:x.push(math.log(x.pop(),2)),
+          221:lambda x:x.push(b64decode(x.pop())),
+          222:lambda x:x.push(b64encode(x.pop())),
           226:lambda x:x.push(math.gamma(x.pop())),
           227:lambda x:x.push(reduce(operator.mul,x.pop(),1)),
           228:lambda x:x.push(sum(x.pop())),
