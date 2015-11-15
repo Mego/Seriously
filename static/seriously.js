@@ -78,7 +78,7 @@ function updateByteCount() {
     $('#byteCount').html(s);
 }
 
-function getExplanation(code = null,indent = 0) {
+function getExplanation(code, indent) {
     var string = false;
     var codeBlock = false;
     var listBlock = false;
@@ -87,6 +87,7 @@ function getExplanation(code = null,indent = 0) {
     if(code == null) {
         code = $("#code").val();
     }
+    var ind = (indent==null)?'':'\t';
     var explain = '';
     for(var x=0; x < code.length; x++) {
         var c = code.charAt(x);
@@ -94,7 +95,7 @@ function getExplanation(code = null,indent = 0) {
             if(string) {
                 var prev = code.lastIndexOf('"',x-1);
                 var strval = code.slice(prev+1,x);
-                explain += 'push the string value "'+strval+'"\r\n'
+                explain += ind + 'push the string value "'+strval+'"\r\n'
             }
             string = !string;
             continue;
@@ -102,8 +103,8 @@ function getExplanation(code = null,indent = 0) {
             if(codeBlock) {
                 var prev = code.lastIndexOf('`',x-1);
                 var strval = code.slice(prev+1,x);
-                explain += 'push the function value `'+strval+'`\r\n'
-                explain += getExplanation(strval, indent+1);
+                explain += ind + 'push the function value `'+strval+'`:\r\n'
+                explain += ind + getExplanation(strval,true);
             }
             codeBlock = !codeBlock;
             continue;
@@ -114,7 +115,7 @@ function getExplanation(code = null,indent = 0) {
             if(numBlock) {
                 var prev = code.lastIndexOf(':',x-1);
                 var strval = code.slice(prev+1,x);
-                explain += 'push the numeric value :'+strval+':\r\n'
+                explain += ind + 'push the numeric value :'+strval+':\r\n'
             }
             numBlock = !numBlock;
             continue;
@@ -122,38 +123,33 @@ function getExplanation(code = null,indent = 0) {
             listBlock = false;
             var prev = code.lastIndexOf('[',x-1);
             var strval = code.slice(prev+1,x);
-            explain += 'push the list value ['+strval+']\r\n'
+            explain += ind + 'push the list value ['+strval+']\r\n'
             continue;
         }
         if(codeBlock || string || listBlock || numBlock) {
             continue;
         }
         if(cp437.decode(c) > -1)
-            explain += explanations[cp437.decode(c)] +'\r\n';
+            explain += ind + explanations[cp437.decode(c)] +'\r\n';
     }
     if(string) {
         var prev = code.lastIndexOf('"',x-1);
         var strval = code.slice(prev+1,x);
-        explain += 'push the string value "'+strval+'"\r\n'
+        explain += ind + 'push the string value "'+strval+'"\r\n'
     } else if(codeBlock) {
         var prev = code.lastIndexOf('"',x-1);
         var strval = code.slice(prev+1,x);
-        explain += 'push the function value `'+strval+'`\r\n'
-        explain += getExplanation(strval, indent+1);
+        explain += ind + 'push the function value `'+strval+'`:\r\n'
+        explain += ind + getExplanation(strval,true);
     } else if(listBlock) {
         var prev = code.lastIndexOf('[',x-1);
         var strval = code.slice(prev+1,x);
-        explain += 'push the list value "'+strval+'"\r\n'
+        explain += ind + 'push the list value "'+strval+'"\r\n'
     } else if(numBlock) {
         var prev = code.lastIndexOf(':',x-1);
         var strval = code.slice(prev+1,x);
-        explain += 'push the numeric value "'+strval+'"\r\n'
+        explain += ind + 'push the numeric value "'+strval+'"\r\n'
     }
-    explain = explain.split("\r\n");
-    for(int i = 0; i < explain.length; i++) {
-        explain[i] = "\t".repeat(indent) + explain[i];
-    }
-    explain = explain.join("\r\n")
     if(setexp)
         $('#explanation').html(explain);
     else
@@ -173,7 +169,7 @@ function updateHexDump() {
 
 function updateUtils() {
     updateByteCount();
-    getExplanation();
+    getExplanation(null);
     updateHexDump();
 }
 
