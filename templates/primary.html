@@ -14,15 +14,17 @@
     Seriously and this site were made by <a href="https://github.com/Mego">Mego</a>!</p>
     <br/>
     <p id="byteCount">0 bytes and 0 chars long.</p>
-    <form id="o" action="" method="post">
+    <form id="srs" action="" method="post">
       <fieldset>
         <input type="submit" value="Run!">
        </fieldset>
     </form>
+    <p>Hex Dump</p>
+    <textarea rows="4" cols="50" name="hexdump" id="hexdump" readonly></textarea>
     <p>Code</p>
-    <textarea rows="4" cols="50" name="code" id="code" form="o">{{ code }}</textarea>
+    <textarea rows="4" cols="50" name="code" id="code" form="srs">{{ code }}</textarea>
     <p>Input (each line is a different input)</p>
-    <textarea rows="4" cols="50" name="input" id="input" form="o">{{ input }}</textarea>
+    <textarea rows="4" cols="50" name="input" id="input" form="srs">{{ input }}</textarea>
     <br/>
     {% block body %}{% endblock %}
     <input id="permalink" type="submit" value="Permalink"/>

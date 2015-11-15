@@ -105,9 +105,19 @@ function getExplanation() {
     $('#explanation').html(explain);
 }
 
+function updateHexDump() {
+    var hex = '';
+    var code = $('#code').val();
+    for(var i = 0; i < code.length; i++) {
+        hex += cp437.decode(code.charAt(i)).toString(16);
+    }
+    $('#hexdump').val(hex);
+}
+
 function updateUtils() {
     updateByteCount();
     getExplanation();
+    updateHexDump();
 }
 
 function utf8_to_b64(str) {
@@ -133,6 +143,9 @@ $(document).ready(
                         window.location.pathname = "/link/" + code;
                     });
             $('#code').on('input propertychange paste', function() {
+                updateUtils();
+            });
+            $('#hexdump').on('input propertychange paste', function() {
                 updateUtils();
             });
             $("input").keypress(function(e){
