@@ -1,3 +1,45 @@
+if (!String.prototype.repeat) {
+  String.prototype.repeat = function(count) {
+    'use strict';
+    if (this == null) {
+      throw new TypeError('can\'t convert ' + this + ' to object');
+    }
+    var str = '' + this;
+    count = +count;
+    if (count != count) {
+      count = 0;
+    }
+    if (count < 0) {
+      throw new RangeError('repeat count must be non-negative');
+    }
+    if (count == Infinity) {
+      throw new RangeError('repeat count must be less than infinity');
+    }
+    count = Math.floor(count);
+    if (str.length == 0 || count == 0) {
+      return '';
+    }
+    // Ensuring count is a 31-bit integer allows us to heavily optimize the
+    // main part. But anyway, most current (August 2014) browsers can't handle
+    // strings 1 << 28 chars or longer, so:
+    if (str.length * count >= 1 << 28) {
+      throw new RangeError('repeat count must not overflow maximum string size');
+    }
+    var rpt = '';
+    for (;;) {
+      if ((count & 1) == 1) {
+        rpt += str;
+      }
+      count >>>= 1;
+      if (count == 0) {
+        break;
+      }
+      str += str;
+    }
+    return rpt;
+  }
+}
+
 var cp437 = {};
 
 cp437.codepage = "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ "
@@ -36,12 +78,15 @@ function updateByteCount() {
     $('#byteCount').html(s);
 }
 
-function getExplanation() {
+function getExplanation(code = null,indent = 0) {
     var string = false;
     var codeBlock = false;
     var listBlock = false;
     var numBlock = false;
-    var code = $('#code').val();
+    var setexp = code == null;
+    if(code == null) {
+        code = $("#code").val();
+    }
     var explain = '';
     for(var x=0; x < code.length; x++) {
         var c = code.charAt(x);
@@ -58,6 +103,7 @@ function getExplanation() {
                 var prev = code.lastIndexOf('`',x-1);
                 var strval = code.slice(prev+1,x);
                 explain += 'push the function value `'+strval+'`\r\n'
+                explain += getExplanation(strval, indent+1);
             }
             codeBlock = !codeBlock;
             continue;
@@ -68,7 +114,7 @@ function getExplanation() {
             if(numBlock) {
                 var prev = code.lastIndexOf(':',x-1);
                 var strval = code.slice(prev+1,x);
-                explain += 'push the numeric value "'+strval+'"\r\n'
+                explain += 'push the numeric value :'+strval+':\r\n'
             }
             numBlock = !numBlock;
             continue;
@@ -76,7 +122,7 @@ function getExplanation() {
             listBlock = false;
             var prev = code.lastIndexOf('[',x-1);
             var strval = code.slice(prev+1,x);
-            explain += 'push the list value "'+strval+'"\r\n'
+            explain += 'push the list value ['+strval+']\r\n'
             continue;
         }
         if(codeBlock || string || listBlock || numBlock) {
@@ -93,6 +139,7 @@ function getExplanation() {
         var prev = code.lastIndexOf('"',x-1);
         var strval = code.slice(prev+1,x);
         explain += 'push the function value `'+strval+'`\r\n'
+        explain += getExplanation(strval, indent+1);
     } else if(listBlock) {
         var prev = code.lastIndexOf('[',x-1);
         var strval = code.slice(prev+1,x);
@@ -102,7 +149,15 @@ function getExplanation() {
         var strval = code.slice(prev+1,x);
         explain += 'push the numeric value "'+strval+'"\r\n'
     }
-    $('#explanation').html(explain);
+    explain = explain.split("\r\n");
+    for(int i = 0; i < explain.length; i++) {
+        explain[i] = "\t".repeat(indent) + explain[i];
+    }
+    explain = explain.join("\r\n")
+    if(setexp)
+        $('#explanation').html(explain);
+    else
+        return explain;
 }
 
 function updateHexDump() {
