@@ -237,7 +237,7 @@ var explanations = {
 235:'',
 236:'',
 237:'push phi (golden ratio)',
-238:'',
+238:'push "" (empty string)',
 239:'pop [a],[b]: push intersection of [a] and [b]',
 240:'',
 241:'pop a: push -a (unary negate)',

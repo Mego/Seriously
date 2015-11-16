@@ -248,7 +248,7 @@ When possible, the character at each code point is listed in parentheses followi
 235 (ë):
 236 (ì):
 237 (í): push phi (golden ratio)
-238 (î):
+238 (î): push "" (empty string)
 239 (ï): pop [a],[b]: push intersection of [a] and [b]
 240 (ð):
 241 (ñ): pop a: push -a (unary negate)
