@@ -137,7 +137,7 @@ var explanations = {
 135:'pop a: push asinh(a)',
 136:'pop a: push acosh(a)',
 137:'pop a: push atanh(a)',
-138:'',
+138:'pop a: push repr(a)',
 139:'push i, the imaginary unit (sqrt(-1) or 0+1i)',
 140:'pop a, push 0+ai; pop [a], push [a] with every element multiplied by i',
 141:'pop a: push 1/a',
