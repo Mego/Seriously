@@ -8,7 +8,7 @@ var explanations = {
 6:'',
 7:'',
 8:'',
-9:'',
+9:'push a single byte of unformatted input from STDIN (push sys.stdin.read(1))',
 10:'',
 11:'',
 12:'',
