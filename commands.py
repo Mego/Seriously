@@ -4,7 +4,7 @@ from __future__ import print_function, division
 from fractions import gcd
 import operator, cmath
 import math as rmath
-import random, itertools
+import random, itertools, sys
 from types import *
 from base64 import *
 
@@ -380,7 +380,8 @@ def while_fn(srs):
     while srs.peek():
         f(srs)
         
-fn_table={32:lambda x:x.push(len(x.stack)),
+fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
+          32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
           35:make_list_fn,
           36:lambda x:x.push(str(x.pop())),
