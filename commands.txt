@@ -19,7 +19,7 @@ When possible, the character at each code point is listed in parentheses followi
 6 (ACK):
 7 (bell):
 8 (backspace):
-9 (tab):
+9 (tab): push a single byte of unformatted input from STDIN (push sys.stdin.read(1))
 10 (line feed):
 11 (vertical tab):
 12 (form feed):
@@ -148,7 +148,7 @@ When possible, the character at each code point is listed in parentheses followi
 135 (á): pop a: push asinh(a)
 136 (à): pop a: push acosh(a)
 137 (â): pop a: push atanh(a)
-138 (ä):
+138 (ä): pop a: push repr(a)
 139 (ã): push i, the imaginary unit (sqrt(-1) or 0+1i)
 140 (å): pop a, push 0+ai; pop [a], push [a] with every element multiplied by i
 141 (ç): pop a: push 1/a
