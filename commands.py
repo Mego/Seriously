@@ -9,7 +9,13 @@ from types import *
 from base64 import *
 
 phi = (1+5**.5)/2
-Fib = lambda n:int(phi**n/5**.5+.5)
+def Fib(n):
+    if n<2:
+        return n
+    a,b=1,1
+    while n>2:
+        a,b,n=b,a+b,n-1
+    return b
 
 primes = [2,3]
 
@@ -24,10 +30,7 @@ class MathSelector(object):
 
 class Math(object):
     def __getattr__(self, fn):
-        if fn in ['pi','e']:
-            return getattr(rmath,fn)
-        else:
-            return MathSelector(fn)
+        return MathSelector(fn) if isinstance(getattr(cmath,fn),function) else getattr(rmath,fn)
         
 math = Math()
 
@@ -92,13 +95,10 @@ def nth_prime(n):
     return primes[n]
         
 def Fib_index(n):
-    a,b=5*n**2+4,5*n**2-4
-    if int(a**.5)==a:
-        return int(math.log((n*5**.5+a**.5)/2)/math.log(phi))
-    elif int(b**.5)==b:
-        return int(math.log((n*5**.5+b**.5)/2)/math.log(phi))
-    else:
-        return -1
+    i=0
+    while Fib(i)<n:
+        i+=1
+    return i if Fib(i) == n else -1
 
 def div_fn(srs):
     a=srs.pop()
