@@ -197,7 +197,7 @@ var explanations = {
 195:'',
 196:'',
 197:'duplicate each element on stack ([a,b,c] => [a,a,b,b,c,c])',
-198:'',
+198:'pop a: make a total copies of each element on stack (3 [a,b,c] -> [a,a,a,b,b,b,c,c,c])',
 199:'pop a: pop a elements and push a list containing those elements in their original order',
 200:'',
 201:'',
