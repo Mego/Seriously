@@ -380,6 +380,14 @@ def while_fn(srs):
     while srs.peek():
         f(srs)
         
+def dupe_each_n_fn(srs):
+    a=srs.pop()
+    tmp = []
+    while srs.stack:
+        b = srs.pop()
+        tmp+=[b for i in range(a)]
+    srs.stack=tmp[:]
+        
 fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
@@ -510,6 +518,7 @@ fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           180:lambda x:x.push(1 if gcd(x.pop(),x.pop())==1 else 0),
           186:lambda x:x.push((lambda y:y[len(y)//2] if len(y)%2 else sum(y[len(y)//2:len(y)//2+1])/2)(x.pop())),
           197:dupe_each_fn,
+          198:dupe_each_n_fn,
           199:npop_list_fn,
           203:lambda x:x.push(math.pi),
           204:lambda x:x.push(math.e),
