@@ -19,7 +19,7 @@ def index():
         if p.returncode:
             return render_template('error.html', code=code, input=input_str, error=error)
         else:
-            return render_template('code.html', code=code, input=input_str, output=output.split('\r\n'))
+            return render_template('code.html', code=code, input=input_str, output=output)
     else:
         return render_template('primary.html')
 
@@ -32,4 +32,4 @@ def link(link='code=%22Error+in+linking+code%22&input='):
 
 if __name__ == '__main__':
     print('Starting server...')
-    app.run(host='0.0.0.0',port=8080)
+    app.run(host='0.0.0.0',port=80)
