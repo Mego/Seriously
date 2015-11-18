@@ -4,4 +4,4 @@
 
 import sys
 s = sys.stdin.read()
-print ''.join(map(chr,s.split()))
+print ''.join(map(lambda x:chr(int(x)),s.split()))
