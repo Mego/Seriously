@@ -51,14 +51,15 @@ def NinetyNineBottles():
     res = ''
     for i in range(99):
         w = 'Take one down and pass it around, '+str((x-(i+1)))+' bottle{0} of beer on the wall.'.format(['s',''][x-i==2])
-        y = str((x-i))+' bottle{0} of beer on the wall, '+str((x-i))+' bottle{0} of beer'
+        y = str((x-i))+' bottle{0} of beer on the wall, '+str((x-i))+' bottle{0} of beer.'
         y=y.format(['s',''][x-i==1])
-        z = 'Go to the Store and buy some more, '+str(x)+' bottles of beer on the wall.'
+        z = 'Go to the store and buy some more, '+str(x)+' bottles of beer on the wall.'
         if i == (x-1):
             res += y + '\n' + z
         else:
             res += y + '\n' + w
         i += 1
+        res += '\n\n'
     return res
 
 def is_prime(x):
