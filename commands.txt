@@ -93,7 +93,7 @@ When possible, the character at each code point is listed in parentheses followi
 80 (P): pop a: push the a-th prime (zero-indexed)
 81 (Q): if stack is empty: push the program's source code
 82 (R): pop f,[a]: call f, using [a] as a temporary stack, push [a] (similar to reduce(f,[a])); pop "a" or [a]: push reversed value ("a".reverse() or [a][::-1]); pop a: push [1,2,...,a] (range(1,a+1))
-83 (S): pop a: push sin(a)
+83 (S): pop a: push sin(a); pop "a" or [a]: push sorted(a)
 84 (T): pop a: push tan(a)
 85 (U): pop [a],[b]: push union of [a] and [b]
 86 (V): pop a,b: push uniform(a,b) (random float between a and b)

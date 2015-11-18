@@ -30,7 +30,7 @@ class MathSelector(object):
 
 class Math(object):
     def __getattr__(self, fn):
-        return MathSelector(fn) if isinstance(getattr(cmath,fn),function) else getattr(rmath,fn)
+        return MathSelector(fn) if callable(getattr(cmath,fn)) else getattr(rmath,fn)
         
 math = Math()
 
@@ -220,7 +220,7 @@ def dupe_each_fn(srs):
 def lr_fn(srs):
     a=srs.pop()
     if type(a) is StringType:
-        map(srs.push,a.split('')[::-1])
+        map(srs.push,a[::-1])
     elif type(a) in [IntType, LongType]:
         srs.push(range(a))
         
@@ -387,6 +387,15 @@ def dupe_each_n_fn(srs):
         b = srs.pop()
         tmp+=[b for i in range(a)]
     srs.stack=tmp[:]
+    
+def S_fn(srs):
+    a=srs.pop()
+    if type(a) is StringType:
+        srs.push(''.join(sorted(a)))
+    elif type(a) is ListType:
+        srs.push(sorted(a))
+    else:
+        srs.push(math.sin(a))
         
 fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           32:lambda x:x.push(len(x.stack)),
@@ -427,7 +436,7 @@ fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           80:lambda x:x.push(nth_prime(x.pop())),
           81:lambda x:x.push(x.code),
           82:r_fn,
-          83:lambda x:x.push(math.sin(x.pop())),
+          83:S_fn,
           84:lambda x:x.push(math.tan(x.pop())),
           85:lambda x:x.push(list(set(x.pop()).union(x.pop()))),
           86:lambda x:x.push(random.uniform(x.pop(),x.pop())),
