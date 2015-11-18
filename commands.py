@@ -30,7 +30,8 @@ class MathSelector(object):
 
 class Math(object):
     def __getattr__(self, fn):
-        return MathSelector(fn) if callable(getattr(cmath,fn)) else getattr(rmath,fn)
+        mathmod = cmath if hasattr(cmath,fn) else rmath
+        return MathSelector(fn) if callable(getattr(mathmod,fn)) else getattr(rmath,fn)
         
 math = Math()
 
@@ -465,7 +466,7 @@ fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           112:p_fn,
           113:enq_fn,
           114:lr_fn,
-          115:lambda x:x.push(math.sgn(x.pop())),
+          115:lambda x:x.push((lambda y:1 if y>0 else -1 if y<0 else 0)(x.pop())),
           116:flat_explode_fn,
           117:lambda x:x.push(x.pop()+1),
           118:lambda x:random.seed(x.pop()),
