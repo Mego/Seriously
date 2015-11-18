@@ -82,7 +82,7 @@ var explanations = {
 80:'pop a: push the a-th prime (zero-indexed)',
 81:"if stack is empty: push the program's source code",
 82:'pop f,[a]: call f, using [a] as a temporary stack, push [a] (similar to reduce(f,[a])); pop "a" or [a]: push reversed value ("a".reverse() or [a][::-1]); pop a: push [1,2,...,a] (range(1,a+1))',
-83:'pop a: push sin(a)',
+83:'pop a: push sin(a); pop "a" or [a]: push sorted(a)',
 84:'pop a: push tan(a)',
 85:'pop [a],[b]: push union of [a] and [b]',
 86:'pop a,b: push uniform(a,b) (random float between a and b)',
