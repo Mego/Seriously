@@ -401,7 +401,7 @@ def S_fn(srs):
         
 def print_all_fn(srs):
     while srs.stack:
-        print srs.pop()
+        print(srs.pop())
         
 fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           32:lambda x:x.push(len(x.stack)),
