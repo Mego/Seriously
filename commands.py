@@ -106,7 +106,7 @@ def div_fn(srs):
     a=srs.pop()
     if type(a) is ListType:
         srs.push(a[-1:]+a[:-1])
-    elif type(a) in [IntType, LongType]:
+    elif type(a) in [IntType, LongType, FloatType, ComplexType]:
         b=srs.pop()
         srs.push(a/b)
     else:
@@ -116,7 +116,7 @@ def idiv_fn(srs):
     a=srs.pop()
     if type(a) is ListType:
         srs.push(a[1:]+a[:1])
-    elif type(a) in [IntType,LongType]:
+    elif type(a) in [IntType,LongType,FloatType,ComplexType]:
         b=srs.pop()
         srs.push(a//b)
     else:
