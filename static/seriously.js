@@ -151,7 +151,7 @@ function getExplanation(code, indent) {
         explain += ind + 'push the numeric value "'+strval+'"\r\n'
     }
     if(setexp)
-        $('#explanation').html(explain.replace("<","&lt;").replace(">","&rt;").replace("&","&amp;"));
+        $('#explanation').html(explain.replace(/</g,"&lt;").replace(/>/g, "&rt;").replace(/&/g,"&amp;"));
     else
         return explain;
 }
