@@ -399,6 +399,10 @@ def S_fn(srs):
     else:
         srs.push(math.sin(a))
         
+def print_all_fn(srs):
+    while srs.stack:
+        print srs.pop()
+        
 fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
@@ -480,7 +484,7 @@ fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           126:lambda x:x.push(~x.pop()),
           127:lambda x:exit(),
           128:comp_fn,
-          129:lambda x:map(print,[x.pop() for _ in len(x.stack)]),
+          129:print_all_fn,
           130:lambda x:map(lambda y:x.pop(), range(len(x.stack))),
           131:lambda x:x.push(math.asin(x.pop())),
           132:lambda x:x.push(math.acos(x.pop())),
