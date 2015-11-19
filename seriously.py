@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import sys, math, cmath, itertools, functools, traceback, argparse
+import traceback, argparse, readline
 from types import *
 import commands
 
