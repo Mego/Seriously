@@ -151,7 +151,7 @@ function getExplanation(code, indent) {
         explain += ind + 'push the numeric value "'+strval+'"\r\n'
     }
     if(setexp)
-        $('#explanation').html(explain.replace(/</g,"&lt;").replace(/>/g, "&rt;").replace(/&/g,"&amp;"));
+        $('#explanation').html(escapeHTML(explain));
     else
         return explain;
 }
@@ -179,6 +179,13 @@ function utf8_to_b64(str) {
 
 function b64_to_utf8(str) {
     return decodeURIComponent(escape(window.atob(str)));
+}
+
+function escapeHTML(s) {
+    var pre = document.createElement('pre');
+    var text = document.createTextNode(s);
+    pre.appendChild(text);
+    return pre.innerHTML;
 }
 
 updateUtils();
