@@ -404,22 +404,13 @@ def print_all_fn(srs):
         print(srs.pop())
         
 def zip_fn(srs):
-    fake_obj = object()
     a=srs.pop()
     if type(a) in [ListType,StringType]:
         b=srs.pop()
-        while len(a) < len(b):
-            a.append(fake_obj)
-        while len(b) < len(a):
-            b.append(fake_obj)
-        srs.push(map(list,filter(lambda x:x is not fake_obj,zip(a,b))))
+        srs.push(map(list,[filter(lambda x:x is not None,zlist) for zlist in itertools.izip_longest(a,b)]))
     else:
         lists = [srs.pop() for i in range(a)]
-        maxlen = len(max(lists,key=len))
-        for i in range(len(lists)):
-            while len(lists[i]) < maxlen:
-                lists[i].append(fake_obj)
-        srs.push(map(list,filter(lambda x:x is not fake_obj,zip(*lists))))
+        srs.push(map(list,[filter(lambda x:x is not None,zlist) for zlist in itertools.izip_longest(*lists)]))
         
         
 fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
