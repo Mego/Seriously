@@ -412,6 +412,10 @@ def zip_fn(srs):
         lists = [srs.pop() for i in range(a)]
         srs.push(map(list,[filter(lambda x:x is not None,zlist) for zlist in itertools.izip_longest(*lists)]))
         
+def sum_fn(srs):
+    a=srs.pop()
+    srs.push(sum(a,type(a[0])()))
+        
         
 fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           32:lambda x:x.push(len(x.stack)),
@@ -556,7 +560,7 @@ fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           222:lambda x:x.push(b64encode(x.pop())),
           226:lambda x:x.push(math.gamma(x.pop())),
           227:lambda x:x.push(reduce(operator.mul,x.pop(),1)),
-          228:lambda x:x.push(sum(x.pop())),
+          228:sum_fn,
           237:lambda x:x.push(phi),
           238:lambda x:x.push(""),
           239:lambda x:x.push(list(set(x.pop()).intersection(x.pop()))),

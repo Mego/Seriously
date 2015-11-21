@@ -1,8 +1,16 @@
 #!/usr/bin/python
-
+# -*- encoding: utf-8 -*-
 import traceback, argparse, readline, hashlib, binascii, random
 from types import *
 import commands
+
+cp437table = ''.join(map(chr,range(128))) + u"ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ "
+
+def ord_cp437(c):
+    return cp437table.index(c)
+    
+def chr_cp437(o):
+    return cp437table[o]
 
 class Seriously(object):
     @classmethod
@@ -92,7 +100,8 @@ class Seriously(object):
             else:
                 old_stack = self.stack[:]
                 try:
-                    self.fn_table.get(ord(c), lambda x:x)(self)
+                    print ord_cp437(c)
+                    self.fn_table.get(ord_cp437(c), lambda x:x)(self)
                 except:
                     if self.debug_mode:
                         traceback.print_exc()
@@ -117,10 +126,10 @@ def srs_repl(debug_mode=False, quiet_mode=False):
 def srs_exec(debug_mode=False, file_obj=None, code=None):
     srs = Seriously(debug_mode=debug_mode)
     if file_obj:
-        srs.eval(file_obj.read())
+        srs.eval(file_obj.read().decode('utf-8'))
         file_obj.close()
     else:
-        srs.eval(code)
+        srs.eval(code.decode('utf-8'))
                 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run the Seriously interpreter")
