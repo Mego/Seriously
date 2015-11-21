@@ -100,7 +100,8 @@ class Seriously(object):
             else:
                 old_stack = self.stack[:]
                 try:
-                    print ord_cp437(c)
+                    if self.debug_mode:
+                        print ord_cp437(c)
                     self.fn_table.get(ord_cp437(c), lambda x:x)(self)
                 except:
                     if self.debug_mode:
