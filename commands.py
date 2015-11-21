@@ -403,6 +403,25 @@ def print_all_fn(srs):
     while srs.stack:
         print(srs.pop())
         
+def zip_fn(srs):
+    fake_obj = object()
+    a=srs.pop()
+    if type(a) in [ListType,StringType]:
+        b=srs.pop()
+        while len(a) < len(b):
+            a.append(fake_obj)
+        while len(b) < len(a):
+            b.append(fake_obj)
+        srs.push(map(list,filter(lambda x:x is not fake_obj,zip(a,b))))
+    else:
+        lists = [srs.pop() for i in range(a)]
+        maxlen = len(max(lists,key=len))
+        for i in range(len(lists)):
+            while len(lists[i]) < maxlen:
+                lists[i].append(fake_obj)
+        srs.push(map(list,filter(lambda x:x is not fake_obj,zip(*lists))))
+        
+        
 fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
@@ -448,7 +467,7 @@ fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           86:lambda x:x.push(random.uniform(x.pop(),x.pop())),
           88:lambda x:x.pop(),
           89:lambda x:x.push(0 if x.pop() else 1),
-          90:lambda x:x.push(map(list,zip(x.pop(),x.pop()))),
+          90:zip_fn,
           92:idiv_fn,
           94:lambda x:x.push(pow(x.pop(),x.pop())),
           95:lambda x:x.push(math.log(x.pop())),

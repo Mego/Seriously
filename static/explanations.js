@@ -89,7 +89,7 @@ var explanations = {
 87:'loop delimiter: peek top of stack, repeat code in loop while a evaluates to true',
 88:'pop a: discard',
 89:'pop a: push !bool(a) (logical negate, opposite of b)',
-90:'pop [a],[b]: push zip([a],[b])',
+90:'pop [a],[b]: push zip([a],[b]); pop a, zip the next a lists',
 91:'begin list literal, values are delimited by commas (,)',
 92:'pop a,b: push a/b (integer division); pop [a]: rotate [a] left by 1, push [a]',
 93:'end list literal',
