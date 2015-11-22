@@ -415,6 +415,13 @@ def zip_fn(srs):
 def sum_fn(srs):
     a=srs.pop()
     srs.push(sum(a,type(a[0])()))
+    
+def index_fn(srs):
+    b,a=srs.pop(),srs.pop()
+    if a in b:
+        srs.push(b.index(a))
+    else:
+        srs.push(-1)
         
         
 fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
@@ -530,6 +537,7 @@ fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           158:lambda x:x.push(cmath.phase(x.pop())),
           159:lambda x:x.pop()(x),
           160:lambda x:x.push(x.pop().conjugate()),
+          161:index_fn,
           166:lambda x:x.push(x.pop()**2),
           167:lambda x:x.push(math.degrees(x.pop())),
           168:lambda x:x.push(int(x.pop(),x.pop())),

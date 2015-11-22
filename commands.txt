@@ -171,7 +171,7 @@ When possible, the character at each code point is listed in parentheses followi
 158 (ž): pop z: push phase(z)
 159 (Ÿ): pop f: call f
 160 ( ): pop z: push the complex conjugate of z
-161 (¡):
+161 (¡): pop a,[b]: push [b].index(a) (0-based, -1 if not found)
 162 (¢):
 163 (£):
 164 (¤):

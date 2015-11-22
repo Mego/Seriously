@@ -160,7 +160,7 @@ var explanations = {
 158:'pop z: push phase(z)',
 159:'pop f: call f',
 160:'pop z: push the complex conjugate of z',
-161:'',
+161:'pop a,[b]: push [b].index(a) (0-based, -1 if not found)',
 162:'',
 163:'',
 164:'',
