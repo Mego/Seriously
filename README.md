@@ -7,6 +7,8 @@ The name was inspired by [this challenge](http://codegolf.stackexchange.com/ques
 
 Try the [online interpreter](https://seriouslylang.herokuapp.com).
 
+If you are running code locally, you *must* set your terminal text encoding to CP437.
+
 # Commands
 
 See [commands.txt](https://github.com/Mego/Seriously/blob/master/commands.txt)
