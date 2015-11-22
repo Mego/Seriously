@@ -7,7 +7,7 @@ import commands
 cp437table = ''.join(map(chr,range(128))) + u"ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ "
 
 def ord_cp437(c):
-    return cp437table.index(c)
+    return int(binascii.hexlify(c),16) if int(binascii.hexlify(c),16) in range(256) else -1
     
 def chr_cp437(o):
     return cp437table[o]
@@ -127,10 +127,10 @@ def srs_repl(debug_mode=False, quiet_mode=False):
 def srs_exec(debug_mode=False, file_obj=None, code=None):
     srs = Seriously(debug_mode=debug_mode)
     if file_obj:
-        srs.eval(file_obj.read().decode('utf-8'))
+        srs.eval(file_obj.read())
         file_obj.close()
     else:
-        srs.eval(code.decode('utf-8'))
+        srs.eval(code)
                 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run the Seriously interpreter")

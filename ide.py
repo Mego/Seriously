@@ -15,7 +15,7 @@ def index():
         print('Running Seriously code...')
         p = Popen(['./seriously.py', '-q', '-c', code.encode('cp437')], stdout=PIPE, stderr=PIPE, stdin=PIPE)
         output, error = map(lambda s: s.decode('utf-8'), p.communicate(input_str))
-        print('Output:', output, 'error:', error)
+        print('Output:', output, 'error:', error, 'return:', p.returncode)
         if p.returncode:
             return render_template('error.html', code=code, input=input_str, error=error)
         else:
@@ -32,4 +32,4 @@ def link(link='code=%22Error+in+linking+code%22&input='):
 
 if __name__ == '__main__':
     print('Starting server...')
-    app.run(host='0.0.0.0',port=80)
+    app.run(host='0.0.0.0',port=8000)
