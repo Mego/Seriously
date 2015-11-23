@@ -4,10 +4,11 @@
 
 import sys, re
 s = sys.stdin.read()
-s=re.sub(r"[^0-9A-F]","",s)
+s=re.sub(r"([^0-9A-Fa-f])","",s)
+print s
 r=''
 i=0
 while i < len(s):
-    r = chr(int(s[i:i+2],16))
+    r += chr(int(s[i:i+2],16))
     i+=2
 print r
