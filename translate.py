@@ -5,7 +5,6 @@
 import sys, re
 s = sys.stdin.read()
 s=re.sub(r"([^0-9A-Fa-f])","",s)
-print s
 r=''
 i=0
 while i < len(s):
