@@ -137,7 +137,7 @@ When possible, the character at each code point is listed in parentheses followi
 124 (|): pop a,b: push (a | b)
 125 (}): pop a: rotate stack left a times
 126 (~): pop a: push ~a (unary bitwise negate)
-127 (): terminate the program
+127 (): terminate the program (without implicit stack popping and printing)
 128 (Ä): pop a,b: push a+bi; pop [a]: pop pairs of real numerics b,c from [a] and push b+ci (appending 0 to [a] if len([a]) is odd)
 129 (Å): pop entire stack and print to stdout
 130 (Ç): pop entire stack (clear stack)
@@ -172,7 +172,7 @@ When possible, the character at each code point is listed in parentheses followi
 159 (ü): pop f: call f
 160 (†): pop z: push the complex conjugate of z
 161 (°): pop a,[b]: push [b].index(a) (0-based, -1 if not found)
-162 (¢):
+162 (¢): pop a: if bool(a) push a, else terminate the program (conditional exit); terminate the program if the stack is empty
 163 (£):
 164 (§):
 165 (•):
