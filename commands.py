@@ -46,6 +46,12 @@ class SeriousFunction(object):
         return '`%s`'%self.code
     def __len__(self):
         return len(self.code)
+    def __add__(self,other):
+        return SeriousFunction(self.code+other.code)
+    def __mul__(self,other):
+        return SeriousFunction(self.code*other)
+    def __mod__(self,other):
+        return SeriousFunction(self.code%other)
         
 def NinetyNineBottles():
     x = 99
@@ -290,7 +296,7 @@ def factors(n):
 def mod_fn(srs):
     a=srs.pop()
     b=srs.pop()
-    if type(a) is StringType:
+    if type(a) is StringType or isinstance(a,SeriousFunction):
         srs.push(a%tuple(b))
     else:
         srs.push(a%b)
@@ -424,6 +430,12 @@ def index_fn(srs):
     else:
         srs.push(-1)
         
+def cond_quit_fn(srs):
+    a=srs.pop() if srs.stack else None
+    if a:
+        srs.push(a)
+    else:
+        exit()
         
 fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           32:lambda x:x.push(len(x.stack)),
@@ -539,6 +551,7 @@ fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           159:lambda x:x.pop()(x),
           160:lambda x:x.push(x.pop().conjugate()),
           161:index_fn,
+          162:cond_quit_fn,
           166:lambda x:x.push(x.pop()**2),
           167:lambda x:x.push(math.degrees(x.pop())),
           168:lambda x:x.push(int(x.pop(),x.pop())),
