@@ -241,7 +241,7 @@ When possible, the character at each code point is listed in parentheses followi
 228 (ä): pop [a]: push sum([a])
 229 (å):
 230 (æ):
-231 (ç):
+231 (ç): pop a: push 2*a
 232 (è):
 233 (é):
 234 (ê):
