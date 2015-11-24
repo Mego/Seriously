@@ -414,7 +414,8 @@ def zip_fn(srs):
         
 def sum_fn(srs):
     a=srs.pop()
-    srs.push(sum(a,type(a[0])()))
+    res = sum(a,type(a[0])()) if type(a[0]) is not StringType else ''.join(map(str,a))
+    srs.push(res)
     
 def index_fn(srs):
     b,a=srs.pop(),srs.pop()
