@@ -163,7 +163,7 @@ var explanations = {
 161:'pop a,[b]: push [b].index(a) (0-based, -1 if not found)',
 162:'pop a: if bool(a) push a, else terminate the program (conditional exit); terminate the program if the stack is empty',
 163:'',
-164:'',
+164:'pop [a]: push enumerate([a]) ([[i,a[i]] for i in range(len(a))])',
 165:'',
 166:'pop a: push a*a',
 167:'pop a: push degrees(a)',
