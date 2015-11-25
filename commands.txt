@@ -196,7 +196,7 @@ When possible, the character at each code point is listed in parentheses followi
 183 (·):
 184 (¸):
 185 (¹):
-186 (º): pop [a]: push median([a])
+186 (º): pop [a] or "a": push median([a]/"a") (using ordinals if string)
 187 (»):
 188 (¼):
 189 (½):

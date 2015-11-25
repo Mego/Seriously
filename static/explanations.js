@@ -185,7 +185,7 @@ var explanations = {
 183:'',
 184:'',
 185:'',
-186:'pop [a]: push median([a])',
+186:'pop [a] or "a": push median([a]/"a") (using ordinals if string)',
 187:'',
 188:'',
 189:'',
