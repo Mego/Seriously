@@ -437,6 +437,17 @@ def cond_quit_fn(srs):
     else:
         exit()
         
+def median_fn(srs):
+    a=srs.pop()
+    if len(a)%2:
+        srs.push(a[len(a)//2])
+    else:
+        if all([type(x) is StringType for x in a[len(a)//2-1:][:2]]):
+            med = sum(map(ord,a[len(a)//2-1:][:2]))//2
+            srs.push(chr(med))
+        else:
+            srs.push(sum(a[len(a)//2-1:][:2])//2)
+        
 fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           32:lambda x:x.push(len(x.stack)),
           33:lambda x:x.push(math.factorial(x.pop())),
@@ -567,7 +578,7 @@ fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           178:lambda x:x.push(sum([is_prime(i) for i in range(1,x.pop()+1)])),
           179:dupe_all_fn,
           180:lambda x:x.push(1 if gcd(x.pop(),x.pop())==1 else 0),
-          186:lambda x:x.push((lambda y:y[len(y)//2] if len(y)%2 else sum(y[len(y)//2:][:2])/2)(x.pop())),
+          186:median_fn,
           197:dupe_each_fn,
           198:dupe_each_n_fn,
           199:npop_list_fn,
