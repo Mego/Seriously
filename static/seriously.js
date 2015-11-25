@@ -129,7 +129,11 @@ function getExplanation(code, indent) {
         if(codeBlock || string || listBlock || numBlock) {
             continue;
         }
-        if(cp437.decode(c) > -1)
+        if(c == "'") {
+            x++;
+            explain = 'push the string "' + code.charAt(x) +'"'
+        }
+        else if(cp437.decode(c) > -1)
             explain += ind + explanations[cp437.decode(c)] +'\r\n';
     }
     if(string) {
