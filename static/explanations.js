@@ -98,7 +98,7 @@ var explanations = {
 96:'function literal delimiter, pushes function whose body contains all of the commands until the next `. An implied ` is present at EOF if needed.',
 97:'invert the stack ([a,b,c,d] -> [d,c,b,a])',
 98:'pop a: push 0 if a==0 else 1; pop "a" or [a]: push 0 if len(a)==0 else 1; pop f: push 0 if len(f)==0 else 1',
-99:'pop a: push character at ordinal a%256',
+99:'pop a: push character at ordinal a%256; pop [a],b: push [a].count(b); pop "a","b": push "a".count("b")',
 100:'pop [a]: dequeue b from [a], push [a],b',
 101:'pop a: push exp(a)',
 102:'pop a: push the Fibonacci index of a if a is a Fibonacci number, else -1; pop "a",[b]: push "a".format(*[b])',

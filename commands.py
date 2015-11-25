@@ -447,6 +447,14 @@ def median_fn(srs):
             srs.push(chr(med))
         else:
             srs.push(sum(a[len(a)//2-1:][:2])//2)
+            
+def c_fn(srs):
+    a=srs.pop()
+    if type(a) in [ListType,StringType]:
+        b=srs.pop()
+        srs.push(a.count(b))
+    else:
+        srs.push(chr(a%256))
         
 fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           32:lambda x:x.push(len(x.stack)),
@@ -499,7 +507,7 @@ fn_table={ 9:lambda x:x.push(sys.stdin.read(1)),
           95:lambda x:x.push(math.log(x.pop())),
           97:invert_fn,
           98:lambda x:x.push(int(bool(x.pop()))),
-          99:lambda x:x.push(chr(x.pop()%256)),
+          99:c_fn,
           100:deq_fn,
           101:lambda x:x.push(math.exp(x.pop())),
           102:lambda x:x.push(Fib_index(x.pop())),
