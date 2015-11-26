@@ -135,10 +135,10 @@ function getExplanation(code, indent) {
         }
         if(c == "'") {
             x++;
-            explain = 'push the string "' + code.charAt(x) +'"'
+            explain = ind + "'" + code.charAt(x) + ": " + 'push the string "' + code.charAt(x) +'"'
         }
         else if(cp437.decode(c) > -1)
-            explain += ind + explanations[toHex(cp437.decode(c))] +'\r\n';
+            explain += ind + c + ': ' + explanations[toHex(cp437.decode(c))] +'\r\n';
     }
     if(string) {
         var prev = code.lastIndexOf('"',x-1);
