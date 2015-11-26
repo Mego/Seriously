@@ -171,7 +171,7 @@ def p_fn(srs):
     if type(a) in [IntType, LongType]:
         srs.push(is_prime(a))
     elif type(a) is ListType:
-        b=a.pop()
+        b=a.pop(0)
         srs.push(a)
         srs.push(b)
     else:
