@@ -460,6 +460,9 @@ def c_fn(srs):
     else:
         srs.push(chr(a%256))
         
+def exit_fn(srs):
+    exit()
+        
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x20:lambda x:x.push(len(x.stack)),
@@ -540,7 +543,7 @@ fn_table={
         0x7C:lambda x:x.push(x.pop() | x.pop()),
         0x7D:nlrot_fn,
         0x7E:lambda x:x.push(~x.pop()),
-        0x7F:lambda x:exit(),
+        0x7F:exit_fn,
         0x80:comp_fn,
         0x81:print_all_fn,
         0x82:lambda x:map(lambda y:x.pop(), range(len(x.stack))),
