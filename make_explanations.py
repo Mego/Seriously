@@ -2,15 +2,11 @@
 
 def make_explanations():
     lines = []
-    with open('commands.txt','rb') as f:
-        for line in f:
-            lines.append(line)
-    i=0
-    while not lines[i][0].isdigit():
-        i+=1
+    with open('commands.txt','Urb') as f:
+        lines = f.read().split('\n')[:256]
     ex = "var explanations = {\n%s\n};"
     exps = []
-    for line in lines[i:]:
+    for line in lines:
         toks = line.split(':')
         val,desc = toks[0],':'.join(toks[1:])
         val = val[:val.index(' ')]
