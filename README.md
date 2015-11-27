@@ -34,3 +34,7 @@ If you prefer a more interesting version:
 ## Coprimality Test
 
 <pre>,,g1=</pre>
+
+## Counting the divisors of a number
+
+<pre>,w`iXu`Mπ</pre>
