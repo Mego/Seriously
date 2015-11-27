@@ -286,8 +286,12 @@ def full_factor(n):
     init_primes_up_to(n)
     res=[]
     for p in filter(lambda x:x<=n,primes):
-        if n%p==0:
-            res.append([p,n//p])
+        a=0
+        while n%p==0:
+            a+=1
+            n//=p
+        if a:
+            res.append([p,a])
     return res
     
 def factor(n):
