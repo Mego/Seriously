@@ -101,7 +101,7 @@ class Seriously(object):
                 old_stack = self.stack[:]
                 try:
                     if self.debug_mode:
-                        print ord_cp437(c)
+                        print binascii.hexlify(chr(ord_cp437(c))).upper()
                     self.fn_table.get(ord_cp437(c), lambda x:x)(self)
                 except:
                     if self.debug_mode:
