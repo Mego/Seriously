@@ -287,10 +287,10 @@ def full_factor(n):
     res=[]
     for p in filter(lambda x:x<=n,primes):
         if n%p==0:
-            res += [p,n//p]
+            res.append([p,n//p])
     return res
     
-def factors(n):
+def factor(n):
     return [a for a,b in full_factor(n)]
     
 def mod_fn(srs):
