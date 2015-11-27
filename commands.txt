@@ -1,15 +1,3 @@
-Notes:
-This file should be viewed with code page 437 encoding (CP437, OEM-437, and OEM-US are common names for it)
-There are 4 data types in Seriously: numeric, string, list, and function.
-a represents any value. This usually means numeric values, but can represent any value of a type not specified in an alternate command definition.
-"a" represents a string value.
-[a] represents a list value (in most cases, a string value is also acceptable).
-z represents a complex value. Complex values are a proper subset of numeric values.
-f represents a function value.
-Some commands have fixed arity. Others have variable arity. This is denoted by the number of values listed in the pop. Those commands that are not functional commands (such as delimiters) do not have arities, and so do not pop from the stack.
-Each functional command operates differently based on the data types of the values popped from the stack. In some cases, that order matters. In others, it does not. Each operation will be denoted by the different data types popped. If there is a conflict, the most restrictive applicable definition is used.
-When possible, the character at each code point is listed in parentheses following the ordinal. For non-printing characters (ordinals 0-31), this is not possible, so a description is provided instead.
-
 00 (NUL):
 01 (SOH):
 02 (STX):
@@ -266,3 +254,15 @@ FC (ü):
 FD (ý):
 FE (þ): print the entire stack without popping, separated by spaces
 FF (ÿ):
+
+Notes:
+This file should be viewed with code page 437 encoding (CP437, OEM-437, and OEM-US are common names for it)
+There are 4 data types in Seriously: numeric, string, list, and function.
+a represents any value. This usually means numeric values, but can represent any value of a type not specified in an alternate command definition.
+"a" represents a string value.
+[a] represents a list value (in most cases, a string value is also acceptable).
+z represents a complex value. Complex values are a proper subset of numeric values.
+f represents a function value.
+Some commands have fixed arity. Others have variable arity. This is denoted by the number of values listed in the pop. Those commands that are not functional commands (such as delimiters) do not have arities, and so do not pop from the stack.
+The functional commands each operate differently based on the data types of the values popped from the stack. In some cases, that order matters. In others, it does not. Each operation will be denoted by the different data types popped. If there is a conflict, the most restrictive applicable definition is used.
+When possible, the character at each code point is listed in parentheses following the ordinal. For non-printing characters (ordinals 0-31), this is not possible, so a description is provided instead.

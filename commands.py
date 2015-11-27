@@ -461,7 +461,7 @@ def c_fn(srs):
         srs.push(chr(a%256))
         
 def exit_fn(srs):
-    exit()
+    exit()    
         
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
