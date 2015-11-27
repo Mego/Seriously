@@ -103,6 +103,8 @@ class Seriously(object):
                     if self.debug_mode:
                         print binascii.hexlify(chr(ord_cp437(c))).upper()
                     self.fn_table.get(ord_cp437(c), lambda x:x)(self)
+                except SystemExit:
+                    exit()
                 except:
                     if self.debug_mode:
                         traceback.print_exc()
