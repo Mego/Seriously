@@ -603,6 +603,7 @@ fn_table={
         0xD2:lambda x:x.push(math.log(x.pop(),10)),
         0xD3:lambda x:x.push(pow(2,x.pop())),
         0xD4:lambda x:x.push(math.log(x.pop(),2)),
+        0xD5:lambda x:x.push(math.log(2)),
         0xDD:lambda x:x.push(b64decode(x.pop())),
         0xDE:lambda x:x.push(b64encode(x.pop())),
         0xE2:lambda x:x.push(math.gamma(x.pop())),

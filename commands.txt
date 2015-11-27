@@ -223,7 +223,7 @@ D1 (Ñ): pop a: push 10**a
 D2 (Ò): pop a: push log(a) (log base 10)
 D3 (Ó): pop a: push 2**a
 D4 (Ô): pop a: push lg(a) (log base 2)
-D5 (Õ):
+D5 (Õ): push ln(2)
 D6 (Ö):
 D7 (×):
 D8 (Ø):
