@@ -212,7 +212,7 @@ var explanations = {
 "D2":'pop a: push log(a) (log base 10)',
 "D3":'pop a: push 2**a',
 "D4":'pop a: push lg(a) (log base 2)',
-"D5":'',
+"D5":'push ln(2)',
 "D6":'',
 "D7":'',
 "D8":'',
