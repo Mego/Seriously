@@ -8,6 +8,20 @@ import random, itertools, sys
 from types import *
 from base64 import *
 
+def template_specialize(fname, *args):
+    if fname not in globals():
+        def raiseError(*args, **kwargs):
+            raise NotImplementedError("This type combination is unimplemented.")
+
+        globals()[fname] = raiseError
+    
+    def template_specializer(func):
+        old_func = globals()[fname]
+        globals()[fname] = lambda *pargs: func(*pargs) if all(isinstance(a, t) for a, t in zip(pargs, args)) else old_func(*pargs)
+        return func
+    
+    return template_specializer
+
 phi = (1+5**.5)/2
 def Fib(n):
     if n<2:
