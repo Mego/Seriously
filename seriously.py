@@ -99,7 +99,7 @@ class Seriously(object):
                 while i<len(code) and code[i]!=']':
                     l+=code[i]
                     i+=1
-                self.push(list(eval(l)))
+                self.push(eval('[%s]'%l))
             elif c == '`':
                 f = ''
                 i+=1
