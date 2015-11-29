@@ -60,7 +60,7 @@ function genChar() {
     var code = prompt("Generate CP437 Character:");
     if(!code)
         return;
-    $('#rawcode').val($('#rawcode').val() + cp437.encode(parseInt(code)));
+    $('#code').val($('#code').val() + cp437.encode(parseInt(code)));
     updateUtils();
 };
 
@@ -75,7 +75,7 @@ function getByteCount(s) {
 }
 
 function updateByteCount() {
-    var c = $('#rawcode').val();
+    var c = $('#code').val();
     var byteCount = c.length;
     var charCount = c.length;
     var s = byteCount + " bytes and " + charCount + " chars long.";
@@ -90,7 +90,7 @@ function getExplanation(code, indent) {
     var evalBlock = false;
     var setexp = code == null;
     if(code == null) {
-        code = $("#rawcode").val();
+        code = $("#code").val();
     }
     var ind = (indent==null)?'':'\t';
     var explain = '';
@@ -179,7 +179,7 @@ function getExplanation(code, indent) {
 
 function updateHexDump() {
     var hex = '';
-    var code = $('#rawcode').val();
+    var code = $('#code').val();
     for(var i = 0; i < code.length; i++) {
         var hexi = cp437.decode(code.charAt(i)).toString(16);
         if(hexi.length < 2) hexi = "0" + hexi;
@@ -214,7 +214,7 @@ function updateCode() {
         }
         code += cp437.encode(val);
     }
-    $("#rawcode").val(code);
+    $("#code").val(code);
     return true;
 }
 
@@ -237,18 +237,17 @@ updateUtils();
 
 $(document).ready(
         function() {
-            updateUtilsHex();
             $("#permalink").click(
                     function() {
                         var code = encodeURIComponent(utf8_to_b64(window.JSON.stringify({
-                            code : $('#rawcode').val(),
+                            code : $('#code').val(),
                             input : $('#input').val()
                         })));
                         prompt("Permalink:", "http://"
                                 + window.location.hostname + "/link/" + code);
                         window.location.pathname = "/link/" + code;
                     });
-            $('#rawcode').on('input propertychange paste', function() {
+            $('#code').on('input propertychange paste', function() {
                 updateUtils();
             });
             $('#hexdump').on('input propertychange paste', function() {
