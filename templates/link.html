@@ -19,6 +19,7 @@
         cp437.encodeString = function(ordList) {
             var res = '';
             ordList.forEach(function(c) {res += cp437.encode(c)});
+            return res;
         };
     </script>
   </head>
@@ -33,6 +34,7 @@
       }
       sCode = cp437.encodeString(sCode);
       var sInput = s[1].split("=")[1];
+      alert("code: "+sCode+"\n\ninput: "+sInput)
       var url = "http://" + window.location.hostname + "/";
       $.redirect(url, {code: sCode, input: sInput});
     });
