@@ -235,7 +235,7 @@ var explanations = {
 "E9":'',
 "EA":'',
 "EB":'',
-"EC":'',
+"EC":"eval delimiter: the code inside the delimiters is eval'd as Python code, and the result is pushed on the stack",
 "ED":'push phi (golden ratio)',
 "EE":'push "" (empty string)',
 "EF":'pop [a],[b]: push intersection of [a] and [b]',

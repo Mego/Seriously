@@ -87,6 +87,7 @@ function getExplanation(code, indent) {
     var codeBlock = false;
     var listBlock = false;
     var numBlock = false;
+    var evalBlock = false;
     var setexp = code == null;
     if(code == null) {
         code = $("#code").val();
@@ -123,6 +124,14 @@ function getExplanation(code, indent) {
             }
             numBlock = !numBlock;
             continue;
+        } else if(c === cp437.encode(0xEC)) {
+            if(evalBlock) {
+                var prev = code.lastIndexOf(':',x-1);
+                var strval = code.slice(prev+1,x);
+                explain += ind + "push the result of eval'ing \""+strval+'"\r\n'
+            }
+            evalBlock = !evalBlock;
+            continue;
         } else if(c === ']') {
             listBlock = false;
             var prev = code.lastIndexOf('[',x-1);
@@ -130,7 +139,7 @@ function getExplanation(code, indent) {
             explain += ind + 'push the list value ['+strval+']\r\n'
             continue;
         }
-        if(codeBlock || string || listBlock || numBlock) {
+        if(codeBlock || string || listBlock || numBlock || evalBlock) {
             continue;
         }
         if(c == "'") {
@@ -157,6 +166,10 @@ function getExplanation(code, indent) {
         var prev = code.lastIndexOf(':',x-1);
         var strval = code.slice(prev+1,x);
         explain += ind + 'push the numeric value "'+strval+'"\r\n'
+    } else if(evalBlock) {
+        var prev = code.lastIndexOf(cp437.encode(0xEC),x-1);
+        var strval = code.slice(prev+1,x);
+        explain += ind + 'push the result of eval\'ing "'+strval+'"\r\n'
     }
     if(setexp)
         $('#explanation').html(escapeHTML(explain));

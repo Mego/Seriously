@@ -234,7 +234,7 @@ E8 (è):
 E9 (é):
 EA (ê):
 EB (ë):
-EC (ì):
+EC (ì): eval delimiter: the code inside the delimiters is eval'd as Python code, and the result is pushed on the stack
 ED (í): push phi (golden ratio)
 EE (î): push "" (empty string)
 EF (ï): pop [a],[b]: push intersection of [a] and [b]
