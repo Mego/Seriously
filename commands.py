@@ -486,13 +486,6 @@ def get_reg(i):
 def set_reg(i, val):
     global registers
     registers[i] = val
-    
-def diff_fn(srs):
-    a,b=srs.pop(),srs.pop()
-    if type(a) == type(b) == ListType:
-        srs.push(filter(lambda x:x not in b, a))
-    else:
-        srs.push(a-b)
         
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -507,7 +500,7 @@ fn_table={
         0x2A:star_fn,
         0x2B:plus_fn,
         0x2C:lambda x:x.push((lambda y:list(y) if type(y) is TupleType else y)(input())),
-        0x2D:diff_fn,
+        0x2D:lambda x:x.push(x.pop()-x.pop()),
         0x2E:lambda x:(lambda y:print(y) if not isinstance(y,SeriousFunction) else y(x) or print(x.pop()))(x.pop()),
         0x2F:div_fn,
         0x3B:dupe_fn,

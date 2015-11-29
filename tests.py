@@ -49,8 +49,5 @@ assert serious_check(r'123'+chr(0xFE),'3 2 1\n3\n2\n1\n')
 assert serious_check(r'1%s2%s%s%s'%(chr(0xBB),chr(0xBC),chr(0xBE),chr(0xBD)),'1\n2\n')
 assert serious_check(r'53%s3%s'%(chr(0xBF),chr(0xC0)),'5\n')
 
-# Math tests
-assert serious_check(r'[1][1,2]-','[2]\n')
-
 # More to come...
 
