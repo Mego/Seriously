@@ -475,7 +475,17 @@ def c_fn(srs):
         srs.push(chr(a%256))
         
 def exit_fn(srs):
-    exit()    
+    exit()
+    
+registers = dict()
+
+def get_reg(i):
+    global registers
+    return registers[i]
+    
+def set_reg(i, val):
+    global registers
+    registers[i] = val
         
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -610,6 +620,12 @@ fn_table={
         0xB3:dupe_all_fn,
         0xB4:lambda x:x.push(1 if gcd(x.pop(),x.pop())==1 else 0),
         0xBA:median_fn,
+        0xBB:lambda x:set_reg(0,x.pop()),
+        0xBC:lambda x:set_reg(1,x.pop()),
+        0xBD:lambda x:x.push(get_reg(0)),
+        0xBE:lambda x:x.push(get_reg(1)),
+        0xBF:lambda x:set_reg(x.pop(),x.pop()),
+        0xC0:lambda x:x.push(get_reg(x.pop())),
         0xC5:dupe_each_fn,
         0xC6:dupe_each_n_fn,
         0xC7:npop_list_fn,
