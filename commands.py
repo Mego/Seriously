@@ -86,6 +86,8 @@ def NinetyNineBottles():
 def nCr(n,r):
     f = rmath.factorial
     return f(n) / f(r) / f(n-r)
+def nPr(n,k):
+    return rmath.factorial(n)/rmath.factorial(n-k)
 
 def is_prime(x):
     global primes
@@ -649,6 +651,7 @@ fn_table={
         0xD4:lambda x:x.push(math.log(x.pop(),2)),
         0xD5:lambda x:x.push(math.log(2)),
         0xDB:lambda x:x.push(nCr(x.pop,x.pop)),
+        0xDB:lambda x:x.push(nPr(x.pop,x.pop)),
         0xDD:lambda x:x.push(b64decode(x.pop())),
         0xDE:lambda x:x.push(b64encode(x.pop())),
         0xE2:lambda x:x.push(math.gamma(x.pop())),
