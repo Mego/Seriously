@@ -19,12 +19,13 @@ class Seriously(object):
     def make_new(self,*stack):
         return self._make_new(init_stack=list(stack), debug_mode=self.debug_mode)
         return res
-    def __init__(self, init_stack=[], debug_mode=False, repl_mode=False):
+    def __init__(self, init_stack=[], debug_mode=False, repl_mode=False, hex_mode=False):
         self.stack = init_stack
         self.debug_mode=debug_mode
         self.repl_mode = repl_mode
         self.fn_table = commands.fn_table
         self.code = ''
+        self.hex_mode = hex_mode
     def push(self,val):
         self.stack=[val]+self.stack
     def pop(self):
@@ -34,6 +35,8 @@ class Seriously(object):
     def append(self, val):
         self.stack+=[val]
     def eval(self, code, print_at_end=True):
+        if self.hex_mode:
+            code = binascii.unhexlify(code)
         key = binascii.unhexlify('1f1733f7cc54447e9f5568e50af437ddea0039600d345af3d708f1a4dc4a40260bd39ed1')
         if hashlib.sha256(code[:10]).hexdigest() == 'd0cedf8c945e712024b7dfd69bf504ffb3fec1232b294c5602507dbe439a57fb':
             rnd = random.Random()
@@ -123,8 +126,8 @@ class Seriously(object):
             while len(self.stack) > 0:
                 print self.pop()
 
-def srs_repl(debug_mode=False, quiet_mode=False):
-    srs = Seriously(repl_mode=True, debug_mode=debug_mode)
+def srs_repl(debug_mode=False, quiet_mode=False, hex=False):
+    srs = Seriously(repl_mode=True, debug_mode=debug_mode, hex_mode=hex)
     while 1:
         try:
             srs.eval(raw_input('' if quiet_mode else '>>> '))
@@ -135,8 +138,8 @@ def srs_repl(debug_mode=False, quiet_mode=False):
                 print '\n'
                 print srs.stack
             
-def srs_exec(debug_mode=False, file_obj=None, code=None):
-    srs = Seriously(debug_mode=debug_mode)
+def srs_exec(debug_mode=False, file_obj=None, code=None, hex=False):
+    srs = Seriously(debug_mode=debug_mode, hex_mode=hex)
     if file_obj:
         srs.eval(file_obj.read())
         file_obj.close()
@@ -147,12 +150,13 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run the Seriously interpreter")
     parser.add_argument("-d", "--debug", help="turn on debug mode", action="store_true")
     parser.add_argument("-q", "--quiet", help="turn off REPL prompts and automatic stack printing, only print code STDOUT output", action="store_true")
+    parser.add_argument("-x", "--hex", help="turn on hex mode (code is taken in hex values instead of binary bytes)", action="store_true")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-c", "--code", help="run the specified code")
     group.add_argument("-f", "--file", help="specify an input file", type=file)
     args = parser.parse_args()
     if args.code or args.file:
-        srs_exec(args.debug, args.file, args.code)
+        srs_exec(args.debug, args.file, args.code, args.hex)
     else:
-        srs_repl(args.debug, args.quiet)
+        srs_repl(args.debug, args.quiet, args.hex)
     
