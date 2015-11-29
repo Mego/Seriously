@@ -13,13 +13,13 @@ def index():
         input_str = request.form['input']
         print('Got code:', code, 'input:', input_str)
         print('Running Seriously code...')
-        p = Popen(['./seriously.py', '-q', '-c', code.encode('cp437')], stdout=PIPE, stderr=PIPE, stdin=PIPE)
+        p = Popen(['./seriously.py', '-x', '-q', '-c', code.encode('cp437')], stdout=PIPE, stderr=PIPE, stdin=PIPE)
         output, error = map(lambda s: s.decode('utf-8'), p.communicate(input_str))
         print('Output:', output, 'error:', error, 'return:', p.returncode)
         if p.returncode:
-            return render_template('error.html', code=code, input=input_str, error=error)
+            return render_template('error.html', hexdump=code, input=input_str, error=error, code='')
         else:
-            return render_template('code.html', code=code, input=input_str, output=output)
+            return render_template('code.html', hexdump=code, input=input_str, output=output, code='')
     else:
         return render_template('primary.html')
 

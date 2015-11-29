@@ -26,9 +26,9 @@
     </form>
     <div id="hexwarn"></div>
     <p>Hex Dump</p>
-    <textarea rows="4" cols="50" name="hexdump" id="hexdump"></textarea>
+    <textarea rows="4" cols="50" name="code" id="code" form="srs">{{ hexdump }}</textarea>
     <p>Code</p>
-    <textarea rows="4" cols="50" name="code" id="code" form="srs">{{ code }}</textarea>
+    <textarea rows="4" cols="50" name="rawcode" id="rawcode">{{ code }}</textarea>
     <p>Input (each line is a different input)</p>
     <textarea rows="4" cols="50" name="input" id="input" form="srs">{{ input }}</textarea>
     <br/>
