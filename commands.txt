@@ -218,7 +218,7 @@ D8 (Ø):
 D9 (Ù):
 DA (Ú):
 DB (Û): pop a,b: push nCr(a,b)
-DC (Ü):
+DC (Ü): pop a,b: push nPr(a,b)
 DD (Ý): pop "a": push b64decode("a")
 DE (Þ): pop "a": push b64encode("a")
 DF (ß):
