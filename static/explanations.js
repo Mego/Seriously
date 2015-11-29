@@ -44,7 +44,7 @@ var explanations = {
 "2A":'pop a,b: push a*b; pop "a",b: repeat "a" b times, push "a" ("a"*b); pop a,[b] or [b],a: apply a* to each element in the array',
 "2B":'pop a,b: push a+b; pop "a","b": push concatenation of "a" and "b"; pop [a],[b]: push [a][b] (append [b] to [a]); pop a,[b] or [b],a: apply a* to each element in the array',
 "2C":'read value from stdin and push',
-"2D":'pop a,b: push a-b',
+"2D":'pop a,b: push a-b; pop [a],[b]: push [a]-[b] (all elements of [a] not in [b])',
 "2E":'pop a: write a to stdout; pop f: f. (call f and execute . recursively)',
 "2F":'pop a,b: push a/b (float division); pop [a]: rotate [a] right by 1, push [a]',
 "30":'push 0',
