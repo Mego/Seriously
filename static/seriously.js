@@ -194,6 +194,30 @@ function updateUtils() {
     updateHexDump();
 }
 
+function updateUtilsHex() {
+    if(updateCode())
+        updateUtils();
+}
+
+function updateCode() {
+    $("#hexwarn").html();
+    var hex = $('#hexdump').val();
+    if(hex.length % 2 != 0) {
+        return false;
+    }
+    var code = '';
+    for(var i = 0; i < hex.length; i += 2) {
+        var val = parseInt(hex.substr(i,2),16);
+        if(isNaN(val)) {
+            $("#hexwarn").html("error: '"+hex.substr(i,2)+"' is not a valid hex byte (must be in 00-FF)")
+            return false;
+        }
+        code += cp437.encode(val);
+    }
+    $("#code").val(code);
+    return true;
+}
+
 function utf8_to_b64(str) {
     return window.btoa(unescape(encodeURIComponent(str)));
 }
@@ -227,7 +251,7 @@ $(document).ready(
                 updateUtils();
             });
             $('#hexdump').on('input propertychange paste', function() {
-                updateUtils();
+                updateUtilsHex();
             });
             $("input").keypress(function(e){
                 var charCode = !e.charCode ? e.which : e.charCode;
