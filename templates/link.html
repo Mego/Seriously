@@ -34,7 +34,7 @@
       }
       sCode = cp437.encodeString(sCode);
       var sInput = s[1].split("=")[1];
-      alert("code: "+sCode+"\n\ninput: "+sInput)
+      //alert("code: "+sCode+"\n\ninput: "+sInput)
       var url = "http://" + window.location.hostname + "/";
       $.redirect(url, {code: sCode, input: sInput});
     });
