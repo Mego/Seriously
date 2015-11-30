@@ -126,134 +126,134 @@
 7D (}): pop a: rotate stack left a times
 7E (~): pop a: push ~a (unary bitwise negate)
 7F (): terminate the program (without implicit stack popping and printing)
-80 (Ä): pop a,b: push a+bi; pop [a]: pop pairs of real numerics b,c from [a] and push b+ci (appending 0 to [a] if len([a]) is odd)
-81 (Å): pop entire stack and print to stdout
-82 (Ç): pop entire stack (clear stack)
-83 (É): pop a: push asin(a)
-84 (Ñ): pop a: push acos(a)
-85 (Ö): pop a: push atan(a)
-86 (Ü): pop a,b: push atan2(a,b)
-87 (á): pop a: push asinh(a)
-88 (à): pop a: push acosh(a)
-89 (â): pop a: push atanh(a)
-8A (ä): pop a: push repr(a)
-8B (ã): push i, the imaginary unit (sqrt(-1) or 0+1i)
-8C (å): pop a, push 0+ai; pop [a], push [a] with every element multiplied by i
-8D (ç): pop a: push 1/a
-8E (é): pop a: push sinh(a)
-8F (è): pop a: push cosh(a)
-90 (ê): pop a: push tanh(a)
-91 (ë): pop [a]: push mean([a])
-92 (í): pop "a","b","c": push "a".replace("b","c")
-93 (ì): pop "a": push "a".strip()
-94 (î): pop "a": push "a".lstrip()
-95 (ï): pop "a": push "a".rstrip()
-96 (ñ): pop "a": push "a".upper()
-97 (ó): pop "a": push "a".lower()
-98 (ò): pop "a": push "a".title()
-99 (ô): pop "a": push "a".swapcase()
-9A (ö): pop [a]: push mode([a])
-9B (õ): pop a,b: push abs(a)*sgn(b)
-9C (ú): pop "a": push a function whose code is "a"
-9D (ù): pop [a],[b]: push the result of pairwise addition of [a] and [b], padding the shorter with 0s
-9E (û): pop z: push phase(z)
-9F (ü): pop f: call f
-A0 (†): pop z: push the complex conjugate of z
-A1 (°): pop a,[b]: push [b].index(a) (0-based, -1 if not found)
-A2 (¢): pop a: if bool(a) push a, else terminate the program (conditional exit); terminate the program if the stack is empty
-A3 (£):
-A4 (§): pop [a]: push enumerate([a]) ([[i,a[i]] for i in range(len(a))])
-A5 (•):
-A6 (¶): pop a: push a*a
-A7 (ß): pop a: push degrees(a)
-A8 (®): pop a,b: push int(a,b) (interpret a as a base-b int)
-A9 (©): pop a: push a+2
-AA (™): pop a: push a-2
-AB (´): pop a: push a/2 (float division)
-AC (¨): pop a: push a/4 (float division)
-AD (≠): pop a,b: push a string representing a in base b
-AE (Æ): pop a,b: insert b at position a, indexed from the bottom of the stack
-AF (Ø): pop a,b: insert b at position a, indexed from the top of the stack
-B0 (∞): pop [a],[b]: push [[a][i] if [b][i] for i in len(a)], pads [b] with 0s if necessary
-B1 (±): pop a: push totient(a) (# of integers <= a that are coprime with a)
-B2 (≤): pop a: push pi(a) (# of primes <= a)
-B3 (≥): duplicate stack ([a,b,c] => [a,b,c,a,b,c])
-B4 (¥): pop a,b: push 1 if a and b are coprime else 0
-B5 (µ):
-B6 (∂):
-B7 (∑):
-B8 (∏):
-B9 (π):
-BA (∫): pop [a] or "a": push median([a]/"a") (using ordinals if string)
-BB (ª): pop a: save a in register 0
-BC (º): pop a: save a in register 1
-BD (Ω): push the value in register 0
-BE (æ): push the value in register 1
-BF (ø): pop a,b: push b to register a
-C0 (¿): pop a: push the value in register a
-C1 (¡):
-C2 (¬):
-C3 (√):
-C4 (ƒ):
-C5 (≈): duplicate each element on stack ([a,b,c] => [a,a,b,b,c,c])
-C6 (∆): pop a: make a total copies of each element on stack (3 [a,b,c] -> [a,a,a,b,b,b,c,c,c])
-C7 («): pop a: pop a elements and push a list containing those elements in their original order
-C8 (»):
-C9 (…):
-CA ( ):
-CB (À): push pi
-CC (Ã): push e
-CD (Õ):
-CE (Œ): pop f: while value on top of stack is truthy (peek), call f
-CF (œ):
-D0 (–):
-D1 (—): pop a: push 10**a
-D2 (“): pop a: push log(a) (log base 10)
-D3 (”): pop a: push 2**a
-D4 (‘): pop a: push lg(a) (log base 2)
-D5 (’): push ln(2)
-D6 (÷):
-D7 (◊):
-D8 (ÿ):
-D9 (Ÿ):
-DA (⁄):
-DB (€):
-DC (‹):
-DD (›): pop "a": push b64decode("a")
-DE (ﬁ): pop "a": push b64encode("a")
-DF (ﬂ):
-E0 (‡):
-E1 (·):
-E2 (‚): pop a: push Gamma(a)
-E3 („): pop [a]: push product([a])
-E4 (‰): pop [a]: push sum([a])
-E5 (Â):
-E6 (Ê):
-E7 (Á): pop a: push 2*a
-E8 (Ë):
-E9 (È):
-EA (Í):
-EB (Î):
-EC (Ï): eval delimiter: the code inside the delimiters is eval'd as Python code, and the result is pushed on the stack
-ED (Ì): push phi (golden ratio)
-EE (Ó): push "" (empty string)
-EF (Ô): pop [a],[b]: push intersection of [a] and [b]
-F0 ():
-F1 (Ò): pop a: push -a (unary negate)
-F2 (Ú): pop a,b: push a>=b
-F3 (Û): pop a,b: push a<=b
-F4 (Ù):
-F5 (ı):
-F6 (ˆ):
-F7 (˜): pop a: push int(a)
-F8 (¯): pop a: push radians(a)
-F9 (˘):
-FA (˙):
-FB (˚): pop a: push sqrt(a)
-FC (¸):
-FD (˝):
-FE (˛): print the entire stack without popping, separated by spaces
-FF (ˇ):
+80 (‚Ç¨): pop a,b: push a+bi; pop [a]: pop pairs of real numerics b,c from [a] and push b+ci (appending 0 to [a] if len([a]) is odd)
+81 (¬Å): pop entire stack and print to stdout
+82 (‚Äö): pop entire stack (clear stack)
+83 (∆í): pop a: push asin(a)
+84 (‚Äû): pop a: push acos(a)
+85 (‚Ä¶): pop a: push atan(a)
+86 (‚Ä†): pop a,b: push atan2(a,b)
+87 (‚Ä°): pop a: push asinh(a)
+88 (ÀÜ): pop a: push acosh(a)
+89 (‚Ä∞): pop a: push atanh(a)
+8A (≈†): pop a: push repr(a)
+8B (‚Äπ): push i, the imaginary unit (sqrt(-1) or 0+1i)
+8C (≈í): pop a, push 0+ai; pop [a], push [a] with every element multiplied by i
+8D (¬ç): pop a: push 1/a
+8E (≈Ω): pop a: push sinh(a)
+8F (¬è): pop a: push cosh(a)
+90 (¬ê): pop a: push tanh(a)
+91 (‚Äò): pop [a]: push mean([a])
+92 (‚Äô): pop "a","b","c": push "a".replace("b","c")
+93 (‚Äú): pop "a": push "a".strip()
+94 (‚Äù): pop "a": push "a".lstrip()
+95 (‚Ä¢): pop "a": push "a".rstrip()
+96 (‚Äì): pop "a": push "a".upper()
+97 (‚Äî): pop "a": push "a".lower()
+98 (Àú): pop "a": push "a".title()
+99 (‚Ñ¢): pop "a": push "a".swapcase()
+9A (≈°): pop [a]: push mode([a])
+9B (‚Ä∫): pop a,b: push abs(a)*sgn(b)
+9C (≈ì): pop "a": push a function whose code is "a"
+9D (¬ù): pop [a],[b]: push the result of pairwise addition of [a] and [b], padding the shorter with 0s
+9E (≈æ): pop z: push phase(z)
+9F (≈∏): pop f: call f
+A0 (¬†): pop z: push the complex conjugate of z
+A1 (¬°): pop a,[b]: push [b].index(a) (0-based, -1 if not found)
+A2 (¬¢): pop a: if bool(a) push a, else terminate the program (conditional exit); terminate the program if the stack is empty
+A3 (¬£):
+A4 (¬§): pop [a]: push enumerate([a]) ([[i,a[i]] for i in range(len(a))])
+A5 (¬•):
+A6 (¬¶): pop a: push a*a
+A7 (¬ß): pop a: push degrees(a)
+A8 (¬®): pop a,b: push int(a,b) (interpret a as a base-b int)
+A9 (¬©): pop a: push a+2
+AA (¬™): pop a: push a-2
+AB (¬´): pop a: push a/2 (float division)
+AC (¬¨): pop a: push a/4 (float division)
+AD (¬≠): pop a,b: push a string representing a in base b
+AE (¬Æ): pop a,b: insert b at position a, indexed from the bottom of the stack
+AF (¬Ø): pop a,b: insert b at position a, indexed from the top of the stack
+B0 (¬∞): pop [a],[b]: push [[a][i] if [b][i] for i in len(a)], pads [b] with 0s if necessary
+B1 (¬±): pop a: push totient(a) (# of integers <= a that are coprime with a)
+B2 (¬≤): pop a: push pi(a) (# of primes <= a)
+B3 (¬≥): duplicate stack ([a,b,c] => [a,b,c,a,b,c])
+B4 (¬¥): pop a,b: push 1 if a and b are coprime else 0
+B5 (¬µ):
+B6 (¬∂):
+B7 (¬∑):
+B8 (¬∏):
+B9 (¬π):
+BA (¬∫): pop [a] or "a": push median([a]/"a") (using ordinals if string)
+BB (¬ª): pop a: save a in register 0
+BC (¬º): pop a: save a in register 1
+BD (¬Ω): push the value in register 0
+BE (¬æ): push the value in register 1
+BF (¬ø): pop a,b: push b to register a
+C0 (√Ä): pop a: push the value in register a
+C1 (√Å):
+C2 (√Ç):
+C3 (√É):
+C4 (√Ñ):
+C5 (√Ö): duplicate each element on stack ([a,b,c] => [a,a,b,b,c,c])
+C6 (√Ü): pop a: make a total copies of each element on stack (3 [a,b,c] -> [a,a,a,b,b,b,c,c,c])
+C7 (√á): pop a: pop a elements and push a list containing those elements in their original order
+C8 (√à):
+C9 (√â):
+CA (√ä):
+CB (√ã): push pi
+CC (√å): push e
+CD (√ç):
+CE (√é): pop f: while value on top of stack is truthy (peek), call f
+CF (√è):
+D0 (√ê):
+D1 (√ë): pop a: push 10**a
+D2 (√í): pop a: push log(a) (log base 10)
+D3 (√ì): pop a: push 2**a
+D4 (√î): pop a: push lg(a) (log base 2)
+D5 (√ï): push ln(2)
+D6 (√ñ):
+D7 (√ó):
+D8 (√ò):
+D9 (√ô):
+DA (√ö):
+DB (√õ): pop a,b: push nCr(a,b)
+DC (√ú): pop a,b: push nPr(a,b)
+DD (√ù): pop "a": push b64decode("a")
+DE (√û): pop "a": push b64encode("a")
+DF (√ü):
+E0 (√†):
+E1 (√°):
+E2 (√¢): pop a: push Gamma(a)
+E3 (√£): pop [a]: push product([a])
+E4 (√§): pop [a]: push sum([a])
+E5 (√•):
+E6 (√¶):
+E7 (√ß): pop a: push 2*a
+E8 (√®):
+E9 (√©):
+EA (√™):
+EB (√´):
+EC (√¨): eval delimiter: the code inside the delimiters is eval'd as Python code, and the result is pushed on the stack
+ED (√≠): push phi (golden ratio)
+EE (√Æ): push "" (empty string)
+EF (√Ø): pop [a],[b]: push intersection of [a] and [b]
+F0 (√∞):
+F1 (√±): pop a: push -a (unary negate)
+F2 (√≤): pop a,b: push a>=b
+F3 (√≥): pop a,b: push a<=b
+F4 (√¥):
+F5 (√µ):
+F6 (√∂):
+F7 (√∑): pop a: push int(a)
+F8 (√∏): pop a: push radians(a)
+F9 (√π):
+FA (√∫):
+FB (√ª): pop a: push sqrt(a)
+FC (√º):
+FD (√Ω):
+FE (√æ): print the entire stack without popping, separated by spaces
+FF (√ø):
 
 Notes:
 This file should be viewed with code page 437 encoding (CP437, OEM-437, and OEM-US are common names for it)
