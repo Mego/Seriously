@@ -250,16 +250,19 @@ def s_fn(srs):
     a=srs.pop()
     if type(a) is StringType:
         b=srs.pop()
-        if type(b) is StringType:
-            srs.push([''.join(list(g)) for k,g in itertools.groupby(a,lambda x:x in b) if not k])
-        else:
-            srs.push(b);srs.push(a) #don't do anything if the other isn't a string (can be made to do something later)
+        if type(b) is ListType:
+            try:
+                b=''.join(b)
+            except TypeError:
+                b=''.join(map(repr,b))
+        if not type(b) in [StringType,ListType]:
+            b=repr(b)
+        srs.push([''.join(list(g)) for k,g in itertools.groupby(a,lambda x:x in b) if not k])
     elif type(a) is ListType:
         b=srs.pop()
-        if type(b) in [ListType,StringType]:
-            srs.push([list(g) for k,g in itertools.groupby(a,lambda x:x in b) if not k])
-        else:
-            srs.push(b);srs.push(a) #don't do anything if the other isn't iterable (can be made to do something later)
+        if not type(b) in [StringType,ListType]:
+            b=[b]
+        srs.push([list(g) for k,g in itertools.groupby(a,lambda x:x in b) if not k])
     else:
         srs.push(1 if a>0 else -1 if a<0 else 0)
     
