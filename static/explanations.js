@@ -114,7 +114,7 @@ var explanations = {
 "70":'pop a: push 1 if a is prime else 0; pop [a]: pop b from [a], push [a],b',
 "71":'pop [a],b: enqueue b in [a], push [a]',
 "72":'pop "a": push each character in "a", starting from the end (explode string); pop a: push [0,1,...,a-1] (range(0,a))',
-"73":'pop a: push sgn(a)',
+"73":'pop a: push sgn(a); pop [a],[b]: push a list of sublists of [a] split by any occurrences of elements of [b] (with "a", the sublists are strings)',
 "74":'pop all elements from stack, flatten any lists and explode any strings, and push them in the same order they were popped (full stack flatten/explode)',
 "75":'pop a: push a+1',
 "76":'pop a: seed the RNG with a (random.seed(a))',
