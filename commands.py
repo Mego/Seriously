@@ -246,6 +246,26 @@ def lr_fn(srs):
     elif type(a) in [IntType, LongType]:
         srs.push(range(a))
         
+def s_fn(srs):
+    a=srs.pop()
+    if type(a) is StringType:
+        b=srs.pop()
+        if type(b) is ListType:
+            try:
+                b=''.join(b)
+            except TypeError:
+                b=''.join(map(repr,b))
+        if not type(b) in [StringType,ListType]:
+            b=repr(b)
+        srs.push([''.join(list(g)) for k,g in itertools.groupby(a,lambda x:x in b) if not k])
+    elif type(a) is ListType:
+        b=srs.pop()
+        if not type(b) in [StringType,ListType]:
+            b=[b]
+        srs.push([list(g) for k,g in itertools.groupby(a,lambda x:x in b) if not k])
+    else:
+        srs.push(1 if a>0 else -1 if a<0 else 0)
+    
 def if_fn(srs):
     a,b,c=srs.pop(),srs.pop(),srs.pop()
     srs.push(b if a else c)
@@ -562,7 +582,7 @@ fn_table={
         0x70:p_fn,
         0x71:enq_fn,
         0x72:lr_fn,
-        0x73:lambda x:x.push((lambda y:1 if y>0 else -1 if y<0 else 0)(x.pop())),
+        0x73:s_fn,
         0x74:flat_explode_fn,
         0x75:lambda x:x.push(x.pop()+1),
         0x76:lambda x:random.seed(x.pop()),
