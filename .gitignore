@@ -3,3 +3,6 @@ __pycache__/
 *$py.class
 *.bak
 publish.sh
+*.srs
+wiki.txt
+wikify.py
