@@ -7,6 +7,7 @@ import math as rmath
 import random, itertools, sys
 from types import *
 from base64 import *
+from copy import copy
 
 def template_specialize(fname, *args):
     if fname not in globals():
@@ -145,7 +146,7 @@ def idiv_fn(srs):
 def dupe_fn(srs):
     a=srs.pop()
     srs.push(a)
-    srs.push(a)
+    srs.push(copy(a))
     
 def rot2_fn(srs):
     a,b=srs.pop(),srs.pop()
@@ -229,14 +230,14 @@ def ins_bot_fn(srs):
     srs.stack=srs.stack[:-a]+[b]+srs.stack[-a:]
     
 def dupe_all_fn(srs):
-    srs.stack=srs.stack[:]+srs.stack[:]
+    srs.stack=[copy(x) for x in srs.stack[:]]+srs.stack[:]
     
 def dupe_each_fn(srs):
     tmp=[]
     while len(srs.stack)>0:
         a=srs.pop()
         tmp.append(a)
-        tmp.append(a)
+        tmp.append(copy(a))
     srs.stack=tmp[:]
     
 def lr_fn(srs):
