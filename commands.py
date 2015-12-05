@@ -4,7 +4,7 @@ from __future__ import print_function, division
 from fractions import gcd
 import operator, cmath
 import math as rmath
-import random, itertools, sys
+import random, itertools, sys, string
 from types import *
 from base64 import *
 from copy import copy
@@ -31,6 +31,9 @@ def Fib(n):
     while n>2:
         a,b,n=b,a+b,n-1
     return b
+    
+def prod(iter):
+    return reduce(operator.mul, iter, 1)
 
 primes = [2,3]
 
@@ -41,7 +44,13 @@ class MathSelector(object):
         try:
             return getattr(rmath,self.fn)(*args)
         except:
-            return getattr(cmath,self.fn)(*args)
+            try:
+                return getattr(cmath,self.fn)(*args)
+            except Exception as e:
+                if self.fn == 'factorial':
+                    return naive_factorial(*args)
+                else:
+                    raise e
 
 class Math(object):
     def __getattr__(self, fn):
@@ -83,6 +92,29 @@ def NinetyNineBottles():
         i += 1
         res += '\n\n'
     return res
+    
+def naive_factorial(x):
+    res = 1
+    while x:
+        res *= x
+        x -= 1
+    return res
+    
+def nCr(n, k):
+    if k > n:
+        return 0
+    elif k==n:
+        return 1
+    res = 1
+    while k:
+        res *= (n+1-k)/k
+        k-=1
+    return int(res)
+        
+def nPr(n, k):
+    if k > n:
+        return 0
+    return nCr(n,k)*math.factorial(k)
 
 def is_prime(x):
     global primes
@@ -287,14 +319,18 @@ def comp_fn(srs):
     else:
         srs.push(a)
         
-def map_fn(srs):
-    f,l=srs.pop(),srs.pop()
-    res=[]
-    for x in l:
-        s = srs.make_new(x)
-        f(s)
-        res+=s.stack
-    srs.push(res)
+def M_fn(srs):
+    a=srs.pop()
+    if type(a) in [StringType,ListType]:
+        srs.push(max(a))
+    else:
+        b=srs.pop()
+        res=[]
+        for x in b:
+            s = srs.make_new(x)
+            a(s)
+            res+=s.stack
+        srs.push(res)
     
 def r_fn(srs):
     a=srs.pop()
@@ -367,10 +403,16 @@ def j_fn(srs):
 def star_fn(srs):
     a=srs.pop()
     b=srs.pop()
-    if type(a) is ListType:
+    if type(a) is ListType and type(a) is not ListType:
         srs.push(map(lambda x:x*b,a))
-    elif type(b) is ListType:
+    elif type(b) is ListType and type(a) is not ListType:
         srs.push(map(lambda x:x*a,b))
+    elif type(a) == type(b) == ListType:
+        if(len(b) > len(a)):
+            a,b=b,a
+        while len(b) < len(a):
+            b.append(0)
+        srs.push(sum([prod(x) for x in zip(a,b)]))
     else:
         srs.push(a*b)
         
@@ -515,8 +557,51 @@ def diff_fn(srs):
     else:
         srs.push(a-b)
         
+def m_fn(srs):
+    a=srs.pop()
+    if type(a) in [StringType,ListType]:
+        srs.push(min(a))
+    else:
+        srs.push(math.modf(a))
+    
+def filter_types(iter,*types):
+    return filter(lambda x:type(x) in types, iter)
+    
+def inv_fil_fn(srs):
+    a=srs.pop()
+    if type(a) is ListType:
+        srs.push(filter_types(a,IntType,LongType,FloatType,ComplexType))
+    else:
+        srs.push(1/a)
+    
+def AE_fn(srs):
+    a=srs.pop()
+    if type(a) is ListType:
+        srs.push(filter_types(a,StringType))
+    else:
+        b,c=srs.pop(),srs.pop()
+        srs.push(a.replace(b,c))
+    
+def fn_fil_fn(srs):
+    a=srs.pop()
+    if type(a) is ListType:
+        srs.push(filter(lambda x:isinstance(x,SeriousFunction),a))
+    else:
+        srs.push(SeriousFunction(a))
+        
+def get_input_fn(srs):
+    a=raw_input()
+    try:
+        b = eval(a)
+        b = list(b) if type(b) is TupleType else b
+    except:
+        b = a
+    finally:
+        srs.push(b)
+        
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
+        0x0C:lambda x:x.push(sys.stdin.read()),
         0x20:lambda x:x.push(len(x.stack)),
         0x21:lambda x:x.push(math.factorial(x.pop())),
         0x23:make_list_fn,
@@ -527,7 +612,7 @@ fn_table={
         0x29:lambda x:x.append(x.pop()),
         0x2A:star_fn,
         0x2B:plus_fn,
-        0x2C:lambda x:x.push((lambda y:list(y) if type(y) is TupleType else y)(input())),
+        0x2C:get_input_fn,
         0x2D:diff_fn,
         0x2E:lambda x:(lambda y:print(y) if not isinstance(y,SeriousFunction) else y(x) or print(x.pop()))(x.pop()),
         0x2F:div_fn,
@@ -549,7 +634,7 @@ fn_table={
         0x4A:j_fn,
         0x4B:lambda x:x.push(math.ceil(x.pop())),
         0x4C:lambda x:x.push(math.floor(x.pop())),
-        0x4D:map_fn,
+        0x4D:M_fn,
         0x4E:lambda x:x.push(NinetyNineBottles()),
         0x4F:lambda x:map(lambda y:map(x.push,map(ord,y)[::-1]),x.pop()[::-1]),
         0x50:lambda x:x.push(nth_prime(x.pop())),
@@ -577,7 +662,7 @@ fn_table={
         0x6A:lambda x:x.push(str.join(x.pop(),map(str,x.pop()))),
         0x6B:to_list_fn,
         0x6C:lambda x:x.push(len(x.pop())),
-        0x6D:lambda x:map(x.push,math.modf(x.pop())),
+        0x6D:m_fn,
         0x6E:n_fn,
         0x6F:psh_fn,
         0x70:p_fn,
@@ -609,12 +694,12 @@ fn_table={
         0x8A:lambda x:x.push(repr(x.pop())),
         0x8B:lambda x:x.push(complex(0,1)),
         0x8C:i_mul_fn,
-        0x8D:lambda x:x.push(1/x.pop()),
+        0x8D:inv_fil_fn,
         0x8E:lambda x:x.push(math.sinh(x.pop())),
         0x8F:lambda x:x.push(math.cosh(x.pop())),
         0x90:lambda x:x.push(math.tanh(x.pop())),
         0x91:lambda x:x.push((lambda y:sum(y)/len(y) if y else 0)(x.pop())),
-        0x92:lambda x:x.push(x.pop().replace(x.pop(),x.pop())),
+        0x92:AE_fn,
         0x93:lambda x:x.push(x.pop().strip()),
         0x94:lambda x:x.push(x.pop().lstrip()),
         0x95:lambda x:x.push(x.pop().rstrip()),
@@ -624,7 +709,7 @@ fn_table={
         0x99:lambda x:x.push(x.pop().swapcase()),
         0x9A:lambda x:x.push((lambda y:max(y,key=y.count))(x.pop())),
         0x9B:lambda x:x.push(math.copysign(x.pop(),x.pop())),
-        0x9C:lambda x:x.push(SeriousFunction(x.pop())),
+        0x9C:fn_fil_fn,
         0x9D:lambda x:x.push(map(operator.add,itertools.izip_longest(x.pop(),x.pop(),fillvalue=0))),
         0x9E:lambda x:x.push(cmath.phase(x.pop())),
         0x9F:lambda x:x.pop()(x),
@@ -632,6 +717,7 @@ fn_table={
         0xA1:index_fn,
         0xA2:cond_quit_fn,
         0xA4:lambda x:x.push(map(list,enumerate(x.pop()))),
+        0xA5:lambda x:x.push(filter_types(x.pop(),ListType)),
         0xA6:lambda x:x.push(x.pop()**2),
         0xA7:lambda x:x.push(math.degrees(x.pop())),
         0xA8:lambda x:x.push(int(x.pop(),x.pop())),
@@ -647,6 +733,7 @@ fn_table={
         0xB2:lambda x:x.push(sum([is_prime(i) for i in range(1,x.pop()+1)])),
         0xB3:dupe_all_fn,
         0xB4:lambda x:x.push(1 if gcd(x.pop(),x.pop())==1 else 0),
+        0xB9:lambda x:x.push((lambda y:[nCr(y,k) for k in range(y+1)])(x.pop())),
         0xBA:median_fn,
         0xBB:lambda x:set_reg(0,x.pop()),
         0xBC:lambda x:set_reg(1,x.pop()),
@@ -665,8 +752,11 @@ fn_table={
         0xD3:lambda x:x.push(pow(2,x.pop())),
         0xD4:lambda x:x.push(math.log(x.pop(),2)),
         0xD5:lambda x:x.push(math.log(2)),
+        0xDB:lambda x:x.push(nCr(x.pop(),x.pop())),
+        0xDC:lambda x:x.push(nPr(x.pop(),x.pop())),
         0xDD:lambda x:x.push(b64decode(x.pop())),
         0xDE:lambda x:x.push(b64encode(x.pop())),
+        0xDF:lambda x:x.push(("0123456789"+string.ascii_uppercase+string.ascii_lowercase+"+/")[:x.pop()]),
         0xE2:lambda x:x.push(math.gamma(x.pop())),
         0xE3:lambda x:x.push(reduce(operator.mul,x.pop(),1)),
         0xE4:sum_fn,
