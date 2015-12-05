@@ -403,7 +403,7 @@ def j_fn(srs):
 def star_fn(srs):
     a=srs.pop()
     b=srs.pop()
-    if type(a) is ListType and type(a) is not ListType:
+    if type(a) is ListType and type(b) is not ListType:
         srs.push(map(lambda x:x*b,a))
     elif type(b) is ListType and type(a) is not ListType:
         srs.push(map(lambda x:x*a,b))
