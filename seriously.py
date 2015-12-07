@@ -50,78 +50,79 @@ class Seriously(object):
         else:
             self.code = code
         while i < len(code):
-            c = code[i]
-            if c == '"':
-                s = ""
-                i+=1
-                while i<len(code) and code[i]!='"':
-                    s+=code[i]
+            old_stack = self.stack[:]
+            try:
+                c = code[i]
+                if c == '"':
+                    s = ""
                     i+=1
-                self.push(s)
-            if ord_cp437(c) == 0xEC:
-                s = ""
-                i+=1
-                while i<len(code) and ord_cp437(code[i]) != 0xEC:
-                    s+=code[i]
+                    while i<len(code) and code[i]!='"':
+                        s+=code[i]
+                        i+=1
+                    self.push(s)
+                if ord_cp437(c) == 0xEC:
+                    s = ""
                     i+=1
-                r = eval(s)
-                if r is not None:
-                    self.push(r)
-            elif c == "'":
-                i+=1
-                self.push(code[i])
-            elif c == ':':
-                v = ""
-                i+=1
-                while i<len(code) and code[i]!=':':
-                    v+=code[i]
+                    while i<len(code) and ord_cp437(code[i]) != 0xEC:
+                        s+=code[i]
+                        i+=1
+                    r = eval(s)
+                    if r is not None:
+                        self.push(r)
+                elif c == "'":
                     i+=1
-                val = 0
-                try:
-                    val = eval(v)
-                except:
-                    pass
-                val = val if type(val) in [IntType,LongType,FloatType,ComplexType] else 0
-                self.push(val)
-            elif c == 'W':
-                inner = ''
-                i+=1
-                while i<len(code) and code[i]!='W':
-                    inner+=code[i]
+                    self.push(code[i])
+                elif c == ':':
+                    v = ""
                     i+=1
-                if self.debug_mode:
-                    print "while loop code: %s"%inner
-                while self.peek():
-                    self.eval(inner, print_at_end=False)
-            elif c == '[':
-                l = ''
-                i+=1
-                while i<len(code) and code[i]!=']':
-                    l+=code[i]
+                    while i<len(code) and code[i]!=':':
+                        v+=code[i]
+                        i+=1
+                    val = 0
+                    try:
+                        val = eval(v)
+                    except:
+                        pass
+                    val = val if type(val) in [IntType,LongType,FloatType,ComplexType] else 0
+                    self.push(val)
+                elif c == 'W':
+                    inner = ''
                     i+=1
-                self.push(eval('[%s]'%l))
-            elif c == '`':
-                f = ''
-                i+=1
-                while i<len(code) and code[i]!='`':
-                    f+=code[i]
+                    while i<len(code) and code[i]!='W':
+                        inner+=code[i]
+                        i+=1
+                    if self.debug_mode:
+                        print "while loop code: %s"%inner
+                    while self.peek():
+                        self.eval(inner, print_at_end=False)
+                elif c == '[':
+                    l = ''
                     i+=1
-                self.push(commands.SeriousFunction(f))
-            elif ord(c) in range(48,58):
-                self.push(int(c))
-            else:
-                old_stack = self.stack[:]
-                try:
+                    while i<len(code) and code[i]!=']':
+                        l+=code[i]
+                        i+=1
+                    self.push(eval('[%s]'%l))
+                elif c == '`':
+                    f = ''
+                    i+=1
+                    while i<len(code) and code[i]!='`':
+                        f+=code[i]
+                        i+=1
+                    self.push(commands.SeriousFunction(f))
+                elif ord(c) in range(48,58):
+                    self.push(int(c))
+                else:
                     if self.debug_mode:
                         print binascii.hexlify(chr(ord_cp437(c))).upper()
                     self.fn_table.get(ord_cp437(c), lambda x:x)(self)
-                except SystemExit:
-                    exit()
-                except:
-                    if self.debug_mode:
-                        traceback.print_exc()
-                    self.stack = old_stack[:]
-            i+=1
+            except SystemExit:
+                exit()
+            except:
+                if self.debug_mode:
+                    traceback.print_exc()
+                self.stack = old_stack[:]
+            finally:
+                i+=1
         if not self.repl_mode and print_at_end:
             while len(self.stack) > 0:
                 print self.pop()
