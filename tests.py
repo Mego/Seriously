@@ -16,8 +16,10 @@ def serious_check(code, result, input='', errors=True):
 # I/O tests
 assert serious_check(r'	','a\n','a')
 assert serious_check(r',','a\n','"a"')
+assert serious_check(r',','abc\n','abc')
 assert serious_check(r',','12345\n','12345')
 assert serious_check(r',','[3, 2, 1]\n','[3,2,1]')
+assert serious_check(chr(0x0C), "abc\n", 'abc')
 
 # Literals tests
 assert serious_check(r'"a','a\n')
@@ -51,6 +53,14 @@ assert serious_check(r'53%s3%s'%(chr(0xBF),chr(0xC0)),'5\n')
 
 # Math tests
 assert serious_check(r'[1][1,2]-','[2]\n')
+assert serious_check(r'[1,2,3]M','3\n')
+assert serious_check(r'[1,2,3]m','1\n')
+assert serious_check(r'[2,3][2,3]*','13\n')
+assert serious_check(r'[4][1,2,"3"]q'+chr(0x8D), '[1, 2]\n')
+assert serious_check(r'[4][1,2,"3"]q'+chr(0x92), "['3']\n")
+assert serious_check(r'[4][1,2,"3"]q'+chr(0xA5), '[[4]]\n')
+assert serious_check(r'2'+chr(0xB9), '[1, 2, 1]\n')
+assert serious_check(r':16:'+chr(0xDF), "0123456789ABCDEF\n")
 
 # More to come...
 
