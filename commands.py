@@ -562,7 +562,7 @@ def m_fn(srs):
     if type(a) in [StringType,ListType]:
         srs.push(min(a))
     else:
-        srs.push(math.modf(a))
+        srs.push(map(list,math.modf(a)))
     
 def filter_types(iter,*types):
     return filter(lambda x:type(x) in types, iter)
