@@ -61,6 +61,10 @@ assert serious_check(r'[4][1,2,"3"]q'+chr(0x92), "['3']\n")
 assert serious_check(r'[4][1,2,"3"]q'+chr(0xA5), '[[4]]\n')
 assert serious_check(r'2'+chr(0xB9), '[1, 2, 1]\n')
 assert serious_check(r':16:'+chr(0xDF), "0123456789ABCDEF\n")
+assert serious_check(r'[1,2,3,4]'+chr(0xE4), "10\n")
+assert serious_check(r'[1,2,3,4]'+chr(0xE3), "24\n")
+assert serious_check(r'[1,2,3,4]'+chr(0xBA), "2.5\n")
+assert serious_check(r'[1,2,3,3]'+chr(0x9A), "3\n")
 
 # More to come...
 
