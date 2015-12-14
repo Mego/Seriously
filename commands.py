@@ -552,7 +552,7 @@ def set_reg(i, val):
     
 def diff_fn(srs):
     a,b=srs.pop(),srs.pop()
-    if type(a) == type(b) == ListType:
+    if all([type(x) in [ListType,StringType] for x in (a,b)]):
         srs.push(filter(lambda x:x not in b, a))
     else:
         srs.push(a-b)
