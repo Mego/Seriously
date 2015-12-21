@@ -435,10 +435,11 @@ def star_fn(srs):
 def plus_fn(srs):
     a=srs.pop()
     b=srs.pop()
-    if type(a) is ListType:
-        srs.push(map(lambda x:x+b,a))
-    elif type(b) is ListType:
-        srs.push(map(lambda x:x+a,b))
+    if type(a)!=type(b):
+        if type(a) is ListType and type(b):
+            srs.push(map(lambda x:x+b,a))
+        elif type(b) is ListType:
+            srs.push(map(lambda x:x+a,b))
     else:
         srs.push(a+b)
         
