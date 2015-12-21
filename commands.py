@@ -93,6 +93,22 @@ def NinetyNineBottles():
         res += '\n\n'
     return res
     
+def _sum(data, start=None):
+    if any(map(lambda x:type(x) is FloatType,data)):
+        return math.fsum(data,start=start or 0.0)
+    if start is None:
+        return sum(data)
+    else:
+        return sum(data, start)
+        
+def median(data):
+    n = len(data)
+    if n%2 == 1:
+        return data[n//2]
+    else:
+        i = n//2-1
+        return _sum(data[i:i+2])/2
+    
 def naive_factorial(x):
     res = 1
     while x:
@@ -412,7 +428,7 @@ def star_fn(srs):
             a,b=b,a
         while len(b) < len(a):
             b.append(0)
-        srs.push(sum([prod(x) for x in zip(a,b)]))
+        srs.push(_sum([prod(x) for x in zip(a,b)]))
     else:
         srs.push(a*b)
         
@@ -501,7 +517,7 @@ def zip_fn(srs):
         
 def sum_fn(srs):
     a=srs.pop()
-    res = sum(a,type(a[0])()) if type(a[0]) is not StringType else ''.join(map(str,a))
+    res = _sum(a,start=type(a[0])()) if type(a[0]) is not StringType else ''.join(map(str,a))
     srs.push(res)
     
 def index_fn(srs):
@@ -524,10 +540,10 @@ def median_fn(srs):
         srs.push(a[len(a)//2])
     else:
         if all([type(x) is StringType for x in a[len(a)//2-1:][:2]]):
-            med = sum(map(ord,a[len(a)//2-1:][:2]))//2
+            med = median(map(ord,a))
             srs.push(chr(med))
         else:
-            srs.push(sum(a[len(a)//2-1:][:2])//2)
+            srs.push(median(a))
             
 def c_fn(srs):
     a=srs.pop()
@@ -552,7 +568,7 @@ def set_reg(i, val):
     
 def diff_fn(srs):
     a,b=srs.pop(),srs.pop()
-    if type(a) == type(b) == ListType:
+    if all([type(x) in [ListType,StringType] for x in (a,b)]):
         srs.push(filter(lambda x:x not in b, a))
     else:
         srs.push(a-b)
@@ -698,7 +714,7 @@ fn_table={
         0x8E:lambda x:x.push(math.sinh(x.pop())),
         0x8F:lambda x:x.push(math.cosh(x.pop())),
         0x90:lambda x:x.push(math.tanh(x.pop())),
-        0x91:lambda x:x.push((lambda y:sum(y)/len(y) if y else 0)(x.pop())),
+        0x91:lambda x:x.push((lambda y:mean(y) if y else 0)(x.pop())),
         0x92:AE_fn,
         0x93:lambda x:x.push(x.pop().strip()),
         0x94:lambda x:x.push(x.pop().lstrip()),
