@@ -562,7 +562,7 @@ def m_fn(srs):
     if type(a) in [StringType,ListType]:
         srs.push(min(a))
     else:
-        srs.push(math.modf(a))
+        srs.push(map(list,math.modf(a)))
     
 def filter_types(iter,*types):
     return filter(lambda x:type(x) in types, iter)
@@ -716,6 +716,7 @@ fn_table={
         0xA0:lambda x:x.push(x.pop().conjugate()),
         0xA1:index_fn,
         0xA2:cond_quit_fn,
+        0xA3:lambda x:x.push(''.join(map(chr,range(97,122+1)))),
         0xA4:lambda x:x.push(map(list,enumerate(x.pop()))),
         0xA5:lambda x:x.push(filter_types(x.pop(),ListType)),
         0xA6:lambda x:x.push(x.pop()**2),

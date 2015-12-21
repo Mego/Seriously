@@ -58,7 +58,7 @@ var explanations = {
 "38":'push 8',
 "39":'push 9',
 "3A":'): numeric literal delimiter: pushes the string between it and the following : as a numeric value, or 0 if it cannot be converted. An implicit : is present at EOF if needed.',
-"3B":'pop a: push a,a',
+"3B":'pop a: push a,a (duplicates top element)',
 "3C":'pop a,b: push 1 if a<b else 0',
 "3D":'pop a,b: push 1 if a==b else 0',
 "3E":'pop a,b: push 1 if a>b else 0',
