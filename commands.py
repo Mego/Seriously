@@ -435,9 +435,9 @@ def star_fn(srs):
 def plus_fn(srs):
     a=srs.pop()
     b=srs.pop()
-    if type(a) is ListType:
+    if type(a) is ListType and type(b) in [IntType, LongType, ComplexType, FloatType]:
         srs.push(map(lambda x:x+b,a))
-    elif type(b) is ListType:
+    elif type(b) is ListType and type(a) in [IntType, LongType, ComplexType, FloatType]:
         srs.push(map(lambda x:x+a,b))
     else:
         srs.push(a+b)

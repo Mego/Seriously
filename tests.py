@@ -65,6 +65,7 @@ assert serious_check(r'[1,2,3,4]'+chr(0xE4), "10\n")
 assert serious_check(r'[1,2,3,4]'+chr(0xE3), "24\n")
 assert serious_check(r'[1,2,3,4]'+chr(0xBA), "2.5\n")
 assert serious_check(r'[1,2,3,3]'+chr(0x9A), "3\n")
+assert serious_check(r'[2.5, 2.5]'+chr(0xE4), "5.0\n")
 
 # More to come...
 
