@@ -83,7 +83,7 @@ var explanations = {
 "51":"if stack is empty: push the program's source code",
 "52":'pop f,[a]: call f, using [a] as a temporary stack, push [a] (similar to reduce(f,[a])); pop "a" or [a]: push reversed value ("a".reverse() or [a][::-1]); pop a: push [1,2,...,a] (range(1,a+1))',
 "53":'pop a: push sin(a); pop "a" or [a]: push sorted(a)',
-"54":'pop a: push tan(a)',
+"54":'pop a: push tan(a); pop [a],b,c: set [a][b] to c, push [a]',
 "55":'pop [a],[b]: push union of [a] and [b]',
 "56":'pop a,b: push uniform(a,b) (random float between a and b)',
 "57":'loop delimiter: peek top of stack, repeat code in loop while a evaluates to true',
