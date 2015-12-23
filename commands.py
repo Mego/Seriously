@@ -369,6 +369,7 @@ def n_fn(srs):
             srs.push(a)
             
 def full_factor(n):
+    n=abs(n)
     global primes
     init_primes_up_to(n)
     res=[]
