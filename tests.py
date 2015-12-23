@@ -65,14 +65,15 @@ assert serious_check(r'[1,2,3,4]'+chr(0xE4), "10\n")
 assert serious_check(r'[1,2,3,4]'+chr(0xE3), "24\n")
 assert serious_check(r'[1,2,3,4]'+chr(0xBA), "2.5\n")
 assert serious_check(r'[1,2,3,3]'+chr(0x9A), "3\n")
-<<<<<<< HEAD
-=======
 assert serious_check(r'[2.5, 2.5]'+chr(0xE4), "5.0\n")
 assert serious_check(r'8f', "6\n")
+assert serious_check(r'1T'+chr(0x85), "1.0\n")
 
 # String tests
 assert serious_check(r'[2,3]"{}.{}"f', "2.3\n")
->>>>>>> refs/remotes/Mego/master
+assert serious_check(r'52[2,3,4]T', "[2, 3, 5]\n")
+assert serious_check(r'52"234"T', "235\n")
+assert serious_check(r'"%s"O'%(chr(0x57)+chr(0x58)+chr(0x59)), "[%s, %s, %s]\n"%(0x57,0x58,0x59))
+assert serious_check(r'["%s"]O'%(chr(0x57)+chr(0x58)+chr(0x59)), "[%s, %s, %s]\n"%(0x57,0x58,0x59))
 
 # More to come...
-
