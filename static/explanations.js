@@ -160,7 +160,7 @@ var explanations = {
 "9E":'pop z: push phase(z)',
 "9F":'pop f: call f',
 "A0":'pop z: push the complex conjugate of z',
-"A1":'pop a,[b]: push [b].index(a) (0-based, -1 if not found)',
+"A1":'pop [a],b: push [a].index(b) (0-based, -1 if not found)',
 "A2":'pop a: if bool(a) push a, else terminate the program (conditional exit); terminate the program if the stack is empty',
 "A3":'push the lowercase English alphabet (ordinals 97-122)',
 "A4":'pop [a]: push enumerate([a]) ([[i,a[i]] for i in range(len(a))])',
