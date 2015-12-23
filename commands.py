@@ -621,8 +621,17 @@ def T_fn(srs):
         srs.push(math.tan(a))
     else:
         b,c = srs.pop(), srs.pop()
-        a[b] = c
+        if type(a) is StringType:
+            a = a[:b] + str(c) + a[b+1:]
+        else:
+            a[b] = c
         srs.push(a)
+        
+def O_fn(srs):
+    a = srs.pop()
+    if type(a) is ListType:
+        a = ''.join(flatten(a))
+    srs.push(map(ord,a))
         
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -661,7 +670,7 @@ fn_table={
         0x4C:lambda x:x.push(math.floor(x.pop())),
         0x4D:M_fn,
         0x4E:lambda x:x.push(NinetyNineBottles()),
-        0x4F:lambda x:map(lambda y:map(x.push,map(ord,y)[::-1]),x.pop()[::-1]),
+        0x4F:O_fn,
         0x50:lambda x:x.push(nth_prime(x.pop())),
         0x51:lambda x:x.push(x.code),
         0x52:r_fn,

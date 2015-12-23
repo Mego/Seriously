@@ -72,6 +72,9 @@ assert serious_check(r'1T'+chr(0x85), "1.0\n")
 # String tests
 assert serious_check(r'[2,3]"{}.{}"f', "2.3\n")
 assert serious_check(r'52[2,3,4]T', "[2, 3, 5]\n")
+assert serious_check(r'52"234"T', "235\n")
+assert serious_check(r'"%s"O'%(chr(0x57)+chr(0x58)+chr(0x59)), "[%s, %s, %s]\n"%(0x57,0x58,0x59))
+assert serious_check(r'["%s"]O'%(chr(0x57)+chr(0x58)+chr(0x59)), "[%s, %s, %s]\n"%(0x57,0x58,0x59))
 
 # More to come...
 
