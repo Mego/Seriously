@@ -40,15 +40,15 @@ primes = [2,3]
 class MathSelector(object):
     def __init__(self, fn):
         self.fn = fn
-    def __call__(self,*args):
+    def __call__(self, *args, **kwargs):
         try:
-            return getattr(rmath,self.fn)(*args)
-        except:
+            return getattr(rmath,self.fn)(*args, **kwargs)
+        except AttributeError:
             try:
-                return getattr(cmath,self.fn)(*args)
+                return getattr(cmath,self.fn)(*args, **kwargs)
             except Exception as e:
                 if self.fn == 'factorial':
-                    return naive_factorial(*args)
+                    return naive_factorial(*args, **kwargs)
                 else:
                     raise e
 
@@ -94,8 +94,8 @@ def NinetyNineBottles():
     return res
     
 def _sum(data, start=None):
-    if any(map(lambda x:type(x) is FloatType,data)):
-        return math.fsum(data,start=start or 0.0)
+    if any([type(x) in [FloatType, ComplexType] for x in data]):
+        return math.fsum(data)+start
     if start is None:
         return sum(data)
     else:
@@ -671,7 +671,7 @@ fn_table={
         0x63:c_fn,
         0x64:deq_fn,
         0x65:lambda x:x.push(math.exp(x.pop())),
-        0x66:lambda x:x.push(Fib_index(x.pop())),
+        0x66:f_fn,
         0x67:lambda x:x.push(gcd(x.pop(),x.pop())),
         0x68:lambda x:x.push(math.hypot(x.pop(),x.pop())),
         0x69:i_fn,
