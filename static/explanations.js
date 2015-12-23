@@ -78,7 +78,7 @@ var explanations = {
 "4C":'pop a: push floor(a)',
 "4D":'pop f,[a], execute f for each element in [a], using the element as a temporary stack, push [a] (similar to map(f,[a])); pop [a]: push max([a])',
 "4E":'if stack is empty: push the lyrics to "99 Bottles of Beer"',
-"4F":'pop "a" or [a]: push ord(c) for each c in "a" or [a], starting from the end. If a list is popped and it contains strings of length > 1, the strings are exploded in-place (["ABC"] -> [65,66,67], [["A","B","CD"]] -> [65,66,67,68])',
+"4F":'pop "a" or [a]: push [ord(c) for each c in "a" or [a], starting from the end]. If a list is popped, it is flattened, and if it contains strings of length > 1, the strings are exploded in-place ("ABC" -> [65,66,67], ["A","B","CD"] -> [65,66,67,68])',
 "50":'pop a: push the a-th prime (zero-indexed)',
 "51":"if stack is empty: push the program's source code",
 "52":'pop f,[a]: call f, using [a] as a temporary stack, push [a] (similar to reduce(f,[a])); pop "a" or [a]: push reversed value ("a".reverse() or [a][::-1]); pop a: push [1,2,...,a] (range(1,a+1))',
