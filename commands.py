@@ -43,7 +43,7 @@ class MathSelector(object):
     def __call__(self, *args, **kwargs):
         try:
             return getattr(rmath,self.fn)(*args, **kwargs)
-        except AttributeError:
+        except:
             try:
                 return getattr(cmath,self.fn)(*args, **kwargs)
             except Exception as e:
