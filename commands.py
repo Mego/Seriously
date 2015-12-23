@@ -260,12 +260,12 @@ def flat_explode_fn(srs):
     srs.stack = tmp[:]
         
 def nrrot_fn(srs):
-    a=x.pop()
+    a=srs.pop()
     srs.stack=srs.stack[a:]+srs.stack[:a]
     
 def nlrot_fn(srs):
-    a=x.pop()
-    srs.stack=srs.stack[:a]+srs.stack[a:]
+    a=-srs.pop()
+    srs.stack=srs.stack[a:]+srs.stack[:a]
     
 def ins_top_fn(srs):
     a=srs.pop()
