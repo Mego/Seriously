@@ -615,6 +615,15 @@ def get_input_fn(srs):
     finally:
         srs.push(b)
         
+def T_fn(srs):
+    a=srs.pop()
+    if type(a) in [IntType, LongType, FloatType, ComplexType]:
+        srs.push(math.tan(a))
+    else:
+        b,c = srs.pop(), srs.pop()
+        a[b] = c
+        srs.push(a)
+        
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x0C:lambda x:x.push(sys.stdin.read()),
@@ -657,7 +666,7 @@ fn_table={
         0x51:lambda x:x.push(x.code),
         0x52:r_fn,
         0x53:S_fn,
-        0x54:lambda x:x.push(math.tan(x.pop())),
+        0x54:T_fn,
         0x55:lambda x:x.push(list(set(x.pop()).union(x.pop()))),
         0x56:lambda x:x.push(random.uniform(x.pop(),x.pop())),
         0x58:lambda x:x.pop(),
