@@ -77,12 +77,12 @@
 4C (L): pop a: push floor(a)
 4D (M): pop f,[a], execute f for each element in [a], using the element as a temporary stack, push [a] (similar to map(f,[a])); pop [a]: push max([a])
 4E (N): if stack is empty: push the lyrics to "99 Bottles of Beer"
-4F (O): pop "a" or [a]: push ord(c) for each c in "a" or [a], starting from the end. If a list is popped and it contains strings of length > 1, the strings are exploded in-place (["ABC"] -> [65,66,67], [["A","B","CD"]] -> [65,66,67,68])
+4F (O): pop "a" or [a]: push [ord(c) for each c in "a" or [a], starting from the end]. If a list is popped, it is flattened, and if it contains strings of length > 1, the strings are exploded in-place ("ABC" -> [65,66,67], ["A","B","CD"] -> [65,66,67,68])
 50 (P): pop a: push the a-th prime (zero-indexed)
 51 (Q): if stack is empty: push the program's source code
 52 (R): pop f,[a]: call f, using [a] as a temporary stack, push [a] (similar to reduce(f,[a])); pop "a" or [a]: push reversed value ("a".reverse() or [a][::-1]); pop a: push [1,2,...,a] (range(1,a+1))
 53 (S): pop a: push sin(a); pop "a" or [a]: push sorted(a)
-54 (T): pop a: push tan(a)
+54 (T): pop a: push tan(a); pop [a],b,c: set [a][b] to c, push [a]
 55 (U): pop [a],[b]: push union of [a] and [b]
 56 (V): pop a,b: push uniform(a,b) (random float between a and b)
 57 (W): loop delimiter: peek top of stack, repeat code in loop while a evaluates to true
@@ -117,9 +117,9 @@
 74 (t): pop all elements from stack, flatten any lists and explode any strings, and push them in the same order they were popped (full stack flatten/explode)
 75 (u): pop a: push a+1
 76 (v): pop a: seed the RNG with a (random.seed(a))
-77 (w): pop a: push the full factorization of a (18 -> [[2,1],[3,2]])
+77 (w): pop a: push the full positive prime factorization of |a| (18 -> [[2,1],[3,2]], -5 -> [[5,1]])
 78 (x): pop a,b: push [a,b) (range(a,b))
-79 (y): pop a: push the prime factors of a (18 -> [2,3])
+79 (y): pop a: push the positive prime factors of |a| (18 -> [2,3], -5 -> [5])
 7A (z): pop a: repeat . a times (pop a times and print to stdout)
 7B ({): pop a: rotate stack right a times
 7C (|): pop a,b: push (a | b)
