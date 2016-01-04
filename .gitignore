@@ -6,3 +6,5 @@ publish.sh
 *.srs
 wiki.txt
 wikify.py
+consecutive.py
+output.txt

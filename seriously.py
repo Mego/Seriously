@@ -115,7 +115,11 @@ class Seriously(object):
                     if self.debug_mode:
                         print binascii.hexlify(chr(ord_cp437(c))).upper()
                     self.fn_table.get(ord_cp437(c), lambda x:x)(self)
+                    if self.debug_mode:
+                        print self.stack
             except SystemExit:
+                exit()
+            except KeyboardInterrupt:
                 exit()
             except:
                 if self.debug_mode:
