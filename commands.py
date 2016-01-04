@@ -260,12 +260,12 @@ def flat_explode_fn(srs):
     srs.stack = tmp[:]
         
 def nrrot_fn(srs):
-    a=x.pop()
+    a=srs.pop()
     srs.stack=srs.stack[a:]+srs.stack[:a]
     
 def nlrot_fn(srs):
-    a=x.pop()
-    srs.stack=srs.stack[:a]+srs.stack[a:]
+    a=-srs.pop()
+    srs.stack=srs.stack[a:]+srs.stack[:a]
     
 def ins_top_fn(srs):
     a=srs.pop()
@@ -436,10 +436,11 @@ def star_fn(srs):
 def plus_fn(srs):
     a=srs.pop()
     b=srs.pop()
-    if type(a) is ListType and type(b) in [IntType, LongType, ComplexType, FloatType]:
-        srs.push(map(lambda x:x+b,a))
-    elif type(b) is ListType and type(a) in [IntType, LongType, ComplexType, FloatType]:
-        srs.push(map(lambda x:x+a,b))
+    if type(a)!=type(b):
+        if type(a) is ListType and type(b):
+            srs.push(map(lambda x:x+b,a))
+        elif type(b) is ListType:
+            srs.push(map(lambda x:x+a,b))
     else:
         srs.push(a+b)
         

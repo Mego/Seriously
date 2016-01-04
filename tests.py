@@ -77,4 +77,3 @@ assert serious_check(r'"%s"O'%(chr(0x57)+chr(0x58)+chr(0x59)), "[%s, %s, %s]\n"%
 assert serious_check(r'["%s"]O'%(chr(0x57)+chr(0x58)+chr(0x59)), "[%s, %s, %s]\n"%(0x57,0x58,0x59))
 
 # More to come...
-
