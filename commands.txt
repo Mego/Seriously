@@ -234,11 +234,11 @@ E8 (è):
 E9 (é):
 EA (ê):
 EB (ë): pop a: bring the (a mod len(stack))'th item on the stack to the top
-EC (ì): pop a: push eval(a)
+EC (ì): toggle preserve mode; if on, stack items are peeked rather than popped; implicitly turned off at EOF
 ED (í): push phi (golden ratio)
 EE (î): push "" (empty string)
 EF (ï): pop [a],[b]: push intersection of [a] and [b]
-F0 (ð):
+F0 (ð): pop a: push eval(a)
 F1 (ñ): pop a: push -a (unary negate)
 F2 (ò): pop a,b: push a>=b
 F3 (ó): pop a,b: push a<=b
