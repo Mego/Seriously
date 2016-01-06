@@ -26,14 +26,22 @@ class Seriously(object):
         self.fn_table = commands.fn_table
         self.code = ''
         self.hex_mode = hex_mode
+        self.preserve = False
+        self.pop_counter = 0
     def push(self,val):
         self.stack=[val]+self.stack
     def pop(self):
-        return self.stack.pop(0)
+        return self.stack.pop(0) if not self.preserve else self.preserve_pop()
+    def preserve_pop(self):
+        v = self.stack[self.pop_counter] if self.stack and len(self.stack) > self.pop_counter else None
+        self.pop_counter += 1
+        return v
     def peek(self):
         return self.stack[0] if self.stack else None
     def append(self, val):
         self.stack+=[val]
+    def toggle_preserve(self):
+        self.preserve = not self.preserve
     def eval(self, code, print_at_end=True):
         if self.hex_mode:
             code = binascii.unhexlify(code)
@@ -98,6 +106,7 @@ class Seriously(object):
                 else:
                     if self.debug_mode:
                         print binascii.hexlify(chr(ord_cp437(c))).upper()
+                    self.pop_counter = 0
                     self.fn_table.get(ord_cp437(c), lambda x:x)(self)
                     if self.debug_mode:
                         print self.stack
@@ -112,6 +121,7 @@ class Seriously(object):
             finally:
                 i+=1
         if not self.repl_mode and print_at_end:
+            self.preserve = False
             while len(self.stack) > 0:
                 print self.pop()
 

@@ -45,8 +45,9 @@ assert serious_check(r'123'+chr(0xB3),'3\n2\n1\n'*2)
 assert serious_check(r'123'+chr(0xC5),'3\n3\n2\n2\n1\n1\n')
 assert serious_check(r'12'+chr(0xC6),'1\n1\n')
 assert serious_check(r'123'+chr(0xFE),'3 2 1\n3\n2\n1\n')
-assert serious_check(r'"1+2"'+chr(0xEC), '3\n')
+assert serious_check(r'"1+2"'+chr(0xF0), '3\n')
 assert serious_check(r'1231'+chr(0xEB), '2\n3\n1\n')
+assert serious_check(r'12'+chr(0xEC)+'+', '3\n2\n1\n')
 
 # Registers tests
 assert serious_check(r'1%s2%s%s%s'%(chr(0xBB),chr(0xBC),chr(0xBE),chr(0xBD)),'1\n2\n')
