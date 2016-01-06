@@ -11,9 +11,10 @@ def index():
     if request.method == 'POST':
         code = request.form['code']
         input_str = request.form['input']
-        print('Got code:', code, 'input:', input_str)
+        hex_code = request.form['hexdump']
+        print('Got code:', hex_code, 'input:', input_str)
         print('Running Seriously code...')
-        p = Popen(['./seriously.py', '-q', '-c', code.encode('cp437')], stdout=PIPE, stderr=PIPE, stdin=PIPE)
+        p = Popen(['./seriously.py', '-q', '-x', '-c', hex_code], stdout=PIPE, stderr=PIPE, stdin=PIPE)
         output, error = map(lambda s: s.decode('utf-8'), p.communicate(input_str))
         print('Output:', output, 'error:', error, 'return:', p.returncode)
         if p.returncode:
