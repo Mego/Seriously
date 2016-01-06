@@ -53,15 +53,6 @@ class Seriously(object):
                         s+=code[i]
                         i+=1
                     self.push(s)
-                if ord_cp437(c) == 0xEC:
-                    s = ""
-                    i+=1
-                    while i<len(code) and ord_cp437(code[i]) != 0xEC:
-                        s+=code[i]
-                        i+=1
-                    r = eval(s)
-                    if r is not None:
-                        self.push(r)
                 elif c == "'":
                     i+=1
                     self.push(code[i])

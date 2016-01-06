@@ -634,6 +634,12 @@ def O_fn(srs):
     if type(a) is ListType:
         a = ''.join(flatten(a))
     srs.push(map(ord,a))
+    
+def dig_fn(srs):
+    a = srs.pop()
+    l = len(srs.stack)
+    a = a % l
+    srs.stack = [srs.stack[a]]+srs.stack[:a]+srs.stack[a+1:]
         
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -798,6 +804,8 @@ fn_table={
         0xE3:lambda x:x.push(reduce(operator.mul,x.pop(),1)),
         0xE4:sum_fn,
         0xE7:lambda x:x.push(x.pop()*2),
+        0xEB:dig_fn,
+        0xEC:lambda x:x.push(eval(x.pop())),
         0xED:lambda x:x.push(phi),
         0xEE:lambda x:x.push(""),
         0xEF:lambda x:x.push(list(set(x.pop()).intersection(x.pop()))),
