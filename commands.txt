@@ -247,7 +247,7 @@ F5 (õ):
 F6 (ö):
 F7 (÷): pop a: push int(a)
 F8 (ø): pop a: push radians(a)
-F9 (ù):
+F9 (ù): pop [a],[b]: push Cartesian product of [a] and [b]
 FA (ú):
 FB (û): pop a: push sqrt(a)
 FC (ü):

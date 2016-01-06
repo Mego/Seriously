@@ -248,7 +248,7 @@ var explanations = {
 "F6":'',
 "F7":'pop a: push int(a)',
 "F8":'pop a: push radians(a)',
-"F9":'',
+"F9":'pop [a],[b]: push Cartesian product of [a] and [b]',
 "FA":'',
 "FB":'pop a: push sqrt(a)',
 "FC":'',
