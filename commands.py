@@ -815,6 +815,7 @@ fn_table={
         0xF3:lambda x:x.push(x.pop()<=x.pop()),
         0xF7:lambda x:x.push(int(x.pop())),
         0xF8:lambda x:x.push(math.radians(x.pop())),
+        0xF9:lambda x:x.push(map(list,itertools.product(x.pop(),x.pop()))),
         0xFB:lambda x:x.push(x.pop()**.5),
         0xFE:peek_print_fn,
 }
