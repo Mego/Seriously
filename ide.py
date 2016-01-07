@@ -1,9 +1,23 @@
 #!/usr/bin/env python
+# -*- encoding: utf-8 -*-
 from flask import Flask, render_template, url_for, request
 from subprocess import Popen, PIPE, check_call
 import os, string
+from itertools import *
 
 app = Flask(__name__)
+
+cp437table = ''.join(map(chr,range(128))) + u"ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ "
+
+def ord_cp437(c):
+    return int(binascii.hexlify(c),16) if int(binascii.hexlify(c),16) in range(256) else -1
+    
+def chr_cp437(o):
+    return cp437table[o]
+    
+def grouper(iterable, n, fillvalue=None):
+    args = [iter(iterable)] * n
+    return izip_longest(*args, fillvalue=fillvalue)
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -26,10 +40,19 @@ def index():
 
 @app.route('/link/')
 @app.route('/link/<link>')
-def link(link='code=%22Error+in+linking+code%22&input='):
+def link(link='code=48&input='):
     url_for('static', filename='logo.ico')
     print('Link:', link)
-    return render_template('link.html', link=link)
+    ls = link.split(';',1)
+    c = ls[0]
+    i = ls[1] if len(ls) > 1 else ''
+    code = ''.join(map(lambda x:chr_cp437(int(''.join(x), 16)), grouper(c, 2)))
+    inputval = u''
+    for val in grouper(i, 4):
+        inputval += unichr(int(val, 16))
+    print('Code:', code)
+    print('Input:', inputval)
+    return render_template('link.html', code=code, inputval=inputval)
 
 if __name__ == '__main__':
     print('Starting server...')

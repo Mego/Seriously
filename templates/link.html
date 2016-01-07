@@ -3,38 +3,12 @@
     <title>Seriously Language IDE</title>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="https://cdn.rawgit.com/mgalante/jquery.redirect/master/jquery.redirect.js"></script>
-    <script>
-        var cp437 = {};
-
-        cp437.codepage = "\u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\b\t\n\u000b\f\r\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ ";
-
-        cp437.encode = function(codePoint) {
-            return cp437.codepage.charAt(codePoint);
-        };
-
-        cp437.decode = function(c) {
-            return cp437.codepage.indexOf(c);
-        };
-        
-        cp437.encodeString = function(ordList) {
-            var res = '';
-            ordList.forEach(function(c) {res += cp437.encode(c)});
-            return res;
-        };
-    </script>
   </head>
   <body>
     <script>
     $(document).ready(function() {
-      var s = "{{ link }}".split("&");
-      var hexCode = s[0].split("=")[1];
-      var sCode = [];
-      for(var i = 0; i < hexCode.length; i+=2) {
-        sCode.push(parseInt(hexCode.substr(i,2),16));
-      }
-      sCode = cp437.encodeString(sCode);
-      var sInput = s[1].split("=")[1];
-      //alert("code: "+sCode+"\n\ninput: "+sInput)
+      var sCode = "{{ code }}";
+      var sInput = "{{ inputval }}";
       var url = "http://" + window.location.hostname + "/";
       $.redirect(url, {code: sCode, input: sInput});
     });
