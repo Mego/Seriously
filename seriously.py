@@ -29,6 +29,10 @@ class Seriously(object):
         self.preserve = False
         self.pop_counter = 0
     def push(self,val):
+        if type(val) is TupleType:
+            val = list(val)
+        if type(val) is BooleanType:
+            val = int(val)
         self.stack=[val]+self.stack
     def pop(self):
         return self.stack.pop(0) if not self.preserve else self.preserve_pop()
