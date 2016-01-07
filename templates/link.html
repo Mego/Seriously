@@ -3,14 +3,16 @@
     <title>Seriously Language IDE</title>
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="https://cdn.rawgit.com/mgalante/jquery.redirect/master/jquery.redirect.js"></script>
+    <link href="{{ url_for('static', filename='logo.ico') }}" rel="shortcut icon">
   </head>
   <body>
     <script>
     $(document).ready(function() {
       var sCode = "{{ code }}";
-      var sInput = "{{ inputval }}";
+      var sInput = "{{ input }}";
+      var sHex = "{{ hexdump }}";
       var url = "http://" + window.location.hostname + "/";
-      $.redirect(url, {code: sCode, input: sInput});
+      $.redirect(url, {code: sCode, input: sInput, hexdump: sHex});
     });
     </script>
   </body>

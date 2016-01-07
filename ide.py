@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # -*- encoding: utf-8 -*-
+from __future__ import print_function
 from flask import Flask, render_template, url_for, request
 from subprocess import Popen, PIPE, check_call
 import os, string
@@ -52,8 +53,8 @@ def link(link='48'):
         inputval += unichr(int(val, 16))
     print('Code:', code)
     print('Input:', inputval)
-    return render_template('link.html', code=code, inputval=inputval)
+    return render_template('link.html', code=code, input=inputval, hexdump=c)
 
 if __name__ == '__main__':
     print('Starting server...')
-    app.run(host='0.0.0.0',port=8000)
+    app.run(host='0.0.0.0',port=80)
