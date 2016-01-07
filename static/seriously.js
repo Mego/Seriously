@@ -236,7 +236,7 @@ function escapeHTML(s) {
 function strtohex(s) {
     var res = '';
     for(var i = 0; i < s.length; i++) {
-        res += s.charCodeAt(i).toString(16);
+        res += ('0000'+s.charCodeAt(i).toString(16)).slice(-4);
     }
     return res
 }
