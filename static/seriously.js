@@ -233,13 +233,21 @@ function escapeHTML(s) {
     return pre.innerHTML;
 }
 
+function strtohex(s) {
+    var res = '';
+    for(var i = 0; i < s.length; i++) {
+        res += s.charCodeAt(i).toString(16);
+    }
+    return res
+}
+
 updateUtils();
 
 $(document).ready(
         function() {
             $("#permalink").click(
                     function() {
-                        var code = "code=" + $("#hexdump").val() + "&input=" + $("#input").val()
+                        var code = $("#hexdump").val() + ";" + strtohex($("#input").val());
                         prompt("Permalink:", "http://"
                                 + window.location.hostname + "/link/" + code);
                         window.location.pathname = "/link/" + code;
