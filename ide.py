@@ -40,7 +40,7 @@ def index():
 
 @app.route('/link/')
 @app.route('/link/<link>')
-def link(link='code=48&input='):
+def link(link='code=48'):
     url_for('static', filename='logo.ico')
     print('Link:', link)
     ls = link.split(';',1)
