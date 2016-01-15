@@ -4,7 +4,7 @@ from __future__ import print_function, division
 from fractions import gcd
 import operator, cmath
 import math as rmath
-import random, itertools, sys, string
+import random, itertools, sys, string, binascii
 from types import *
 from base64 import *
 from copy import copy
@@ -63,7 +63,8 @@ class SeriousFunction(object):
     def __init__(self, code):
         self.code = code
     def __call__(self,srs):
-        srs.eval(self.code,print_at_end=False)
+        c = binascii.hexlify(self.code) if srs.hex_mode else self.code
+        srs.eval(c,print_at_end=False)
     def __str__(self):
         return '%s'%self.code
     def __repr__(self):
@@ -787,6 +788,7 @@ fn_table={
         0xC5:dupe_each_fn,
         0xC6:dupe_each_n_fn,
         0xC7:npop_list_fn,
+        0xC8:lambda x:x.push(random.shuffle(x.pop())),
         0xCB:lambda x:x.push(math.pi),
         0xCC:lambda x:x.push(math.e),
         0xCE:while_fn,
