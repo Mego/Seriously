@@ -17,7 +17,7 @@ class Seriously(object):
     def _make_new(cls,init_stack=[], debug_mode=False, repl_mode=False):
         return cls(init_stack,debug_mode)
     def make_new(self,*stack):
-        return self._make_new(init_stack=list(stack), debug_mode=self.debug_mode)
+        return self._make_new(init_stack=list(stack), debug_mode=self.debug_mode, hex_mode=False)
         return res
     def __init__(self, init_stack=[], debug_mode=False, repl_mode=False, hex_mode=False):
         self.stack = init_stack
@@ -154,10 +154,13 @@ if __name__ == '__main__':
     parser.add_argument("-d", "--debug", help="turn on debug mode", action="store_true")
     parser.add_argument("-q", "--quiet", help="turn off REPL prompts and automatic stack printing, only print code STDOUT output", action="store_true")
     parser.add_argument("-x", "--hex", help="turn on hex mode (code is taken in hex values instead of binary bytes)", action="store_true")
+    parser.add_argument("-i", "--ide", help="turn on IDE mode, which disables unsafe commands", action="store_true")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-c", "--code", help="run the specified code")
     group.add_argument("-f", "--file", help="specify an input file", type=argparse.FileType('rb'))
     args = parser.parse_args()
+    if args.ide:
+        commands.fn_table[0xF0]=lambda x:x
     if args.code or args.file:
         srs_exec(args.debug, args.file, args.code, args.hex)
     else:

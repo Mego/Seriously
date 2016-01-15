@@ -199,7 +199,7 @@ var explanations = {
 "C5":'duplicate each element on stack ([a,b,c] => [a,a,b,b,c,c])',
 "C6":'pop a: make a total copies of each element on stack (3 [a,b,c] -> [a,a,a,b,b,b,c,c,c])',
 "C7":'pop a: pop a elements and push a list containing those elements in their original order',
-"C8":'',
+"C8":'pop [a]: push random.shuffle(a)',
 "C9":'',
 "CA":'',
 "CB":'push pi',
