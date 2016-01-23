@@ -15,14 +15,14 @@ def ord_cp437(c):
     
 def chr_cp437(o):
     return cp437table[o]
-	
+    
 def srs_run(hex_code):
-	print('Got code:', hex_code, 'input:', input_str)
-	print('Running Seriously code...')
-	p = Popen(['./seriously.py', '-q', '-x', '-c', hex_code], stdout=PIPE, stderr=PIPE, stdin=PIPE)
-	output, error = map(lambda s: s.decode('utf-8'), p.communicate(input_str))
-	print('Output:', output, 'error:', error, 'return:', p.returncode)
-	return output, error, p.returncode
+    print('Got code:', hex_code, 'input:', input_str)
+    print('Running Seriously code...')
+    p = Popen(['./seriously.py', '-q', '-x', '-c', hex_code], stdout=PIPE, stderr=PIPE, stdin=PIPE)
+    output, error = map(lambda s: s.decode('utf-8'), p.communicate(input_str))
+    print('Output:', output, 'error:', error, 'return:', p.returncode)
+    return output, error, p.returncode
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -48,18 +48,18 @@ def link(link='48'):
     c = ls[0]
     i = ls[1] if len(ls) > 1 else ''
     code = ''
-	for x in range(0, len(c), 2):
-		code += chr_cp437(int(c[x:x+2],16))
+    for x in range(0, len(c), 2):
+        code += chr_cp437(int(c[x:x+2],16))
     inputval = u''
     for x in range(0, len(i), 4):
         inputval += unichr(int(i[x:x+4], 16))
     print('Code:', code)
     print('Input:', inputval)
-	output, error, returncode = srs_run(c)
-	if returncode:
-		return render_template('error.html', code=code, input=input_str, error=error)
-	else:
-		return render_template('code.html', code=code, input=input_str, output=output)
+    output, error, returncode = srs_run(c)
+    if returncode:
+        return render_template('error.html', code=code, input=input_str, error=error)
+    else:
+        return render_template('code.html', code=code, input=input_str, output=output)
 
 if __name__ == '__main__':
     print('Starting server...')
