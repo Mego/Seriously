@@ -11,14 +11,18 @@ app = Flask(__name__)
 cp437table = ''.join(map(chr,range(128))) + u"ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ "
 
 def ord_cp437(c):
-    return int(binascii.hexlify(c),16) if int(binascii.hexlify(c),16) in range(256) else -1
+    return cp437table.index(c)
     
 def chr_cp437(o):
     return cp437table[o]
-    
-def grouper(iterable, n, fillvalue=None):
-    args = [iter(iterable)] * n
-    return izip_longest(*args, fillvalue=fillvalue)
+	
+def srs_run(hex_code):
+	print('Got code:', hex_code, 'input:', input_str)
+	print('Running Seriously code...')
+	p = Popen(['./seriously.py', '-q', '-x', '-c', hex_code], stdout=PIPE, stderr=PIPE, stdin=PIPE)
+	output, error = map(lambda s: s.decode('utf-8'), p.communicate(input_str))
+	print('Output:', output, 'error:', error, 'return:', p.returncode)
+	return output, error, p.returncode
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -27,12 +31,8 @@ def index():
         code = request.form['code']
         input_str = request.form['input']
         hex_code = request.form['hexdump']
-        print('Got code:', hex_code, 'input:', input_str)
-        print('Running Seriously code...')
-        p = Popen(['./seriously.py', '-q', '-x', '-c', hex_code], stdout=PIPE, stderr=PIPE, stdin=PIPE)
-        output, error = map(lambda s: s.decode('utf-8'), p.communicate(input_str))
-        print('Output:', output, 'error:', error, 'return:', p.returncode)
-        if p.returncode:
+        output, error, returncode = srs_run(hex_code)
+        if returncode:
             return render_template('error.html', code=code, input=input_str, error=error)
         else:
             return render_template('code.html', code=code, input=input_str, output=output)
@@ -47,13 +47,19 @@ def link(link='48'):
     ls = link.split(';',1)
     c = ls[0]
     i = ls[1] if len(ls) > 1 else ''
-    code = ''.join(map(lambda x:chr_cp437(int(''.join(x), 16)), grouper(c, 2)))
+    code = ''
+	for x in range(0, len(c), 2):
+		code += chr_cp437(int(c[x:x+2],16))
     inputval = u''
-    for val in grouper(i, 4):
-        inputval += unichr(int(val, 16))
+    for x in range(0, len(i), 4):
+        inputval += unichr(int(i[x:x+4], 16))
     print('Code:', code)
     print('Input:', inputval)
-    return render_template('link.html', code=code, input=inputval, hexdump=c)
+	output, error, returncode = srs_run(c)
+	if returncode:
+		return render_template('error.html', code=code, input=input_str, error=error)
+	else:
+		return render_template('code.html', code=code, input=input_str, output=output)
 
 if __name__ == '__main__':
     print('Starting server...')
