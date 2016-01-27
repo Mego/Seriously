@@ -192,7 +192,7 @@ BE (¾): push the value in register 1
 BF (¿): pop a,b: push b to register a
 C0 (À): pop a: push the value in register a
 C1 (Á):
-C2 (Â):
+C2 (Â): pop a: push transpose(a) ([1,2,3],[4,5,6] -> [1,4],[2,5],[3,6])
 C3 (Ã):
 C4 (Ä):
 C5 (Å): duplicate each element on stack ([a,b,c] => [a,a,b,b,c,c])

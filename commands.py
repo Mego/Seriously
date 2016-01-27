@@ -9,6 +9,17 @@ from types import *
 from base64 import *
 from copy import copy
 
+def memoize(f):
+    memo = {}
+    def m_fun(*args):
+        if args in memo:
+            return memo[args]
+        else:
+            res = f(*args)
+            memo[args] = res
+            return res
+    return m_fun
+
 def template_specialize(fname, *args):
     if fname not in globals():
         def raiseError(*args, **kwargs):
@@ -24,6 +35,8 @@ def template_specialize(fname, *args):
     return template_specializer
 
 phi = (1+5**.5)/2
+
+@memoize
 def Fib(n):
     if n<2:
         return n
@@ -110,6 +123,7 @@ def median(data):
         i = n//2-1
         return _sum(data[i:i+2])/2
     
+@memoize
 def naive_factorial(x):
     res = 1
     while x:
@@ -117,6 +131,7 @@ def naive_factorial(x):
         x -= 1
     return res
     
+@memoize
 def nCr(n, k):
     if k > n:
         return 0
@@ -128,10 +143,11 @@ def nCr(n, k):
         k-=1
     return int(res)
         
+@memoize
 def nPr(n, k):
     if k > n:
         return 0
-    return nCr(n,k)*math.factorial(k)
+    return nCr(n,k)*naive_factorial(k)
 
 def is_prime(x):
     global primes
@@ -166,6 +182,7 @@ def nth_prime(n):
         init_primes_up_to(max(primes)+100)
     return primes[n]
         
+@memoize
 def Fib_index(n):
     i=0
     while Fib(i)<n:
@@ -369,6 +386,7 @@ def n_fn(srs):
         else:
             srs.push(a)
             
+@memoize
 def full_factor(n):
     n=abs(n)
     global primes
@@ -785,6 +803,7 @@ fn_table={
         0xBE:lambda x:x.push(get_reg(1)),
         0xBF:lambda x:set_reg(x.pop(),x.pop()),
         0xC0:lambda x:x.push(get_reg(x.pop())),
+        0xC2:lambda x:x.push(map(list, zip(*x.pop()))),
         0xC5:dupe_each_fn,
         0xC6:dupe_each_n_fn,
         0xC7:npop_list_fn,
