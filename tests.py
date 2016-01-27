@@ -80,5 +80,6 @@ assert serious_check(r'["%s"]O'%(chr(0x57)+chr(0x58)+chr(0x59)), "[%s, %s, %s]\n
 
 # List tests
 assert serious_check(r'[1,2][3,4]@'+chr(0xF9), '[[1, 3], [1, 4], [2, 3], [2, 4]]\n')
+assert serious_check(r'[4,5,6][1,2,3]k'+chr(0xC2), '[[1, 4], [2, 5], [3, 6]]\n')
 
 # More to come...

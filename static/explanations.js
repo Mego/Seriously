@@ -193,7 +193,7 @@ var explanations = {
 "BF":'pop a,b: push b to register a',
 "C0":'pop a: push the value in register a',
 "C1":'',
-"C2":'',
+"C2":'pop a: push transpose(a) ([1,2,3],[4,5,6] -> [1,4],[2,5],[3,6])',
 "C3":'',
 "C4":'',
 "C5":'duplicate each element on stack ([a,b,c] => [a,a,b,b,c,c])',
