@@ -8,6 +8,7 @@ import random, itertools, sys, string, binascii
 from types import *
 from base64 import *
 from copy import copy
+import pyshoco
 
 def memoize(f):
     memo = {}
@@ -834,6 +835,8 @@ fn_table={
         0xF1:lambda x:x.push(-x.pop()),
         0xF2:lambda x:x.push(x.pop()>=x.pop()),
         0xF3:lambda x:x.push(x.pop()<=x.pop()),
+        0xF4:lambda x:x.push(pyshoco.compress(x.pop())),
+        0xF5:lambda x:x.push(pyshoco.decompress(x.pop())),
         0xF7:lambda x:x.push(int(x.pop())),
         0xF8:lambda x:x.push(math.radians(x.pop())),
         0xF9:lambda x:x.push(map(list,itertools.product(x.pop(),x.pop()))),

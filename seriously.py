@@ -14,8 +14,8 @@ def chr_cp437(o):
 
 class Seriously(object):
     @classmethod
-    def _make_new(cls,init_stack=[], debug_mode=False, repl_mode=False):
-        return cls(init_stack,debug_mode)
+    def _make_new(cls,init_stack=[], debug_mode=False, repl_mode=False, hex_mode=False):
+        return cls(init_stack,debug_mode,hex_mode)
     def make_new(self,*stack):
         return self._make_new(init_stack=list(stack), debug_mode=self.debug_mode, hex_mode=False)
         return res
