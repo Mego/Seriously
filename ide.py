@@ -50,6 +50,8 @@ def link(link='48'):
     code = ''
     for x in range(0, len(c), 2):
         code += chr_cp437(int(c[x:x+2],16))
+    if c.upper().startswith('E5'):
+        return redirect('http://bitly.com/%s'%(code[1:]))
     inputval = u''
     for x in range(0, len(i), 4):
         inputval += unichr(int(i[x:x+4], 16))
