@@ -26,7 +26,6 @@ def srs_run(hex_code):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    url_for('static', filename='logo.ico')
     if request.method == 'POST':
         code = request.form['code']
         input_str = request.form['input']
@@ -44,18 +43,21 @@ def index():
 def link(link='48'):
     url_for('static', filename='logo.ico')
     print('Link:', link)
-    ls = link.split(';',1)
+    ls = link.split('-',1)
+    print(ls)
     c = ls[0]
     i = ls[1] if len(ls) > 1 else ''
+    print(c, i)
     code = ''
     for x in range(0, len(c), 2):
         code += chr_cp437(int(c[x:x+2],16))
+    print('Code:', code)
     if c.upper().startswith('E5'):
-        return redirect('http://bitly.com/%s'%(code[1:]))
+        print('http://bit.ly/%s'%(code[1:]))
+        return redirect('http://bit.ly/%s'%(code[1:]))
     inputval = u''
     for x in range(0, len(i), 4):
         inputval += unichr(int(i[x:x+4], 16))
-    print('Code:', code)
     print('Input:', inputval)
     output, error, returncode = srs_run(c)
     if returncode:

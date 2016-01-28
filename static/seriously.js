@@ -247,7 +247,7 @@ $(document).ready(
         function() {
             $("#permalink").click(
                     function() {
-                        var code = $("#hexdump").val() + ";" + strtohex($("#input").val());
+                        var code = $("#hexdump").val() + "-" + strtohex($("#input").val());
                         prompt("Permalink:", "http://"
                                 + window.location.hostname + "/link/" + code);
                         window.location.pathname = "/link/" + code;
