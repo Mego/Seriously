@@ -118,7 +118,7 @@
 75 (u): pop a: push a+1
 76 (v): pop a: seed the RNG with a (random.seed(a))
 77 (w): pop a: push the full positive prime factorization of |a| (18 -> [[2,1],[3,2]], -5 -> [[5,1]])
-78 (x): pop a,b: push [a,b) (range(a,b))
+78 (x): pop a,b: push [a,b) (range(a,b)); pop [a]: push range(*a)
 79 (y): pop a: push the positive prime factors of |a| (18 -> [2,3], -5 -> [5])
 7A (z): pop a: repeat . a times (pop a times and print to stdout)
 7B ({): pop a: rotate stack right a times
@@ -200,7 +200,7 @@ C6 (Æ): pop a: make a total copies of each element on stack (3 [a,b,c] -> [a,a,a
 C7 (Ç): pop a: pop a elements and push a list containing those elements in their original order
 C8 (È): pop [a]: push random.shuffle(a)
 C9 (É):
-CA (Ê):
+CA (Ê): read all input and push each to its own numbered register, starting with 0
 CB (Ë): push pi
 CC (Ì): push e
 CD (Í):
