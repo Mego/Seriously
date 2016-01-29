@@ -660,6 +660,19 @@ def dig_fn(srs):
     l = len(srs.stack)
     a = a % l
     srs.stack = [srs.stack[a]]+srs.stack[:a]+srs.stack[a+1:]
+    
+def reg_all_input_fn(srs):
+    global registers
+    for i,n in enumerate(sys.stdin.read().split('\n')):
+        registers[i] = eval(n)
+        
+def range_ab_fn(srs):
+    a = srs.pop()
+    if type(a) is ListType:
+        srs.push(range(*a))
+    else:
+        b = srs.pop()
+        srs.push(range(a,b))
         
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -735,7 +748,7 @@ fn_table={
         0x75:lambda x:x.push(x.pop()+1),
         0x76:lambda x:random.seed(x.pop()),
         0x77:lambda x:x.push(full_factor(x.pop())),
-        0x78:lambda x:x.push(range(x.pop(),x.pop())),
+        0x78:range_ab_fn,
         0x79:lambda x:x.push(factor(x.pop())),
         0x7A:lambda x:map(x.eval,(lambda y:['.' for _ in range(y)])(x.pop())),
         0x7B:nrrot_fn,
@@ -809,6 +822,7 @@ fn_table={
         0xC6:dupe_each_n_fn,
         0xC7:npop_list_fn,
         0xC8:lambda x:x.push(random.shuffle(x.pop())),
+        0xCA:reg_all_input_fn,
         0xCB:lambda x:x.push(math.pi),
         0xCC:lambda x:x.push(math.e),
         0xCE:while_fn,
