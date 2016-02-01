@@ -4,7 +4,7 @@ from __future__ import print_function, division
 from fractions import gcd
 import operator, cmath
 import math as rmath
-import random, itertools, sys, string, binascii
+import random, itertools, sys, string, binascii, ast
 from types import *
 from base64 import *
 from copy import copy
@@ -630,7 +630,7 @@ def fn_fil_fn(srs):
 def get_input_fn(srs):
     a=raw_input()
     try:
-        b = eval(a)
+        b = ast.literal_eval(a)
         b = list(b) if type(b) is TupleType else b
     except:
         b = a
