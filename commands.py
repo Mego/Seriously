@@ -664,7 +664,10 @@ def dig_fn(srs):
 def reg_all_input_fn(srs):
     global registers
     for i,n in enumerate(sys.stdin.read().split('\n')):
-        registers[i] = eval(n)
+        a = ast.literal_eval(n)
+        a = list(a) if type(a) is TupleType else a
+        registers[i] = a
+        
         
 def range_ab_fn(srs):
     a = srs.pop()
