@@ -456,7 +456,7 @@ def star_fn(srs):
 def plus_fn(srs):
     a=srs.pop()
     b=srs.pop()
-    if type(a)!=type(b):
+    if type(a)!=type(b) and (type(a) is ListType or type(b) is ListType):
         if type(a) is ListType and type(b):
             srs.push(map(lambda x:x+b,a))
         elif type(b) is ListType:
@@ -472,10 +472,18 @@ def digit_to_char(digit):
 def str_base(number,base):
     if number < 0:
         return '-' + str_base(-number, base)
+    if type(number) is FloatType: return str_base_float(number,base,0)
     (d, m) = divmod(number, base)
     if d > 0:
         return str_base(d, base) + digit_to_char(m)
     return digit_to_char(m)
+
+def str_base_float(number,base,exp):
+    if number >= base:
+        return str_base_float(number/base,base,exp+1)
+    if exp<-15 or (number == 0 and exp < 0):            #15 places after the dot should be good, right?
+        return ""
+    return digit_to_char(int(number)) + ("." if exp==0 and number%1 else "") + str_base_float((number%1)*base,base,exp-1)
     
 def i_mul_fn(srs):
     a=srs.pop()
