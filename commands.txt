@@ -10,7 +10,8 @@
 09 (tab): push a single byte of unformatted input from STDIN (push sys.stdin.read(1))
 0A (line feed):
 0B (vertical tab):
-0C (form feed): push all data from stdin as a string
+0C (form feed
+): push all data from stdin as a string
 0D (carriage return):
 0E (SO):
 0F (SI):

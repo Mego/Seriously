@@ -76,4 +76,7 @@ assert serious_check(r'52"234"T', "235\n")
 assert serious_check(r'"%s"O'%(chr(0x57)+chr(0x58)+chr(0x59)), "[%s, %s, %s]\n"%(0x57,0x58,0x59))
 assert serious_check(r'["%s"]O'%(chr(0x57)+chr(0x58)+chr(0x59)), "[%s, %s, %s]\n"%(0x57,0x58,0x59))
 
+#base
+assert serious_check(r'2:5.5:%s'%(chr(0xAD)), "101.1\n")
+
 # More to come...
