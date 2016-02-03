@@ -4,10 +4,22 @@ from __future__ import print_function, division
 from fractions import gcd
 import operator, cmath
 import math as rmath
-import random, itertools, sys, string
+import random, itertools, sys, string, binascii, ast
 from types import *
 from base64 import *
 from copy import copy
+import pyshoco
+
+def memoize(f):
+    memo = {}
+    def m_fun(*args):
+        if args in memo:
+            return memo[args]
+        else:
+            res = f(*args)
+            memo[args] = res
+            return res
+    return m_fun
 
 def template_specialize(fname, *args):
     if fname not in globals():
@@ -24,6 +36,8 @@ def template_specialize(fname, *args):
     return template_specializer
 
 phi = (1+5**.5)/2
+
+@memoize
 def Fib(n):
     if n<2:
         return n
@@ -63,7 +77,8 @@ class SeriousFunction(object):
     def __init__(self, code):
         self.code = code
     def __call__(self,srs):
-        srs.eval(self.code,print_at_end=False)
+        c = binascii.hexlify(self.code) if srs.hex_mode else self.code
+        srs.eval(c,print_at_end=False)
     def __str__(self):
         return '%s'%self.code
     def __repr__(self):
@@ -109,6 +124,7 @@ def median(data):
         i = n//2-1
         return _sum(data[i:i+2])/2
     
+@memoize
 def naive_factorial(x):
     res = 1
     while x:
@@ -116,6 +132,7 @@ def naive_factorial(x):
         x -= 1
     return res
     
+@memoize
 def nCr(n, k):
     if k > n:
         return 0
@@ -127,10 +144,11 @@ def nCr(n, k):
         k-=1
     return int(res)
         
+@memoize
 def nPr(n, k):
     if k > n:
         return 0
-    return nCr(n,k)*math.factorial(k)
+    return nCr(n,k)*naive_factorial(k)
 
 def is_prime(x):
     global primes
@@ -165,6 +183,7 @@ def nth_prime(n):
         init_primes_up_to(max(primes)+100)
     return primes[n]
         
+@memoize
 def Fib_index(n):
     i=0
     while Fib(i)<n:
@@ -368,6 +387,7 @@ def n_fn(srs):
         else:
             srs.push(a)
             
+@memoize
 def full_factor(n):
     n=abs(n)
     global primes
@@ -464,8 +484,6 @@ def str_base_float(number,base,exp):
     if exp<-15 or (number == 0 and exp < 0):            #15 places after the dot should be good, right?
         return ""
     return digit_to_char(int(number)) + ("." if exp==0 and number%1 else "") + str_base_float((number%1)*base,base,exp-1)
-    
-    
     
 def i_mul_fn(srs):
     a=srs.pop()
@@ -620,7 +638,7 @@ def fn_fil_fn(srs):
 def get_input_fn(srs):
     a=raw_input()
     try:
-        b = eval(a)
+        b = ast.literal_eval(a)
         b = list(b) if type(b) is TupleType else b
     except:
         b = a
@@ -644,6 +662,28 @@ def O_fn(srs):
     if type(a) is ListType:
         a = ''.join(flatten(a))
     srs.push(map(ord,a))
+    
+def dig_fn(srs):
+    a = srs.pop()
+    l = len(srs.stack)
+    a = a % l
+    srs.stack = [srs.stack[a]]+srs.stack[:a]+srs.stack[a+1:]
+    
+def reg_all_input_fn(srs):
+    global registers
+    for i,n in enumerate(sys.stdin.read().split('\n')):
+        a = ast.literal_eval(n)
+        a = list(a) if type(a) is TupleType else a
+        registers[i] = a
+        
+        
+def range_ab_fn(srs):
+    a = srs.pop()
+    if type(a) is ListType:
+        srs.push(range(*a))
+    else:
+        b = srs.pop()
+        srs.push(range(a,b))
         
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -719,7 +759,7 @@ fn_table={
         0x75:lambda x:x.push(x.pop()+1),
         0x76:lambda x:random.seed(x.pop()),
         0x77:lambda x:x.push(full_factor(x.pop())),
-        0x78:lambda x:x.push(range(x.pop(),x.pop())),
+        0x78:range_ab_fn,
         0x79:lambda x:x.push(factor(x.pop())),
         0x7A:lambda x:map(x.eval,(lambda y:['.' for _ in range(y)])(x.pop())),
         0x7B:nrrot_fn,
@@ -788,9 +828,12 @@ fn_table={
         0xBE:lambda x:x.push(get_reg(1)),
         0xBF:lambda x:set_reg(x.pop(),x.pop()),
         0xC0:lambda x:x.push(get_reg(x.pop())),
+        0xC2:lambda x:x.push(map(list, zip(*x.pop()))),
         0xC5:dupe_each_fn,
         0xC6:dupe_each_n_fn,
         0xC7:npop_list_fn,
+        0xC8:lambda x:x.push(random.shuffle(x.pop())),
+        0xCA:reg_all_input_fn,
         0xCB:lambda x:x.push(math.pi),
         0xCC:lambda x:x.push(math.e),
         0xCE:while_fn,
@@ -808,14 +851,20 @@ fn_table={
         0xE3:lambda x:x.push(reduce(operator.mul,x.pop(),1)),
         0xE4:sum_fn,
         0xE7:lambda x:x.push(x.pop()*2),
+        0xEB:dig_fn,
+        0xEC:lambda x:x.toggle_preserve(),
         0xED:lambda x:x.push(phi),
         0xEE:lambda x:x.push(""),
         0xEF:lambda x:x.push(list(set(x.pop()).intersection(x.pop()))),
+        0xF0:lambda x:x.push(eval(x.pop())),
         0xF1:lambda x:x.push(-x.pop()),
         0xF2:lambda x:x.push(x.pop()>=x.pop()),
         0xF3:lambda x:x.push(x.pop()<=x.pop()),
+        0xF4:lambda x:x.push(pyshoco.compress(x.pop())),
+        0xF5:lambda x:x.push(pyshoco.decompress(x.pop())),
         0xF7:lambda x:x.push(int(x.pop())),
         0xF8:lambda x:x.push(math.radians(x.pop())),
+        0xF9:lambda x:x.push(map(list,itertools.product(x.pop(),x.pop()))),
         0xFB:lambda x:x.push(x.pop()**.5),
         0xFE:peek_print_fn,
 }
