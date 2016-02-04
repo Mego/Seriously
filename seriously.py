@@ -156,10 +156,13 @@ if __name__ == '__main__':
     parser.add_argument("-d", "--debug", help="turn on debug mode", action="store_true")
     parser.add_argument("-q", "--quiet", help="turn off REPL prompts and automatic stack printing, only print code STDOUT output", action="store_true")
     parser.add_argument("-x", "--hex", help="turn on hex mode (code is taken in hex values instead of binary bytes)", action="store_true")
+    parser.add_argument("-i", "--ide", help="turn on IDE mode, which disables unsafe commands", action="store_true")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-c", "--code", help="run the specified code")
-    group.add_argument("-f", "--file", help="specify an input file", type=file)
+    group.add_argument("-f", "--file", help="specify an input file", type=argparse.FileType('rb'))
     args = parser.parse_args()
+    if args.ide:
+        commands.fn_table[0xF0]=lambda x:x
     if args.code or args.file:
         srs_exec(args.debug, args.file, args.code, args.hex)
     else:
