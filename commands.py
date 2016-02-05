@@ -685,6 +685,14 @@ def range_ab_fn(srs):
         b = srs.pop()
         srs.push(range(a,b))
         
+def cart_prod_fn(srs):
+    #lambda x:x.push(map(list,itertools.product(x.pop(),x.pop())))
+    a,b = srs.pop(),srs.pop()
+    if type(b) in [IntType, FloatType]:
+        srs.push(map(list,itertools.product(a,repeat=b)))
+    else:
+        srs.push(map(list,itertools.product(a,b)))
+        
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x0C:lambda x:x.push(sys.stdin.read()),
@@ -837,6 +845,8 @@ fn_table={
         0xCB:lambda x:x.push(math.pi),
         0xCC:lambda x:x.push(math.e),
         0xCE:while_fn,
+        0xCF:lambda x:x.push(map(list,itertools.combinations(x.pop(),x.pop()))),
+        0xD0:lambda x:x.push(map(list,itertools.permutations(x.pop(),x.pop()))),
         0xD1:lambda x:x.push(pow(10,x.pop())),
         0xD2:lambda x:x.push(math.log(x.pop(),10)),
         0xD3:lambda x:x.push(pow(2,x.pop())),
@@ -864,7 +874,7 @@ fn_table={
         0xF5:lambda x:x.push(pyshoco.decompress(x.pop())),
         0xF7:lambda x:x.push(int(x.pop())),
         0xF8:lambda x:x.push(math.radians(x.pop())),
-        0xF9:lambda x:x.push(map(list,itertools.product(x.pop(),x.pop()))),
+        0xF9:cart_prod_fn,
         0xFB:lambda x:x.push(x.pop()**.5),
         0xFE:peek_print_fn,
 }
