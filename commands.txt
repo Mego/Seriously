@@ -205,8 +205,8 @@ CB (Ë): push pi
 CC (Ì): push e
 CD (Í):
 CE (Î): pop f: while value on top of stack is truthy (peek), call f
-CF (Ï):
-D0 (Ð):
+CF (Ï): pop [a] or "a",b: push all b-length combinations of a
+D0 (Ð): pop [a] or "a",b: push all b-length permutations of a
 D1 (Ñ): pop a: push 10**a
 D2 (Ò): pop a: push log(a) (log base 10)
 D3 (Ó): pop a: push 2**a
@@ -247,7 +247,7 @@ F5 (õ): pop "a": push pyshoco.decompress("a")
 F6 (ö):
 F7 (÷): pop a: push int(a)
 F8 (ø): pop a: push radians(a)
-F9 (ù): pop [a],[b]: push Cartesian product of [a] and [b]
+F9 (ù): pop [a],[b]: push Cartesian product of [a] and [b]; pop [a],b: push [a]^b (Cartesian product of b copies of [a])
 FA (ú):
 FB (û): pop a: push sqrt(a)
 FC (ü):

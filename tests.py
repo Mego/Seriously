@@ -76,7 +76,13 @@ assert serious_check(r'52"234"T', "235\n")
 assert serious_check(r'"%s"O'%(chr(0x57)+chr(0x58)+chr(0x59)), "[%s, %s, %s]\n"%(0x57,0x58,0x59))
 assert serious_check(r'["%s"]O'%(chr(0x57)+chr(0x58)+chr(0x59)), "[%s, %s, %s]\n"%(0x57,0x58,0x59))
 
-#base
+# Base tests
 assert serious_check(r'2:5.5:%s'%(chr(0xAD)), "101.1\n")
+
+# List tests
+assert serious_check(r'2[1,2,3]'+chr(0xCF), "[[1, 2], [1, 3], [2, 3]]\n")
+assert serious_check(r'2[1,2,3]'+chr(0xD0), "[[1, 2], [1, 3], [2, 1], [2, 3], [3, 1], [3, 2]]\n")
+assert serious_check(r'2[1,2,3]'+chr(0xF9), "[[1, 1], [1, 2], [1, 3], [2, 1], [2, 2], [2, 3], [3, 1], [3, 2], [3, 3]]\n")
+assert serious_check(r'[1,2,3][1,2,3]'+chr(0xF9), "[[1, 1], [1, 2], [1, 3], [2, 1], [2, 2], [2, 3], [3, 1], [3, 2], [3, 3]]\n")
 
 # More to come...
