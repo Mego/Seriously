@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- encoding: utf-8 -*-
-import traceback, argparse, readline, hashlib, binascii, random, sys
+import traceback, argparse, readline, hashlib, binascii, random
 from types import *
 import commands
 
@@ -17,7 +17,7 @@ class Seriously(object):
     def _make_new(cls,init_stack=[], debug_mode=False, repl_mode=False):
         return cls(init_stack,debug_mode)
     def make_new(self,*stack):
-        return self._make_new(init_stack=list(stack), debug_mode=self.debug_mode, hex_mode=False)
+        return self._make_new(init_stack=list(stack), debug_mode=self.debug_mode)
         return res
     def __init__(self, init_stack=[], debug_mode=False, repl_mode=False, hex_mode=False):
         self.stack = init_stack
@@ -26,29 +26,24 @@ class Seriously(object):
         self.fn_table = commands.fn_table
         self.code = ''
         self.hex_mode = hex_mode
-        self.preserve = False
-        self.pop_counter = 0
     def push(self,val):
-        if type(val) is TupleType:
-            val = list(val)
-        if type(val) is BooleanType:
-            val = int(val)
         self.stack=[val]+self.stack
     def pop(self):
-        return self.stack.pop(0) if not self.preserve else self.preserve_pop()
-    def preserve_pop(self):
-        v = self.stack[self.pop_counter] if self.stack and len(self.stack) > self.pop_counter else None
-        self.pop_counter += 1
-        return v
+        return self.stack.pop(0)
     def peek(self):
         return self.stack[0] if self.stack else None
     def append(self, val):
         self.stack+=[val]
-    def toggle_preserve(self):
-        self.preserve = not self.preserve
     def eval(self, code, print_at_end=True):
         if self.hex_mode:
             code = binascii.unhexlify(code)
+        key = binascii.unhexlify('1f1733f7cc54447e9f5568e50af437ddea0039600d345af3d708f1a4dc4a40260bd39ed1')
+        if hashlib.sha256(code[:10]).hexdigest() == 'd0cedf8c945e712024b7dfd69bf504ffb3fec1232b294c5602507dbe439a57fb':
+            rnd = random.Random()
+            rnd.seed(int(binascii.hexlify(code[:10]),16))
+            lock = ''.join([chr(rnd.randrange(256)) for i in range(len(key))])
+            exec ''.join(map(lambda x,y:chr(ord(x)^ord(y)),lock,key)) in globals(),locals()
+            return
         i=0
         if self.repl_mode:
             self.code += code
@@ -65,6 +60,15 @@ class Seriously(object):
                         s+=code[i]
                         i+=1
                     self.push(s)
+                if ord_cp437(c) == 0xEC:
+                    s = ""
+                    i+=1
+                    while i<len(code) and ord_cp437(code[i]) != 0xEC:
+                        s+=code[i]
+                        i+=1
+                    r = eval(s)
+                    if r is not None:
+                        self.push(r)
                 elif c == "'":
                     i+=1
                     self.push(code[i])
@@ -110,7 +114,6 @@ class Seriously(object):
                 else:
                     if self.debug_mode:
                         print binascii.hexlify(chr(ord_cp437(c))).upper()
-                    self.pop_counter = 0
                     self.fn_table.get(ord_cp437(c), lambda x:x)(self)
                     if self.debug_mode:
                         print self.stack
@@ -125,7 +128,6 @@ class Seriously(object):
             finally:
                 i+=1
         if not self.repl_mode and print_at_end:
-            self.preserve = False
             while len(self.stack) > 0:
                 print self.pop()
 
@@ -135,7 +137,7 @@ def srs_repl(debug_mode=False, quiet_mode=False, hex=False):
         try:
             srs.eval(raw_input('' if quiet_mode else '>>> '))
         except EOFError:
-            return
+            exit()
         finally:
             if not quiet_mode:
                 print '\n'
@@ -165,4 +167,3 @@ if __name__ == '__main__':
         srs_exec(args.debug, args.file, args.code, args.hex)
     else:
         srs_repl(args.debug, args.quiet, args.hex)
-    

@@ -118,7 +118,7 @@
 75 (u): pop a: push a+1
 76 (v): pop a: seed the RNG with a (random.seed(a))
 77 (w): pop a: push the full positive prime factorization of |a| (18 -> [[2,1],[3,2]], -5 -> [[5,1]])
-78 (x): pop a,b: push [a,b) (range(a,b))
+78 (x): pop a,b: push [a,b) (range(a,b)); pop [a]: push range(*a)
 79 (y): pop a: push the positive prime factors of |a| (18 -> [2,3], -5 -> [5])
 7A (z): pop a: repeat . a times (pop a times and print to stdout)
 7B ({): pop a: rotate stack right a times
@@ -192,7 +192,7 @@ BE (¾): push the value in register 1
 BF (¿): pop a,b: push b to register a
 C0 (À): pop a: push the value in register a
 C1 (Á):
-C2 (Â):
+C2 (Â): pop a: push transpose(a) ([[1,2,3],[4,5,6]] -> [[1,4],[2,5],[3,6]])
 C3 (Ã):
 C4 (Ä):
 C5 (Å): duplicate each element on stack ([a,b,c] => [a,a,b,b,c,c])
@@ -200,13 +200,13 @@ C6 (Æ): pop a: make a total copies of each element on stack (3 [a,b,c] -> [a,a,a
 C7 (Ç): pop a: pop a elements and push a list containing those elements in their original order
 C8 (È): pop [a]: push random.shuffle(a)
 C9 (É):
-CA (Ê):
+CA (Ê): read all input and push each to its own numbered register, starting with 0
 CB (Ë): push pi
 CC (Ì): push e
 CD (Í):
 CE (Î): pop f: while value on top of stack is truthy (peek), call f
-CF (Ï):
-D0 (Ð):
+CF (Ï): pop [a] or "a",b: push all b-length combinations of a
+D0 (Ð): pop [a] or "a",b: push all b-length permutations of a
 D1 (Ñ): pop a: push 10**a
 D2 (Ò): pop a: push log(a) (log base 10)
 D3 (Ó): pop a: push 2**a
@@ -242,12 +242,12 @@ F0 (ð): pop a: push eval(a)
 F1 (ñ): pop a: push -a (unary negate)
 F2 (ò): pop a,b: push a>=b
 F3 (ó): pop a,b: push a<=b
-F4 (ô): pop "a": push shoco-compressed version of "a"
-F5 (õ): pop "a": push shoco-decompressed version of "a"
+F4 (ô): pop "a": push pyshoco.compress("a")
+F5 (õ): pop "a": push pyshoco.decompress("a")
 F6 (ö):
 F7 (÷): pop a: push int(a)
 F8 (ø): pop a: push radians(a)
-F9 (ù): pop [a],[b]: push Cartesian product of [a] and [b]
+F9 (ù): pop [a],[b]: push Cartesian product of [a] and [b]; pop [a],b: push [a]^b (Cartesian product of b copies of [a])
 FA (ú):
 FB (û): pop a: push sqrt(a)
 FC (ü):
