@@ -31,6 +31,7 @@ assert serious_check(r':1.25','1.25\n')
 assert serious_check(r':1+2j','(1+2j)\n')
 assert serious_check(r'[1,2+0j,"fizz",4.0,"buzz"]',"[1, (2+0j), 'fizz', 4.0, 'buzz']\n")
 assert serious_check(r'`foo`','foo\n')
+assert serious_check(r'%slen({1,2,2,3})%s'%(chr(0xEC),chr(0xEC)), '3\n')
 
 # Meta stack tests
 assert serious_check(r'1 ','1\n1\n')
@@ -45,9 +46,6 @@ assert serious_check(r'123'+chr(0xB3),'3\n2\n1\n'*2)
 assert serious_check(r'123'+chr(0xC5),'3\n3\n2\n2\n1\n1\n')
 assert serious_check(r'12'+chr(0xC6),'1\n1\n')
 assert serious_check(r'123'+chr(0xFE),'3 2 1\n3\n2\n1\n')
-assert serious_check(r'"1+2"'+chr(0xF0), '3\n')
-assert serious_check(r'1231'+chr(0xEB), '2\n3\n1\n')
-assert serious_check(r'12'+chr(0xEC)+'+', '3\n2\n1\n')
 
 # Registers tests
 assert serious_check(r'1%s2%s%s%s'%(chr(0xBB),chr(0xBC),chr(0xBE),chr(0xBD)),'1\n2\n')
@@ -78,7 +76,13 @@ assert serious_check(r'52"234"T', "235\n")
 assert serious_check(r'"%s"O'%(chr(0x57)+chr(0x58)+chr(0x59)), "[%s, %s, %s]\n"%(0x57,0x58,0x59))
 assert serious_check(r'["%s"]O'%(chr(0x57)+chr(0x58)+chr(0x59)), "[%s, %s, %s]\n"%(0x57,0x58,0x59))
 
+# Base tests
+assert serious_check(r'2:5.5:%s'%(chr(0xAD)), "101.1\n")
+
 # List tests
-assert serious_check(r'[1,2][3,4]@'+chr(0xF9), '[[1, 3], [1, 4], [2, 3], [2, 4]]\n')
+assert serious_check(r'2[1,2,3]'+chr(0xCF), "[[1, 2], [1, 3], [2, 3]]\n")
+assert serious_check(r'2[1,2,3]'+chr(0xD0), "[[1, 2], [1, 3], [2, 1], [2, 3], [3, 1], [3, 2]]\n")
+assert serious_check(r'2[1,2,3]'+chr(0xF9), "[[1, 1], [1, 2], [1, 3], [2, 1], [2, 2], [2, 3], [3, 1], [3, 2], [3, 3]]\n")
+assert serious_check(r'[1,2,3][1,2,3]'+chr(0xF9), "[[1, 1], [1, 2], [1, 3], [2, 1], [2, 2], [2, 3], [3, 1], [3, 2], [3, 3]]\n")
 
 # More to come...

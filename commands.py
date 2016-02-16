@@ -1,14 +1,24 @@
 #!/usr/bin/env python
-
 from __future__ import print_function, division
 from fractions import gcd
 import operator, cmath
 import math as rmath
-import random, itertools, sys, string, binascii
+import random, itertools, sys, string, binascii, ast
 from types import *
 from base64 import *
 from copy import copy
 import pyshoco
+
+def memoize(f):
+    memo = {}
+    def m_fun(*args):
+        if args in memo:
+            return memo[args]
+        else:
+            res = f(*args)
+            memo[args] = res
+            return res
+    return m_fun
 
 def template_specialize(fname, *args):
     if fname not in globals():
@@ -25,6 +35,8 @@ def template_specialize(fname, *args):
     return template_specializer
 
 phi = (1+5**.5)/2
+
+@memoize
 def Fib(n):
     if n<2:
         return n
@@ -111,6 +123,7 @@ def median(data):
         i = n//2-1
         return _sum(data[i:i+2])/2
     
+@memoize
 def naive_factorial(x):
     res = 1
     while x:
@@ -118,6 +131,7 @@ def naive_factorial(x):
         x -= 1
     return res
     
+@memoize
 def nCr(n, k):
     if k > n:
         return 0
@@ -129,10 +143,11 @@ def nCr(n, k):
         k-=1
     return int(res)
         
+@memoize
 def nPr(n, k):
     if k > n:
         return 0
-    return nCr(n,k)*math.factorial(k)
+    return nCr(n,k)*naive_factorial(k)
 
 def is_prime(x):
     global primes
@@ -167,6 +182,7 @@ def nth_prime(n):
         init_primes_up_to(max(primes)+100)
     return primes[n]
         
+@memoize
 def Fib_index(n):
     i=0
     while Fib(i)<n:
@@ -370,6 +386,7 @@ def n_fn(srs):
         else:
             srs.push(a)
             
+@memoize
 def full_factor(n):
     n=abs(n)
     global primes
@@ -438,7 +455,7 @@ def star_fn(srs):
 def plus_fn(srs):
     a=srs.pop()
     b=srs.pop()
-    if type(a)!=type(b):
+    if type(a)!=type(b) and (type(a) is ListType or type(b) is ListType):
         if type(a) is ListType and type(b):
             srs.push(map(lambda x:x+b,a))
         elif type(b) is ListType:
@@ -454,10 +471,18 @@ def digit_to_char(digit):
 def str_base(number,base):
     if number < 0:
         return '-' + str_base(-number, base)
+    if type(number) is FloatType: return str_base_float(number,base,0)
     (d, m) = divmod(number, base)
     if d > 0:
         return str_base(d, base) + digit_to_char(m)
     return digit_to_char(m)
+
+def str_base_float(number,base,exp):
+    if number >= base:
+        return str_base_float(number/base,base,exp+1)
+    if exp<-15 or (number == 0 and exp < 0):            #15 places after the dot should be good, right?
+        return ""
+    return digit_to_char(int(number)) + ("." if exp==0 and number%1 else "") + str_base_float((number%1)*base,base,exp-1)
     
 def i_mul_fn(srs):
     a=srs.pop()
@@ -582,7 +607,7 @@ def m_fn(srs):
     if type(a) in [StringType,ListType]:
         srs.push(min(a))
     else:
-        srs.push(map(list,math.modf(a)))
+        srs.push(list(math.modf(a)))
     
 def filter_types(iter,*types):
     return filter(lambda x:type(x) in types, iter)
@@ -612,7 +637,7 @@ def fn_fil_fn(srs):
 def get_input_fn(srs):
     a=raw_input()
     try:
-        b = eval(a)
+        b = ast.literal_eval(a)
         b = list(b) if type(b) is TupleType else b
     except:
         b = a
@@ -648,6 +673,32 @@ def D_fn(srs):
     if type(a) is ListType:
         E = sum(a)/len(a)
         srs.push((sum([(E-X)**2 for X in a])/len(a))**.5)
+    else:
+        srs.push(a-1)
+
+def reg_all_input_fn(srs):
+    global registers
+    for i,n in enumerate(sys.stdin.read().split('\n')):
+        a = ast.literal_eval(n)
+        a = list(a) if type(a) is TupleType else a
+        registers[i] = a
+        
+        
+def range_ab_fn(srs):
+    a = srs.pop()
+    if type(a) is ListType:
+        srs.push(range(*a))
+    else:
+        b = srs.pop()
+        srs.push(range(a,b))
+        
+def cart_prod_fn(srs):
+    #lambda x:x.push(map(list,itertools.product(x.pop(),x.pop())))
+    a,b = srs.pop(),srs.pop()
+    if type(b) in [IntType, FloatType]:
+        srs.push(map(list,itertools.product(a,repeat=b)))
+    else:
+        srs.push(map(list,itertools.product(a,b)))
         
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -723,7 +774,7 @@ fn_table={
         0x75:lambda x:x.push(x.pop()+1),
         0x76:lambda x:random.seed(x.pop()),
         0x77:lambda x:x.push(full_factor(x.pop())),
-        0x78:lambda x:x.push(range(x.pop(),x.pop())),
+        0x78:range_ab_fn,
         0x79:lambda x:x.push(factor(x.pop())),
         0x7A:lambda x:map(x.eval,(lambda y:['.' for _ in range(y)])(x.pop())),
         0x7B:nrrot_fn,
@@ -792,13 +843,17 @@ fn_table={
         0xBE:lambda x:x.push(get_reg(1)),
         0xBF:lambda x:set_reg(x.pop(),x.pop()),
         0xC0:lambda x:x.push(get_reg(x.pop())),
+        0xC2:lambda x:x.push(map(list, zip(*x.pop()))),
         0xC5:dupe_each_fn,
         0xC6:dupe_each_n_fn,
         0xC7:npop_list_fn,
         0xC8:lambda x:x.push(random.shuffle(x.pop())),
+        0xCA:reg_all_input_fn,
         0xCB:lambda x:x.push(math.pi),
         0xCC:lambda x:x.push(math.e),
         0xCE:while_fn,
+        0xCF:lambda x:x.push(map(list,itertools.combinations(x.pop(),x.pop()))),
+        0xD0:lambda x:x.push(map(list,itertools.permutations(x.pop(),x.pop()))),
         0xD1:lambda x:x.push(pow(10,x.pop())),
         0xD2:lambda x:x.push(math.log(x.pop(),10)),
         0xD3:lambda x:x.push(pow(2,x.pop())),
@@ -826,7 +881,7 @@ fn_table={
         0xF5:lambda x:x.push(pyshoco.decompress(x.pop())),
         0xF7:lambda x:x.push(int(x.pop())),
         0xF8:lambda x:x.push(math.radians(x.pop())),
-        0xF9:lambda x:x.push(map(list,itertools.product(x.pop(),x.pop()))),
+        0xF9:cart_prod_fn,
         0xFB:lambda x:x.push(x.pop()**.5),
         0xFE:peek_print_fn,
 }
