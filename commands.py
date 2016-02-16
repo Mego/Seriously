@@ -642,6 +642,12 @@ def dig_fn(srs):
     l = len(srs.stack)
     a = a % l
     srs.stack = [srs.stack[a]]+srs.stack[:a]+srs.stack[a+1:]
+    
+def D_fn(srs):
+    a = srs.pop()
+    if type(a) is ListType:
+        E = sum(a)/len(a)
+        srs.push((sum([(E-X)**2 for X in a])/len(a))**.5)
         
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -669,7 +675,7 @@ fn_table={
         0x41:lambda x:x.push(abs(x.pop())),
         0x42:lambda x:x.push(random.randrange(x.pop(),x.pop())),
         0x43:lambda x:x.push(math.cos(x.pop())),
-        0x44:lambda x:x.push(x.pop()-1),
+        0x44:D_fn,
         0x45:E_fn,
         0x46:lambda x:x.push(Fib(x.pop())),
         0x47:lambda x:x.push(random.random()),
