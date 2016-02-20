@@ -776,7 +776,7 @@ fn_table={
         0x77:lambda x:x.push(full_factor(x.pop())),
         0x78:range_ab_fn,
         0x79:lambda x:x.push(factor(x.pop())),
-        0x7A:lambda x:map(x.eval,(lambda y:['.' for _ in range(y)])(x.pop())),
+        0x7A:lambda x:map(print,(lambda y:[x.pop() for _ in range(y)])(x.pop())),
         0x7B:nrrot_fn,
         0x7C:lambda x:x.push(x.pop() | x.pop()),
         0x7D:nlrot_fn,
