@@ -1,13 +1,14 @@
-#!/usr/bin/env python
-from __future__ import print_function, division
+#!/usr/bin/env python3
+
 from fractions import gcd
 import operator, cmath
 import math as rmath
 import random, itertools, sys, string, binascii, ast
-from types import *
 from base64 import *
 from copy import copy
 import pyshoco
+import collections
+from functools import reduce
 
 def memoize(f):
     memo = {}
@@ -20,23 +21,21 @@ def memoize(f):
             return res
     return m_fun
 
-
 def template_specialize(fname, *args):
     if fname not in globals():
         def raiseError(*args, **kwargs):
             raise NotImplementedError("This type combination is unimplemented.")
 
         globals()[fname] = raiseError
-
+    
     def template_specializer(func):
         old_func = globals()[fname]
         globals()[fname] = lambda *pargs: func(*pargs) if all(isinstance(a, t) for a, t in zip(pargs, args)) else old_func(*pargs)
         return func
-
+    
     return template_specializer
 
 phi = (1+5**.5)/2
-
 
 @memoize
 def Fib(n):
@@ -46,7 +45,7 @@ def Fib(n):
     while n>2:
         a,b,n=b,a+b,n-1
     return b
-
+    
 def prod(iter):
     return reduce(operator.mul, iter, 1)
 
@@ -70,9 +69,12 @@ class MathSelector(object):
 class Math(object):
     def __getattr__(self, fn):
         mathmod = cmath if hasattr(cmath,fn) else rmath
-        return MathSelector(fn) if callable(getattr(mathmod,fn)) else getattr(rmath,fn)
-
+        return MathSelector(fn) if isinstance(getattr(mathmod,fn), collections.Callable) else getattr(rmath,fn)
+        
 math = Math()
+
+def anytype(x, *types):
+    return any(isinstance(x,t) for t in types)
 
 class SeriousFunction(object):
     def __init__(self, code):
@@ -92,7 +94,7 @@ class SeriousFunction(object):
         return SeriousFunction(self.code*other)
     def __mod__(self,other):
         return SeriousFunction(self.code%other)
-
+        
 def NinetyNineBottles():
     x = 99
     res = ''
@@ -108,15 +110,15 @@ def NinetyNineBottles():
         i += 1
         res += '\n\n'
     return res
-
+    
 def _sum(data, start=None):
-    if any([type(x) in [FloatType, ComplexType] for x in data]):
+    if any(anytype(x, float, complex) for x in data):
         return math.fsum(data)+start
     if start is None:
         return sum(data)
     else:
         return sum(data, start)
-
+        
 def median(data):
     n = len(data)
     if n%2 == 1:
@@ -124,7 +126,7 @@ def median(data):
     else:
         i = n//2-1
         return _sum(data[i:i+2])/2
-
+    
 @memoize
 def naive_factorial(x):
     res = 1
@@ -132,7 +134,7 @@ def naive_factorial(x):
         res *= x
         x -= 1
     return res
-
+    
 @memoize
 def nCr(n, k):
     if k > n:
@@ -144,7 +146,7 @@ def nCr(n, k):
         res *= (n+1-k)/k
         k-=1
     return int(res)
-
+        
 @memoize
 def nPr(n, k):
     if k > n:
@@ -157,7 +159,7 @@ def is_prime(x):
         return 1
     if x<2 or (max(primes) > x):
         return 0
-    for p in filter(lambda p:p*p<=x,primes):
+    for p in [p for p in primes if p*p<=x]:
         if x%p==0:
             return 0
     n = max(primes)+2
@@ -175,7 +177,7 @@ def init_primes_up_to(n):
         if is_prime(x):
             primes.append(x)
         x+=2
-
+        
 init_primes_up_to(100)
 
 def nth_prime(n):
@@ -183,7 +185,7 @@ def nth_prime(n):
     while len(primes)<=n:
         init_primes_up_to(max(primes)+100)
     return primes[n]
-
+        
 @memoize
 def Fib_index(n):
     i=0
@@ -193,19 +195,19 @@ def Fib_index(n):
 
 def div_fn(srs):
     a=srs.pop()
-    if type(a) is ListType:
+    if isinstance(a, list):
         srs.push(a[-1:]+a[:-1])
-    elif type(a) in [IntType, LongType, FloatType, ComplexType]:
+    elif anytype(a, int, float, complex):
         b=srs.pop()
         srs.push(a/b)
     else:
         srs.push(a)
-
+        
 def idiv_fn(srs):
     a=srs.pop()
-    if type(a) is ListType:
+    if isinstance(a, list):
         srs.push(a[1:]+a[:1])
-    elif type(a) in [IntType,LongType,FloatType,ComplexType]:
+    elif anytype(a, int, float, complex):
         b=srs.pop()
         srs.push(a//b)
     else:
@@ -215,149 +217,149 @@ def dupe_fn(srs):
     a=srs.pop()
     srs.push(a)
     srs.push(copy(a))
-
+    
 def rot2_fn(srs):
     a,b=srs.pop(),srs.pop()
     srs.push(a)
     srs.push(b)
-
+    
 def deq_fn(srs):
     a=srs.pop()
-    if type(a) is ListType:
+    if isinstance(a, list):
         b=a.pop(-1)
         srs.push(a)
         srs.push(b)
     else:
         srs.push(a)
-
+        
 def i_fn(srs):
     a=srs.pop()
-    if type(a) is StringType and (all([c.isdigit() or c=='.' for c in a]) and a.count('.')<2):
+    if isinstance(a, str) and (all([c.isdigit() or c=='.' for c in a]) and a.count('.')<2):
         srs.push(float(a))
-    elif type(a) is ListType:
+    elif isinstance(a, list):
         for x in a[::-1]:
             srs.push(x)
     else:
         srs.push(a)
-
+        
 def to_list_fn(srs):
     srs.stack = [srs.stack]
-
+    
 def psh_fn(srs):
     a=srs.pop()
     b=srs.pop()
     a=[b]+a
     srs.push(a)
-
+    
 def p_fn(srs):
     a=srs.pop()
-    if type(a) in [IntType, LongType]:
+    if isinstance(a, int):
         srs.push(is_prime(a))
-    elif type(a) is ListType:
+    elif isinstance(a, list):
         b=a.pop(0)
         srs.push(a)
         srs.push(b)
     else:
         srs.push(a)
-
+        
 def enq_fn(srs):
     a,b=srs.pop(),srs.pop()
     a.append(b)
     srs.push(a)
-
+    
 def flatten(lst):
     return sum(([x] if not isinstance(x, list) else flatten(x) for x in lst), [])
-
+    
 def flat_explode_fn(srs):
     tmp = []
     while len(srs.stack)>0:
         a = srs.pop()
-        if type(a) is StringType:
+        if isinstance(a, str):
             a = a.split('')
-        elif type(a) is ListType:
+        elif isinstance(a, list):
             a = flatten(a)
         tmp.append(a)
     srs.stack = tmp[:]
-
+        
 def nrrot_fn(srs):
     a=srs.pop()
     srs.stack=srs.stack[a:]+srs.stack[:a]
-
+    
 def nlrot_fn(srs):
     a=-srs.pop()
     srs.stack=srs.stack[a:]+srs.stack[:a]
-
+    
 def ins_top_fn(srs):
     a=srs.pop()
     b=srs.pop()
     srs.stack=srs.stack[:a]+[b]+srs.stack[a:]
-
+    
 def ins_bot_fn(srs):
     a=srs.pop()
     b=srs.pop()
     srs.stack=srs.stack[:-a]+[b]+srs.stack[-a:]
-
+    
 def dupe_all_fn(srs):
     srs.stack=[copy(x) for x in srs.stack[:]]+srs.stack[:]
-
+    
 def dupe_each_fn(srs):
     tmp=[]
     while len(srs.stack)>0:
         a=srs.pop()
         tmp.append(a)
         tmp.append(copy(a))
-    srs.stack=tmp[:]
-
+    srs.stack=tmp[::-1]
+    
 def lr_fn(srs):
     a=srs.pop()
-    if type(a) is StringType:
-        map(srs.push,a[::-1])
-    elif type(a) in [IntType, LongType]:
-        srs.push(range(a))
-
+    if isinstance(a, str):
+        list(map(srs.push,a[::-1]))
+    elif isinstance(a, int):
+        srs.push(list(range(a)))
+        
 def s_fn(srs):
     a=srs.pop()
-    if type(a) is StringType:
+    if isinstance(a, str):
         b=srs.pop()
-        if type(b) is ListType:
+        if isinstance(b, list):
             try:
                 b=''.join(b)
             except TypeError:
                 b=''.join(map(repr,b))
-        if not type(b) in [StringType,ListType]:
+        if not anytype(b, list, str):
             b=repr(b)
         srs.push([''.join(list(g)) for k,g in itertools.groupby(a,lambda x:x in b) if not k])
-    elif type(a) is ListType:
+    elif isinstance(a, list):
         b=srs.pop()
-        if not type(b) in [StringType,ListType]:
+        if not anytype(b, list, str):
             b=[b]
         srs.push([list(g) for k,g in itertools.groupby(a,lambda x:x in b) if not k])
     else:
         srs.push(1 if a>0 else -1 if a<0 else 0)
-
+    
 def if_fn(srs):
     a,b,c=srs.pop(),srs.pop(),srs.pop()
     srs.push(b if a else c)
-
+    
 def invert_fn(srs):
     srs.stack=srs.stack[::-1]
-
+    
 def comp_fn(srs):
     a=srs.pop()
-    if type(a) is ListType:
+    if isinstance(a, list):
         a = a+[0] if a%2 else a
         while len(a) > 0:
             r,i = a.pop(0),a.pop(0)
             srs.push(complex(r,i))
-    elif type(a) in [IntType, LongType, FloatType]:
+    elif anytype(a, int, float):
         b=srs.pop()
         srs.push(complex(a,b))
     else:
         srs.push(a)
-
+        
 def M_fn(srs):
     a=srs.pop()
-    if type(a) in [StringType,ListType]:
+    if anytype(a, str, list):
         srs.push(max(a))
     else:
         b=srs.pop()
@@ -367,7 +369,7 @@ def M_fn(srs):
             a(s)
             res+=s.stack
         srs.push(res)
-
+    
 def r_fn(srs):
     a=srs.pop()
     if isinstance(a,SeriousFunction):
@@ -375,11 +377,11 @@ def r_fn(srs):
         s=srs.make_new(*b)
         a(s)
         srs.push(s.stack)
-    elif type(a) in [StringType,ListType]:
+    elif anytype(a, str, list):
         srs.push(a[::-1])
     else:
-        srs.push(range(1,a+1))
-
+        srs.push(list(range(1,a+1)))
+        
 def n_fn(srs):
     a,b=srs.pop(),srs.pop()
     for i in range(b):
@@ -387,14 +389,14 @@ def n_fn(srs):
             a(srs)
         else:
             srs.push(a)
-
+            
 @memoize
 def full_factor(n):
     n=abs(n)
     global primes
     init_primes_up_to(n)
     res=[]
-    for p in filter(lambda x:x<=n,primes):
+    for p in [x for x in primes if x<=n]:
         a=0
         while n%p==0:
             a+=1
@@ -402,26 +404,26 @@ def full_factor(n):
         if a:
             res.append([p,a])
     return res
-
+    
 def factor(n):
     return [a for a,b in full_factor(n)]
-
+    
 def mod_fn(srs):
     a=srs.pop()
     b=srs.pop()
-    if type(a) is StringType or isinstance(a,SeriousFunction):
+    if anytype(a, str, SeriousFunction):
         srs.push(a%tuple(b))
     else:
         srs.push(a%b)
-
+        
 def f_fn(srs):
     a=srs.pop()
-    if type(a) is StringType:
+    if isinstance(a, str):
         b=srs.pop()
         srs.push(a.format(*b))
     else:
         srs.push(Fib_index(a))
-
+        
 def make_list_fn(srs):
     a=srs.pop()
     res=a
@@ -430,22 +432,22 @@ def make_list_fn(srs):
     except:
         res=[a]
     srs.push(res)
-
+    
 def j_fn(srs):
     a=srs.pop()
-    if type(a) in [ListType, StringType]:
+    if anytype(a, list, str):
         srs.push(random.choice(a))
     else:
         srs.push(random.randrange(a))
-
+        
 def star_fn(srs):
     a=srs.pop()
     b=srs.pop()
-    if type(a) is ListType and type(b) is not ListType:
-        srs.push(map(lambda x:x*b,a))
-    elif type(b) is ListType and type(a) is not ListType:
-        srs.push(map(lambda x:x*a,b))
-    elif type(a) == type(b) == ListType:
+    if isinstance(a, list) and not isinstance(b, list):
+        srs.push([x*b for x in a])
+    elif isinstance(b, list) and not isinstance(a, list):
+        srs.push([x*a for x in b])
+    elif isinstance(a, list) and isinstance(b, list):
         if(len(b) > len(a)):
             a,b=b,a
         while len(b) < len(a):
@@ -453,18 +455,18 @@ def star_fn(srs):
         srs.push(_sum([prod(x) for x in zip(a,b)]))
     else:
         srs.push(a*b)
-
+        
 def plus_fn(srs):
     a=srs.pop()
     b=srs.pop()
-    if type(a)!=type(b) and (type(a) is ListType or type(b) is ListType):
-        if type(a) is ListType and type(b):
-            srs.push(map(lambda x:x+b,a))
-        elif type(b) is ListType:
-            srs.push(map(lambda x:x+a,b))
+    if isinstance(a, list) ^ isinstance(b, list):
+        if isinstance(a, list):
+            srs.push([x+b for x in a])
+        elif isinstance(b, list):
+            srs.push([x+a for x in b])
     else:
         srs.push(a+b)
-
+        
 def digit_to_char(digit):
     if digit < 10:
         return str(digit)
@@ -473,7 +475,7 @@ def digit_to_char(digit):
 def str_base(number,base):
     if number < 0:
         return '-' + str_base(-number, base)
-    if type(number) is FloatType: return str_base_float(number,base,0)
+    if isinstance(number, float): return str_base_float(number,base,0)
     (d, m) = divmod(number, base)
     if d > 0:
         return str_base(d, base) + digit_to_char(m)
@@ -485,194 +487,190 @@ def str_base_float(number,base,exp):
     if exp<-15 or (number == 0 and exp < 0):            #15 places after the dot should be good, right?
         return ""
     return digit_to_char(int(number)) + ("." if exp==0 and number%1 else "") + str_base_float((number%1)*base,base,exp-1)
-
+    
 def i_mul_fn(srs):
     a=srs.pop()
-    if type(a) is ListType:
-        srs.push(map(lambda x:complex(0,x),a))
+    if isinstance(a, list):
+        srs.push([complex(0,x) for x in a])
     else:
         srs.push(complex(0,a))
-
+        
 def npop_list_fn(srs):
     a=srs.pop()
     res=[]
     for _ in range(a):
         res.append(srs.pop())
     srs.push(res)
-
+    
 def E_fn(srs):
     a=srs.pop()
-    if type(a) in [IntType,LongType,FloatType,ComplexType]:
+    if anytype(a, int, float, complex):
         srs.push(math.erf(a))
     else:
         b=srs.pop()
         srs.push(a[b])
-
+        
 def peek_print_fn(srs):
-    print(' '.join(map(repr, srs.stack)))
-
+    print(' '.join(map(repr, srs.stack[::-1])))
+    
 def while_fn(srs):
     f=srs.pop()
     while srs.peek():
         f(srs)
-
+        
 def dupe_each_n_fn(srs):
     a=srs.pop()
     tmp = []
     while srs.stack:
         b = srs.pop()
         tmp+=[b for i in range(a)]
-    srs.stack=tmp[:]
-
+    srs.stack=tmp[::-1]
+    
 def S_fn(srs):
     a=srs.pop()
-    if type(a) is StringType:
+    if isinstance(a, str):
         srs.push(''.join(sorted(a)))
-    elif type(a) is ListType:
+    elif isinstance(a, list):
         srs.push(sorted(a))
     else:
         srs.push(math.sin(a))
-
+        
 def print_all_fn(srs):
     while srs.stack:
         print(srs.pop())
-
+        
 def zip_fn(srs):
     a=srs.pop()
-    if type(a) in [ListType,StringType]:
+    if anytype(a, str, list):
         b=srs.pop()
-        srs.push(map(list,[filter(lambda x:x is not None,zlist) for zlist in itertools.izip_longest(a,b)]))
+        srs.push(list(map(list,[[x for x in zlist if x is not None] for zlist in itertools.zip_longest(a,b)])))
     else:
         lists = [srs.pop() for i in range(a)]
-        srs.push(map(list,[filter(lambda x:x is not None,zlist) for zlist in itertools.izip_longest(*lists)]))
-
+        srs.push(list(map(list,[[x for x in zlist if x is not None] for zlist in itertools.zip_longest(*lists)])))
+        
 def sum_fn(srs):
     a=srs.pop()
-    res = _sum(a,start=type(a[0])()) if type(a[0]) is not StringType else ''.join(map(str,a))
+    res = _sum(a,start=type(a[0])()) if not isinstance(a[0], str) else ''.join(map(str,a))
     srs.push(res)
-
+    
 def index_fn(srs):
     b,a=srs.pop(),srs.pop()
     if a in b:
         srs.push(b.index(a))
     else:
         srs.push(-1)
-
+        
 def cond_quit_fn(srs):
     a=srs.pop() if srs.stack else None
     if a:
         srs.push(a)
     else:
         exit()
-
+        
 def median_fn(srs):
     a=srs.pop()
     if len(a)%2:
         srs.push(a[len(a)//2])
     else:
-        if all([type(x) is StringType for x in a[len(a)//2-1:][:2]]):
-            med = median(map(ord,a))
+        if all([isinstance(x, str) for x in a[len(a)//2-1:][:2]]):
+            med = median(list(map(ord,a)))
             srs.push(chr(med))
         else:
             srs.push(median(a))
-
+            
 def c_fn(srs):
     a=srs.pop()
-    if type(a) in [ListType,StringType]:
+    if anytype(a, list, str):
         b=srs.pop()
         srs.push(a.count(b))
     else:
         srs.push(chr(a%256))
-
+        
 def exit_fn(srs):
     exit()
-
+    
 registers = dict()
 
 def get_reg(i):
     global registers
     return registers[i]
-
+    
 def set_reg(i, val):
     global registers
     registers[i] = val
-
+    
 def diff_fn(srs):
     a,b=srs.pop(),srs.pop()
-    if all([type(x) in [ListType,StringType] for x in (a,b)]):
-        srs.push(filter(lambda x:x not in b, a))
+    if all([anytype(x, str, list) for x in (a,b)]):
+        srs.push([x for x in a if x not in b])
     else:
         srs.push(a-b)
-
+        
 def m_fn(srs):
     a=srs.pop()
-    if type(a) in [StringType,ListType]:
+    if anytype(a, str, list):
         srs.push(min(a))
     else:
         srs.push(list(math.modf(a)))
-
+    
 def filter_types(iter,*types):
-    return filter(lambda x:type(x) in types, iter)
-
+    return [x for x in iter if anytype(x, types)]
+    
 def inv_fil_fn(srs):
     a=srs.pop()
-    if type(a) is ListType:
-        srs.push(filter_types(a,IntType,LongType,FloatType,ComplexType))
+    if isinstance(a, list):
+        srs.push(filter_types(a, int, float, complex))
     else:
         srs.push(1/a)
-
+    
 def AE_fn(srs):
     a=srs.pop()
-    if type(a) is ListType:
-        srs.push(filter_types(a,StringType))
+    if isinstance(a, list):
+        srs.push(filter_types(a, str))
     else:
         b,c=srs.pop(),srs.pop()
         srs.push(a.replace(b,c))
-
+    
 def fn_fil_fn(srs):
     a=srs.pop()
-    if type(a) is ListType:
-        srs.push(filter(lambda x:isinstance(x,SeriousFunction),a))
+    if isinstance(a, list):
+        srs.push([x for x in a if isinstance(x, SeriousFunction)])
     else:
         srs.push(SeriousFunction(a))
-
+        
 def get_input_fn(srs):
-    a=raw_input()
-    try:
-        b = ast.literal_eval(a)
-        b = list(b) if type(b) is TupleType else b
-    except:
-        b = a
-    finally:
-        srs.push(b)
-
+    a=input()
+    b = ast.literal_eval(a)
+    b = list(b) if isinstance(b, tuple) else b
+    srs.push(b)
+        
 def T_fn(srs):
     a=srs.pop()
-    if type(a) in [IntType, LongType, FloatType, ComplexType]:
+    if anytype(a, int, float, complex):
         srs.push(math.tan(a))
     else:
         b,c = srs.pop(), srs.pop()
-        if type(a) is StringType:
+        if isinstance(a, str):
             a = a[:b] + str(c) + a[b+1:]
         else:
             a[b] = c
         srs.push(a)
-
+        
 def O_fn(srs):
     a = srs.pop()
-    if type(a) is ListType:
+    if isinstance(a, list):
         a = ''.join(flatten(a))
-    srs.push(map(ord,a))
-
+    srs.push(list(map(ord,a)))
+    
 def dig_fn(srs):
     a = srs.pop()
     l = len(srs.stack)
     a = a % l
     srs.stack = [srs.stack[a]]+srs.stack[:a]+srs.stack[a+1:]
-
+    
 def D_fn(srs):
     a = srs.pop()
-    if type(a) is ListType:
+    if isinstance(a, list):
         E = sum(a)/len(a)
         srs.push((sum([(E-X)**2 for X in a])/len(a))**.5)
     else:
@@ -682,26 +680,38 @@ def reg_all_input_fn(srs):
     global registers
     for i,n in enumerate(sys.stdin.read().split('\n')):
         a = ast.literal_eval(n)
-        a = list(a) if type(a) is TupleType else a
+        a = list(a) if isinstance(a, tuple) else a
         registers[i] = a
-
-
+        
+        
 def range_ab_fn(srs):
     a = srs.pop()
-    if type(a) is ListType:
-        srs.push(range(*a))
+    if isinstance(a, list):
+        srs.push(list(range(*a)))
     else:
         b = srs.pop()
-        srs.push(range(a,b))
-
+        srs.push(list(range(a,b)))
+        
 def cart_prod_fn(srs):
     #lambda x:x.push(map(list,itertools.product(x.pop(),x.pop())))
     a,b = srs.pop(),srs.pop()
-    if type(b) in [IntType, FloatType]:
-        srs.push(map(list,itertools.product(a,repeat=b)))
+    if anytype(b, int, float):
+        srs.push(list(map(list,itertools.product(a,repeat=b))))
     else:
-        srs.push(map(list,itertools.product(a,b)))
-
+        srs.push(list(map(list,itertools.product(a,b))))
+        
+def print_fn(srs):
+    a = srs.pop()
+    if isinstance(a, SeriousFunction):
+        a(srs)
+    else:
+        print(a)
+        
+def nprint_fn(srs):
+    n = srs.pop()
+    for i in range(n):
+        print_fn(srs)
+        
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x0C:lambda x:x.push(sys.stdin.read()),
@@ -711,13 +721,13 @@ fn_table={
         0x24:lambda x:x.push(str(x.pop())),
         0x25:mod_fn,
         0x26:lambda x:x.push(x.pop() & x.pop()),
-        0x28:lambda x:x.push(x.stack.pop(-1)),
-        0x29:lambda x:x.append(x.pop()),
+        0x28:lambda x:x.push(x.stack.pop(0)),
+        0x29:lambda x:x.prepend(x.pop()),
         0x2A:star_fn,
         0x2B:plus_fn,
         0x2C:get_input_fn,
         0x2D:diff_fn,
-        0x2E:lambda x:(lambda y:print(y) if not isinstance(y,SeriousFunction) else y(x) or print(x.pop()))(x.pop()),
+        0x2E:print_fn,
         0x2F:div_fn,
         0x3B:dupe_fn,
         0x3C:lambda x:x.push(int(x.pop()<x.pop())),
@@ -762,7 +772,7 @@ fn_table={
         0x67:lambda x:x.push(gcd(x.pop(),x.pop())),
         0x68:lambda x:x.push(math.hypot(x.pop(),x.pop())),
         0x69:i_fn,
-        0x6A:lambda x:x.push(str.join(x.pop(),map(str,x.pop()))),
+        0x6A:lambda x:x.push(str.join(x.pop(),list(map(str,x.pop())))),
         0x6B:to_list_fn,
         0x6C:lambda x:x.push(len(x.pop())),
         0x6D:m_fn,
@@ -778,7 +788,7 @@ fn_table={
         0x77:lambda x:x.push(full_factor(x.pop())),
         0x78:range_ab_fn,
         0x79:lambda x:x.push(factor(x.pop())),
-        0x7A:lambda x:map(print,(lambda y:[x.pop() for _ in range(y)])(x.pop())),
+        0x7A:nprint_fn,
         0x7B:nrrot_fn,
         0x7C:lambda x:x.push(x.pop() | x.pop()),
         0x7D:nlrot_fn,
@@ -786,7 +796,7 @@ fn_table={
         0x7F:exit_fn,
         0x80:comp_fn,
         0x81:print_all_fn,
-        0x82:lambda x:map(lambda y:x.pop(), range(len(x.stack))),
+        0x82:lambda x:[x.pop() for y in range(len(x.stack))],
         0x83:lambda x:x.push(math.asin(x.pop())),
         0x84:lambda x:x.push(math.acos(x.pop())),
         0x85:lambda x:x.push(math.atan(x.pop())),
@@ -813,15 +823,15 @@ fn_table={
         0x9A:lambda x:x.push((lambda y:max(y,key=y.count))(x.pop())),
         0x9B:lambda x:x.push(math.copysign(x.pop(),x.pop())),
         0x9C:fn_fil_fn,
-        0x9D:lambda x:x.push(map(operator.add,itertools.izip_longest(x.pop(),x.pop(),fillvalue=0))),
+        0x9D:lambda x:x.push(list(map(operator.add,itertools.zip_longest(x.pop(),x.pop(),fillvalue=0)))),
         0x9E:lambda x:x.push(cmath.phase(x.pop())),
         0x9F:lambda x:x.pop()(x),
         0xA0:lambda x:x.push(x.pop().conjugate()),
         0xA1:index_fn,
         0xA2:cond_quit_fn,
-        0xA3:lambda x:x.push(''.join(map(chr,range(97,122+1)))),
-        0xA4:lambda x:x.push(map(list,enumerate(x.pop()))),
-        0xA5:lambda x:x.push(filter_types(x.pop(),ListType)),
+        0xA3:lambda x:x.push(''.join(map(chr,list(range(97,122+1))))),
+        0xA4:lambda x:x.push(list(map(list,enumerate(x.pop())))),
+        0xA5:lambda x:x.push(filter_types(x.pop(), list)),
         0xA6:lambda x:x.push(x.pop()**2),
         0xA7:lambda x:x.push(math.degrees(x.pop())),
         0xA8:lambda x:x.push(int(x.pop(),x.pop())),
@@ -845,7 +855,7 @@ fn_table={
         0xBE:lambda x:x.push(get_reg(1)),
         0xBF:lambda x:set_reg(x.pop(),x.pop()),
         0xC0:lambda x:x.push(get_reg(x.pop())),
-        0xC2:lambda x:x.push(map(list, zip(*x.pop()))),
+        0xC2:lambda x:x.push(list(map(list, list(zip(*x.pop()))))),
         0xC5:dupe_each_fn,
         0xC6:dupe_each_n_fn,
         0xC7:npop_list_fn,
@@ -854,8 +864,8 @@ fn_table={
         0xCB:lambda x:x.push(math.pi),
         0xCC:lambda x:x.push(math.e),
         0xCE:while_fn,
-        0xCF:lambda x:x.push(map(list,itertools.combinations(x.pop(),x.pop()))),
-        0xD0:lambda x:x.push(map(list,itertools.permutations(x.pop(),x.pop()))),
+        0xCF:lambda x:x.push(list(map(list,itertools.combinations(x.pop(),x.pop())))),
+        0xD0:lambda x:x.push(list(map(list,itertools.permutations(x.pop(),x.pop())))),
         0xD1:lambda x:x.push(pow(10,x.pop())),
         0xD2:lambda x:x.push(math.log(x.pop(),10)),
         0xD3:lambda x:x.push(pow(2,x.pop())),
