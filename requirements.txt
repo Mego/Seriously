@@ -1,2 +1,2 @@
-pyshoco>=1.2
+pyshoco>=1.3.3
 future

@@ -1,5 +1,16 @@
-#!/usr/bin/python3
+#!/usr/bin/python
 # -*- encoding: utf-8 -*-
+from __future__ import print_function
+from __future__ import unicode_literals
+from __future__ import division
+from __future__ import absolute_import
+from builtins import map
+from builtins import input
+from builtins import range
+from builtins import int
+from builtins import chr
+from future import standard_library
+standard_library.install_aliases()
 import argparse
 import ast
 import binascii
@@ -8,7 +19,6 @@ import random
 import readline
 import sys
 import traceback
-from types import *
 import SeriouslyCommands
 
 anytype = SeriouslyCommands.anytype
@@ -17,7 +27,7 @@ cp437table = ''.join(map(chr,list(range(128)))) + "Çüéâäàåçêëèïîì�
 
 def ord_cp437(c):
     return cp437table.index(c)
-    
+
 def chr_cp437(o):
     return cp437table[o]
 
@@ -154,7 +164,7 @@ def srs_repl(debug_mode=False, quiet_mode=False, hex=False):
             if not quiet_mode:
                 print('\n')
                 print(srs.stack)
-            
+
 def srs_exec(debug_mode=False, file_obj=None, code=None, hex=False):
     srs = Seriously(debug_mode=debug_mode, hex_mode=hex)
     if file_obj:
@@ -162,7 +172,7 @@ def srs_exec(debug_mode=False, file_obj=None, code=None, hex=False):
         file_obj.close()
     else:
         srs.eval(code)
-                
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run the Seriously interpreter")
     parser.add_argument("-d", "--debug", help="turn on debug mode", action="store_true")
