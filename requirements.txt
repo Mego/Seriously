@@ -1,2 +1,1 @@
 pyshoco>=1.3.3
-future
