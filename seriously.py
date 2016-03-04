@@ -1,16 +1,4 @@
-#!/usr/bin/python
-# -*- encoding: utf-8 -*-
-from __future__ import print_function
-from __future__ import unicode_literals
-from __future__ import division
-from __future__ import absolute_import
-from builtins import map
-from builtins import input
-from builtins import range
-from builtins import int
-from builtins import chr
-from future import standard_library
-standard_library.install_aliases()
+#!/usr/bin/python3
 import argparse
 import ast
 import binascii
@@ -20,16 +8,13 @@ import readline
 import sys
 import traceback
 import SeriouslyCommands
+from lib.cp437 import CP437
 
 anytype = SeriouslyCommands.anytype
 
-cp437table = ''.join(map(chr,list(range(128)))) + "ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ "
+ord_cp437 = CP437.ord
 
-def ord_cp437(c):
-    return cp437table.index(c)
-
-def chr_cp437(o):
-    return cp437table[o]
+chr_cp437 = CP437.chr
 
 class Seriously(object):
     @classmethod

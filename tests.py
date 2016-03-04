@@ -1,27 +1,17 @@
 #!/usr/bin/env python3
-
-from __future__ import print_function
-from __future__ import unicode_literals
-from __future__ import division
-from __future__ import absolute_import
-from builtins import map
-from builtins import range
-from future import standard_library
-standard_library.install_aliases()
 import subprocess
+from lib.cp437 import CP437
 
 cp437table = ''.join(map(chr,list(range(128)))) + "ÇüéâäàåçêëèïîìÄÅÉæÆôöòûùÿÖÜ¢£¥₧ƒáíóúñÑªº¿⌐¬½¼¡«»░▒▓│┤╡╢╖╕╣║╗╝╜╛┐└┴┬├─┼╞╟╚╔╩╦╠═╬╧╨╤╥╙╘╒╓╫╪┘┌█▄▌▐▀αßΓπΣσµτΦΘΩδ∞φε∩≡±≥≤⌠⌡÷≈°∙·√ⁿ²■ "
 
-def ord_cp437(c):
-    return cp437table.index(c)
-    
-def chr_cp437(o):
-    return cp437table[o]
+ord_cp437 = CP437.ord
+
+chr_cp437 = CP437.chr
 
 def serious_call(code, input=''):
-    p = subprocess.Popen(['./seriously.py','-c',code],stdin=subprocess.PIPE,stdout=subprocess.PIPE, universal_newlines=True)
+    p = subprocess.Popen(['python3','seriously.py','-c',code],stdin=subprocess.PIPE,stdout=subprocess.PIPE, universal_newlines=True)
     return p.communicate(input)
-    
+
 def serious_check(code, result, input='', errors=True):
     output, error = serious_call(code, input)
     if errors and error:
@@ -31,7 +21,7 @@ def serious_check(code, result, input='', errors=True):
         print(code)
         print((output,error))
     return output == result
-    
+
 # I/O tests
 assert serious_check(chr_cp437(0x09),'a\n','a')
 assert serious_check(r',','a\n','"a"')

@@ -1,18 +1,4 @@
-#!/usr/bin/env python
-from __future__ import division
-from __future__ import print_function
-from __future__ import unicode_literals
-from __future__ import absolute_import
-from builtins import dict
-from builtins import input
-from builtins import int
-from builtins import str
-from builtins import chr
-from builtins import map
-from builtins import zip
-from builtins import range
-from future import standard_library
-standard_library.install_aliases()
+#!/usr/bin/env python3
 
 from fractions import gcd
 import operator, cmath
@@ -92,7 +78,12 @@ def anytype(x, *types):
 
 class SeriousFunction(object):
     def __init__(self, code):
-        self.code = code
+        if isinstance(code, SeriousFunction):
+            self.code = code.code
+        elif isinstance(code, str):
+            self.code = code
+        else:
+            raise TypeError
     def __call__(self,srs):
         c = binascii.hexlify(self.code) if srs.hex_mode else self.code
         srs.eval(c,print_at_end=False)
@@ -839,7 +830,7 @@ fn_table={
         0x9C:fn_fil_fn,
         0x9D:lambda x:x.push(list(map(operator.add,itertools.zip_longest(x.pop(),x.pop(),fillvalue=0)))),
         0x9E:lambda x:x.push(cmath.phase(x.pop())),
-        0x9F:lambda x:x.pop()(x),
+        0x9F:lambda x:SeriouslyFunction(x.pop())(x),
         0xA0:lambda x:x.push(x.pop().conjugate()),
         0xA1:index_fn,
         0xA2:cond_quit_fn,
