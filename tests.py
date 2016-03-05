@@ -8,35 +8,43 @@ ord_cp437 = CP437.ord
 chr_cp437 = CP437.chr
 
 
-def serious_call(code, cinput):
+class SeriousError(SystemExit):
+    def __init__(self, *args):
+        super().__init__()
+        self.args = args
+
+    def __str__(self):
+        return repr(self.args)
+
+
+def serious_call(args):
+    code, result, cinput, errors = args
     p = subprocess.Popen(['python3', 'seriously.py', '-c', code],
                          stdin=subprocess.PIPE, stdout=subprocess.PIPE,
                          universal_newlines=True)
-    return p.communicate(cinput)
+    out, err = p.communicate(cinput)
+    return code, cinput, out, err, result, errors
 
 
-pool = multiprocessing.Pool()
-pool_results = []
+run_queue = []
 
 
 def serious_check(code, result, cinput='', errors=True):
-    global pool_results
-    global pool
-    pool_results.append((pool.apply_async(serious_call, (code, cinput)),
-                        result, errors))
+    global run_queue
+    run_queue.append((code, result, cinput, errors))
 
 
-def check_tests():
-    global pool_results
-    for res, result, errors in pool_results:
-        output, error = res.get()
-        if errors and error:
-            print(error)
-            return False
-        if output != result:
-            print(code)
-            print((output, error))
-            return False
+def run_tests():
+    global run_queue
+    with multiprocessing.Pool() as pool:
+        r = pool.imap_unordered(serious_call, run_queue)
+        for res in r:
+            code, cinput, output, error, result, errors = res
+            res2 = {'code': code, 'input': cinput, 'output': output,
+                    'error': error, 'result': result, 'errors': errors}
+            if (errors and error) or (output != result):
+                print("Bad: {}".format(res2))
+                return False
     return True
 
 if __name__ == '__main__':
@@ -54,6 +62,7 @@ if __name__ == '__main__':
     for i in range(10):
         serious_check(r'%d'%i,'%d\n'%i)
     serious_check(r':12345','12345\n')
+    serious_check(r':12345D', '12344\n')
     serious_check(r':1.25','1.25\n')
     serious_check(r':1+2j','(1+2j)\n')
     serious_check(r'[1,2+0j,"fizz",4.0,"buzz"]',"[1, (2+0j), 'fizz', 4.0, 'buzz']\n")
@@ -87,7 +96,7 @@ if __name__ == '__main__':
     serious_check(r'[4][1,2,"3"]q'+chr_cp437(0x92), "['3']\n")
     serious_check(r'[4][1,2,"3"]q'+chr_cp437(0xA5), '[[4]]\n')
     serious_check(r'2'+chr_cp437(0xB9), '[1, 2, 1]\n')
-    serious_check(r':16:'+chr_cp437(0xDF), "0123456789ABCDEF\n")
+    serious_check(r':16'+chr_cp437(0xDF), "0123456789ABCDEF\n")
     serious_check(r'[1,2,3,4]'+chr_cp437(0xE4), "10\n")
     serious_check(r'[1,2,3,4]'+chr_cp437(0xE3), "24\n")
     serious_check(r'[1,2,3,4]'+chr_cp437(0xBA), "2.5\n")
@@ -104,7 +113,7 @@ if __name__ == '__main__':
     serious_check(r'["%s"]O'%(chr_cp437(0x57)+chr_cp437(0x58)+chr_cp437(0x59)), "[%s, %s, %s]\n"%(0x57,0x58,0x59))
 
     # Base tests
-    serious_check(r'2:5.5:%s'%(chr_cp437(0xAD)), "101.1\n")
+    serious_check(r'2:5.5%s'%(chr_cp437(0xAD)), "101.1\n")
 
     # List tests
     serious_check(r'2[1,2,3]'+chr_cp437(0xCF), "[[1, 2], [1, 3], [2, 3]]\n")
@@ -114,4 +123,4 @@ if __name__ == '__main__':
 
     # More to come...
 
-    assert check_tests()
+    assert run_tests()

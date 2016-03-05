@@ -4,6 +4,7 @@ import ast
 import binascii
 import hashlib
 import random
+import re
 import readline
 import sys
 import traceback
@@ -67,24 +68,16 @@ class Seriously(object):
                         s+=code[i]
                         i+=1
                     self.push(s)
-                if ord_cp437(c) == 0xEC:
-                    s = ""
-                    i+=1
-                    while i<len(code) and ord_cp437(code[i]) != 0xEC:
-                        s+=code[i]
-                        i+=1
-                    r = eval(s)
-                    if r is not None:
-                        self.push(r)
                 elif c == "'":
                     i+=1
                     self.push(code[i])
                 elif c == ':':
                     v = ""
                     i+=1
-                    while i<len(code) and code[i]!=':':
+                    while i<len(code) and code[i] in '0123456789.ij+-':
                         v+=code[i]
                         i+=1
+                    i-=1
                     val = 0
                     try:
                         val = eval(v)
