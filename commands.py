@@ -343,7 +343,7 @@ def invert_fn(srs):
 def comp_fn(srs):
     a=srs.pop()
     if type(a) is ListType:
-        a = a+[0] if a%2 else a
+        a = a+[0] if len(a)%2 else a
         while len(a) > 0:
             r,i = a.pop(0),a.pop(0)
             srs.push(complex(r,i))
