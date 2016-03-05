@@ -5,36 +5,48 @@ All strings are valid programs. There is no such thing as a syntax error, and an
 
 The name was inspired by [this challenge](http://codegolf.stackexchange.com/questions/58522/seriously-golfscript-cjam-or-pyth).
 
-Try the [online interpreter](https://seriouslylang.herokuapp.com).
+Try the [online interpreter](http://seriously.tryitonline.net). This is part of [Try it online!](http://tryitonline.net) by @DennisMitchell.
 
 If you are running code locally, you *must* set your terminal text encoding to CP437.
 
 # Commands
 
-See [commands.txt](https://github.com/Mego/Seriously/blob/master/commands.txt)
+See [commands.txt](commands.txt)
 
 # Examples
 
 ## Hello, World!
 
-<pre>H</pre>
+```
+H
+```
 
 If you prefer a more interesting version:
 
-<pre>"Hello, World!"</pre>
+```
+"Hello, World!"
+```
 
 ## Primality Test
 
-<pre>,p</pre>
+```
+,p
+```
 
 ## 99 Bottles of Beer
 
-<pre>N</pre>
+```
+N
+```
 
 ## Coprimality Test
 
-<pre>,,g1=</pre>
+```
+,,g1=
+```
 
 ## Counting the divisors of a number
 
-<pre>,w`iXu`Mπ</pre>
+```
+,w`iXu`Mπ
+```
