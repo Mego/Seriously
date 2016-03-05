@@ -19,15 +19,14 @@ chr_cp437 = CP437.chr
 
 class Seriously(object):
     @classmethod
-    def _make_new(cls,init_stack=[], debug_mode=False, repl_mode=False):
-        return cls(init_stack, debug_mode, repl_mode)
+    def _make_new(cls,init_stack=[], debug_mode=False):
+        return cls(init_stack, debug_mode)
     def make_new(self,*stack):
         return self._make_new(init_stack=list(stack), debug_mode=self.debug_mode)
         return res
-    def __init__(self, init_stack=[], debug_mode=False, repl_mode=False, hex_mode=False):
+    def __init__(self, init_stack=[], debug_mode=False, hex_mode=False):
         self.stack = init_stack
         self.debug_mode=debug_mode
-        self.repl_mode = repl_mode
         self.fn_table = SeriouslyCommands.fn_table
         self.code = ''
         self.hex_mode = hex_mode
@@ -47,16 +46,16 @@ class Seriously(object):
         self.stack[:] = [val] + self.stack
     def toggle_preserve(self):
         self.preserve = not self.preserve
-    def eval(self, code, print_at_end=True):
+    def eval(self, code):
         if self.hex_mode:
-            code = binascii.unhexlify(code).decode('cp437')
+            tmp = ''
+            for i in range(0, len(code), 2):
+                tmp += chr_cp437(int(code[i:i+2], 16))
+            code = tmp
         if self.debug_mode:
             print(code)
         i=0
-        if self.repl_mode:
-            self.code += code
-        else:
-            self.code = code
+        self.code = code
         while i < len(code):
             old_stack = self.stack[:]
             try:
@@ -127,29 +126,18 @@ class Seriously(object):
                 self.stack = old_stack[:]
             finally:
                 i+=1
-        if not self.repl_mode and print_at_end:
-            while len(self.stack) > 0:
-                print(self.pop())
+        return self.stack
 
-def srs_repl(debug_mode=False, quiet_mode=False, hex=False):
-    srs = Seriously(repl_mode=True, debug_mode=debug_mode, hex_mode=hex)
-    while 1:
-        try:
-            srs.eval(input('' if quiet_mode else '>>> '))
-        except EOFError:
-            exit()
-        finally:
-            if not quiet_mode:
-                print('\n')
-                print(srs.stack)
 
 def srs_exec(debug_mode=False, file_obj=None, code=None, hex=False):
     srs = Seriously(debug_mode=debug_mode, hex_mode=hex)
     if file_obj:
-        srs.eval(file_obj.read())
+        for x in srs.eval(file_obj.read()):
+            print(x)
         file_obj.close()
     else:
-        srs.eval(code)
+        for x in srs.eval(code):
+            print(x)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Run the Seriously interpreter")
@@ -157,13 +145,10 @@ if __name__ == '__main__':
     parser.add_argument("-q", "--quiet", help="turn off REPL prompts and automatic stack printing, only print code STDOUT output", action="store_true")
     parser.add_argument("-x", "--hex", help="turn on hex mode (code is taken in hex values instead of binary bytes)", action="store_true")
     parser.add_argument("-i", "--ide", help="turn on IDE mode, which disables unsafe commands", action="store_true")
-    group = parser.add_mutually_exclusive_group()
+    group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-c", "--code", help="run the specified code")
     group.add_argument("-f", "--file", help="specify an input file", type=argparse.FileType('r'))
     args = parser.parse_args()
     if args.ide:
         commands.fn_table[0xF0] = lambda x: x.push(ast.literal_eval(x.pop()))
-    if args.code or args.file:
-        srs_exec(args.debug, args.file, args.code, args.hex)
-    else:
-        srs_repl(args.debug, args.quiet, args.hex)
+    srs_exec(args.debug, args.file, args.code, args.hex)
