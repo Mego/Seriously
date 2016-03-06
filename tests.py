@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import contextlib
 from io import StringIO
 import sys
 import unittest
@@ -10,11 +11,16 @@ ord_cp437 = CP437.ord
 chr_cp437 = CP437.chr
 
 
-def serious_check(*args):
-    pass
-
-
 class SeriousTest(unittest.TestCase):
+    def __init__(self, *args):
+        super().__init__(*args)
+        if not hasattr(self, 'subTest'):
+            self.subTest = self.dummy_manager
+
+    @contextlib.contextmanager
+    def dummy_manager(*args):
+        pass
+
     def setUp(self):
         self.srs = Seriously()
 
