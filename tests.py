@@ -18,7 +18,7 @@ class SeriousTest(unittest.TestCase):
             self.subTest = self.dummy_manager
 
     @contextlib.contextmanager
-    def dummy_manager(*args):
+    def dummy_manager(*args, **kwargs):
         pass
 
     def setUp(self):
