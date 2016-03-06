@@ -84,21 +84,38 @@ class SeriousFunction(object):
             self.code = code
         else:
             raise TypeError
-    def __call__(self,srs):
+
+    def __call__(self, srs):
         c = binascii.hexlify(self.code) if srs.hex_mode else self.code
-        srs.eval(c,print_at_end=False)
+        srs.eval(c, print_at_end=False)
+
     def __str__(self):
-        return '%s'%self.code
+        return '{}'.format(self.code)
+
     def __repr__(self):
-        return '`%s`'%self.code
+        return '`{}`'.format(self.code)
+
     def __len__(self):
         return len(self.code)
-    def __add__(self,other):
+
+    def __add__(self, other):
         return SeriousFunction(self.code+other.code)
-    def __mul__(self,other):
-        return SeriousFunction(self.code*other)
-    def __mod__(self,other):
-        return SeriousFunction(self.code%other)
+
+    def __mul__(self, other):
+        return SeriousFunction(self.code * other)
+
+    def __mod__(self, other):
+        return SeriousFunction(self.code % other)
+
+    def __eq__(self, other):
+        if not isinstance(other, SeriousFunction):
+            if not isinstance(other, str):
+                raise TypeError
+            else:
+                return self.code == other
+        else:
+            return self.code == other.code
+
 
 def NinetyNineBottles():
     x = 99
