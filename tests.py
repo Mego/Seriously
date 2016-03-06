@@ -19,7 +19,7 @@ class SeriousTest(unittest.TestCase):
 
     @contextlib.contextmanager
     def dummy_manager(*args, **kwargs):
-        pass
+        yield
 
     def setUp(self):
         self.srs = Seriously()
