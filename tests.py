@@ -30,8 +30,8 @@ assert serious_check(r':12345','12345\n')
 assert serious_check(r':1.25','1.25\n')
 assert serious_check(r':1+2j','(1+2j)\n')
 assert serious_check(r'[1,2+0j,"fizz",4.0,"buzz"]',"[1, (2+0j), 'fizz', 4.0, 'buzz']\n")
-assert serious_check(r'`foo`','foo\n')
-assert serious_check(r'%slen({1,2,2,3})%s'%(chr(0xEC),chr(0xEC)), '3\n')
+assert serious_check(r'4`F`','3\n')
+assert serious_check(r'"len({1,2,2,3})"%s'%(chr(0xF0)), '3\n')
 
 # Meta stack tests
 assert serious_check(r'1 ','1\n1\n')

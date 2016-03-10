@@ -131,7 +131,11 @@ class Seriously(object):
                 i+=1
         if not self.repl_mode and print_at_end:
             while len(self.stack) > 0:
-                print self.pop()
+                a = self.pop()
+                if not isinstance(a, commands.SeriousFunction):
+                    print a
+                else:
+                    a(self)
 
 def srs_repl(debug_mode=False, quiet_mode=False, hex=False):
     srs = Seriously(repl_mode=True, debug_mode=debug_mode, hex_mode=hex)
