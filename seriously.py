@@ -69,7 +69,7 @@ class Seriously(object):
             print(code)
         i = 0
         if all(x not in code for x in (',',chr_cp437(0xCA),chr_cp437(0x09),chr_cp437(0x0C))):
-            for line in sys.stdin.splitlines():
+            for line in sys.stdin.read().splitlines():
                 self.push(literal_eval(line))
         self.code = code
         while i < len(code):
