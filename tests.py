@@ -38,6 +38,8 @@ class SeriousTest(unittest.TestCase):
     def assert_serious(self, code, output, input=None, close=False):
         if input is not None:
             self.setInput(input)
+        else:
+            self.setInput('')
         if not close:
             self.assertEqual(self.srs.eval(code), output)
         else:
