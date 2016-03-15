@@ -68,9 +68,9 @@ class Seriously(object):
         if self.debug_mode:
             print(code)
         i = 0
-		if all(x not in code for x in (',',chr_cp437(0xCA),chr_cp437(0x09),chr_cp437(0x0C))):
-			for line in sys.stdin.splitlines():
-				self.push(literal_eval(line))
+        if all(x not in code for x in (',',chr_cp437(0xCA),chr_cp437(0x09),chr_cp437(0x0C))):
+            for line in sys.stdin.splitlines():
+                self.push(literal_eval(line))
         self.code = code
         while i < len(code):
             old_stack = self.stack[:]
