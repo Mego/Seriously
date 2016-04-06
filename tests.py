@@ -206,6 +206,8 @@ class StringAndListTests(SeriousTest):
                             ["Cafe Babe 123"])
         self.assert_serious('"CAFE babe 123"'+chr_cp437(0x99),
                             ["cafe BABE 123"])
+        self.assert_serious('"abcd"3N', ["abc"])
+        self.assert_serious('"abcd"30-N', ["bcd"])
 
 
 class BaseConversionTests(SeriousTest):
