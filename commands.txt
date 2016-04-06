@@ -76,7 +76,7 @@
 4B (K): pop a: push ceil(a)
 4C (L): pop a: push floor(a)
 4D (M): pop f,[a], execute f for each element in [a], using the element as a temporary stack, push [a] (similar to map(f,[a])); pop [a]: push max([a])
-4E (N): if stack is empty: push the lyrics to "99 Bottles of Beer"
+4E (N): if stack is empty: push the lyrics to "99 Bottles of Beer"; pop "a" or [a],b: push the first b elements of a (last if b is negative)
 4F (O): pop "a" or [a]: push [ord(c) for each c in "a" or [a], starting from the end]. If a list is popped, it is flattened, and if it contains strings of length > 1, the strings are exploded in-place ("ABC" -> [65,66,67], ["A","B","CD"] -> [65,66,67,68])
 50 (P): pop a: push the a-th prime (zero-indexed)
 51 (Q): if stack is empty: push the program's source code

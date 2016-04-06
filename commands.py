@@ -700,6 +700,14 @@ def cart_prod_fn(srs):
     else:
         srs.push(map(list,itertools.product(a,b)))
         
+def N_fn(srs):
+    if len(srs.stack) == 0:
+        srs.push(NinetyNineBottles())
+    else:
+        a,b = srs.pop(), srs.pop()
+        srs.push(a[:b])
+        
+        
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x0C:lambda x:x.push(sys.stdin.read()),
@@ -736,7 +744,7 @@ fn_table={
         0x4B:lambda x:x.push(math.ceil(x.pop())),
         0x4C:lambda x:x.push(math.floor(x.pop())),
         0x4D:M_fn,
-        0x4E:lambda x:x.push(NinetyNineBottles()),
+        0x4E:N_fn,
         0x4F:O_fn,
         0x50:lambda x:x.push(nth_prime(x.pop())),
         0x51:lambda x:x.push(x.code),
