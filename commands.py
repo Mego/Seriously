@@ -705,7 +705,7 @@ def N_fn(srs):
         srs.push(NinetyNineBottles())
     else:
         a,b = srs.pop(), srs.pop()
-        srs.push(a[:b])
+        srs.push(b[:a] if a>=0 else b[a:])
         
         
 fn_table={
