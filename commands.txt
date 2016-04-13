@@ -92,7 +92,7 @@
 5B ([): begin list literal, values are delimited by commas (,)
 5C (\): pop a,b: push a/b (integer division); pop [a]: rotate [a] left by 1, push [a]
 5D (]): end list literal
-5E (^): pop a,b: push pow(a,b)
+5E (^): pop a,b: push a XOR b
 5F (_): pop a: push ln(a)
 60 (`): function literal delimiter, pushes function whose body contains all of the commands until the next `. An implied ` is present at EOF if needed.
 61 (a): invert the stack ([a,b,c,d] -> [d,c,b,a])
@@ -164,7 +164,7 @@ A2 (ó): pop a: if bool(a) push a, else terminate the program (conditional exit)
 A3 (ú): push the lowercase English alphabet (ordinals 97-122)
 A4 (ñ): pop [a]: push enumerate([a]) ([[i,a[i]] for i in range(len(a))])
 A5 (Ñ): pop [a]: push lists from [a]
-A6 (ª): pop a: push a*a
+A6 (ª):
 A7 (º): pop a: push degrees(a)
 A8 (¿): pop a,b: push int(a,b) (interpret a as a base-b int)
 A9 (⌐): pop a: push a+2
@@ -250,8 +250,8 @@ F8 (°): pop a: push radians(a)
 F9 (∙): pop [a],[b]: push Cartesian product of [a] and [b]; pop [a],b: push [a]^b (Cartesian product of b copies of [a])
 FA (·):
 FB (√): pop a: push sqrt(a)
-FC (ⁿ):
-FD (²):
+FC (ⁿ): pop a,b: push pow(a,b)
+FD (²): pop a: push a*a
 FE (■): print the entire stack without popping, separated by spaces
 FF ( ):
 

@@ -142,6 +142,8 @@ class MathTests(SeriousTest):
         self.assert_serious('24\\', [2])
         self.assert_serious('25/', [2.5])
         self.assert_serious('25\\', [2])
+        self.assert_serious('4'+chr_cp437(0xFD), [16])
+        self.assert_serious('32'+chr_cp437(0xFC), [8])
 
     def test_lists(self):
         self.assert_serious('[1][1,2]-', [[2]])
