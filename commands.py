@@ -707,6 +707,11 @@ def N_fn(srs):
         a,b = srs.pop(), srs.pop()
         srs.push(b[:a] if a>=0 else b[a:])
         
+def shuffle_fn(srs):
+    a = srs.pop()
+    random.shuffle(a)
+    srs.push(a)
+        
         
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -855,7 +860,7 @@ fn_table={
         0xC5:dupe_each_fn,
         0xC6:dupe_each_n_fn,
         0xC7:npop_list_fn,
-        0xC8:lambda x:x.push(random.shuffle(x.pop())),
+        0xC8:shuffle_fn,
         0xCA:reg_all_input_fn,
         0xCB:lambda x:x.push(math.pi),
         0xCC:lambda x:x.push(math.e),
