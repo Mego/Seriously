@@ -892,7 +892,7 @@ fn_table={
         0xC5:dupe_each_fn,
         0xC6:dupe_each_n_fn,
         0xC7:npop_list_fn,
-        0xC8:lshuffle_fn,
+        0xC8:shuffle_fn,
         0xCA:reg_all_input_fn,
         0xCB:lambda x:x.push(math.pi),
         0xCC:lambda x:x.push(math.e),
