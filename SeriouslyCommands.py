@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
-from fractions import gcd
+try:
+    from math import gcd as _gcd
+except:
+    from fractions import gcd as _gcd
 import operator, cmath
 import math as rmath
 import random, itertools, sys, string, binascii, ast
@@ -48,6 +51,12 @@ def Fib(n):
 
 def prod(iter):
     return reduce(operator.mul, iter, 1)
+    
+def gcd(*vals):
+    if len(vals) == 2:
+        return _gcd(*vals)
+    else:
+        return _gcd(vals[0], gcd(*vals[1:]))
 
 primes = [2,3]
 
@@ -86,8 +95,7 @@ class SeriousFunction(object):
             raise TypeError
 
     def __call__(self, srs):
-        c = binascii.hexlify(self.code) if srs.hex_mode else self.code
-        srs.eval(c, print_at_end=False)
+        return srs.eval(self.code)
 
     def __str__(self):
         return '{}'.format(self.code)
@@ -385,11 +393,13 @@ def M_fn(srs):
         srs.push(max(a))
     else:
         b=srs.pop()
+        if srs.debug_mode:
+            print('mapping {} over {}'.format(a, b))
         res=[]
         for x in b:
             s = srs.make_new(x)
-            a(s)
-            res+=s.stack
+            r = a(s)
+            res.extend(r)
         srs.push(res)
 
 def r_fn(srs):
@@ -745,10 +755,28 @@ def shuffle_fn(srs):
     a = srs.pop()
     random.shuffle(a)
     srs.push(a)
+    
+def g_fn(srs):
+    a = srs.pop()
+    if isinstance(a, list):
+        srs.push(gcd(*a))
+    else:
+        b = srs.pop()
+        srs.push(gcd(a,b))
+        
+def reduce_fn(srs):
+    a = srs.pop()
+    if isinstance(a, list):
+        srs.push([x//gcd(*a) for x in a])
+    else:
+        b = srs.pop()
+        srs.push(b//gcd(a,b))
+        srs.push(a//gcd(a,b))
 
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x0C:lambda x:x.push(sys.stdin.read()),
+        0x1F:reduce_fn,
         0x20:lambda x:x.push(len(x.stack)),
         0x21:lambda x:x.push(math.factorial(x.pop())),
         0x23:make_list_fn,
@@ -803,7 +831,7 @@ fn_table={
         0x64:deq_fn,
         0x65:lambda x:x.push(math.exp(x.pop())),
         0x66:f_fn,
-        0x67:lambda x:x.push(gcd(x.pop(),x.pop())),
+        0x67:g_fn,
         0x68:lambda x:x.push(math.hypot(x.pop(),x.pop())),
         0x69:i_fn,
         0x6A:lambda x:x.push(str.join(x.pop(),list(map(str,x.pop())))),

@@ -25,14 +25,12 @@ class Seriously(object):
 
     def make_new(self, *stack):
         return self._make_new(init=list(stack), debug_mode=self.debug_mode)
-        return res
 
-    def __init__(self, init_stack=None, debug_mode=False, hex_mode=False):
+    def __init__(self, init_stack=None, debug_mode=False):
         self.stack = init_stack if init_stack is not None else []
         self.debug_mode = debug_mode
         self.fn_table = SeriouslyCommands.fn_table
         self.code = ''
-        self.hex_mode = hex_mode
         self.preserve = False
         self.pop_counter = 0
 
@@ -60,11 +58,6 @@ class Seriously(object):
         self.stack = list()
 
     def eval(self, code):
-        if self.hex_mode:
-            tmp = ''
-            for i in range(0, len(code), 2):
-                tmp += chr_cp437(int(code[i:i+2], 16))
-            code = tmp
         if self.debug_mode:
             print(code)
         i = 0
@@ -119,19 +112,35 @@ class Seriously(object):
                 elif c == '[':
                     l = ''
                     i += 1
-                    while i < len(code) and code[i] != ']':
+                    nest = 1
+                    while i < len(code):
+                        if code[i] == '[':
+                            nest += 1
+                        elif code[i] == ']':
+                            nest -= 1
+                            if nest == 0:
+                                break
                         l += code[i]
                         i += 1
                     self.push(literal_eval('[{}]'.format(l)))
+                    if self.debug_mode:
+                        print("list: [{}]".format(l))
+                        print(self.stack)
                 elif c == '`':
                     f = ''
                     i += 1
                     while i < len(code) and code[i] != '`':
                         f += code[i]
                         i += 1
+                    if self.debug_mode:
+                        print('fn: {}'.format(f))
                     self.push(SeriouslyCommands.SeriousFunction(f))
                 elif ord(c) in range(48, 58):
                     self.push(int(c))
+                elif ord_cp437(c) == 0x0B:
+                    i += 1
+                    self.push(SeriouslyCommands.SeriousFunction(code[i]))
+                    self.fn_table.get(ord_cp437('M'))(self)
                 else:
                     if self.debug_mode:
                         print("{:2X}".format(ord_cp437(c)))
@@ -151,8 +160,8 @@ class Seriously(object):
         return self.stack[::-1]
 
 
-def srs_exec(debug_mode=False, file_obj=None, code=None, hex=False):
-    srs = Seriously(debug_mode=debug_mode, hex_mode=hex)
+def srs_exec(debug_mode=False, file_obj=None, code=None):
+    srs = Seriously(debug_mode=debug_mode)
     if file_obj:
         for x in srs.eval(file_obj.read()):
             print(x)
@@ -170,9 +179,6 @@ if __name__ == '__main__':
                 description="Run the Seriously interpreter")
     parser.add_argument("-d", "--debug", help="turn on debug mode",
                         action="store_true")
-    parser.add_argument("-x", "--hex",
-                        help="turn on hex mode (code is taken in hex values)",
-                        action="store_true")
     parser.add_argument("-i", "--ide",
                         help="disable unsafe commands", action="store_true")
     group = parser.add_mutually_exclusive_group(required=True)
@@ -182,5 +188,5 @@ if __name__ == '__main__':
     args = parser.parse_args()
     if args.ide:
         ide_mode()
-    srs_exec(args.debug, args.file, args.code, args.hex)
+    srs_exec(args.debug, args.file, args.code)
 
