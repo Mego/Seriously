@@ -125,7 +125,7 @@
 7C (|): pop a,b: push (a | b)
 7D (}): pop a: rotate stack left a times
 7E (~): pop a: push ~a (unary bitwise negate)
-7F (): terminate the program (without implicit stack popping and printing)
+7F (⌂): terminate the program (without implicit stack popping and printing)
 80 (Ç): pop a,b: push a+bi; pop [a]: pop pairs of real numerics b,c from [a] and push b+ci (appending 0 to [a] if len([a]) is odd)
 81 (ü): pop entire stack and print to stdout
 82 (é): pop entire stack (clear stack)
