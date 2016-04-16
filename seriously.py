@@ -1,4 +1,9 @@
 #!/usr/bin/env python3
+import sys
+if sys.version_info[0] != 3:
+    print("You must use Python 3 to run this script!")
+    exit()
+
 import argparse
 from ast import literal_eval
 import binascii
@@ -6,7 +11,6 @@ import hashlib
 import random
 import re
 import readline
-import sys
 import traceback
 import SeriouslyCommands
 from lib.cp437 import CP437
