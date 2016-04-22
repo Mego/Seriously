@@ -772,6 +772,18 @@ def reduce_fn(srs):
         b = srs.pop()
         srs.push(b//gcd(a,b))
         srs.push(a//gcd(a,b))
+		
+def is_unique_fn(srs):
+	a = srs.pop()
+	srs.push(1 if all(a.count(x) == 1 for x in a) else 0)
+	
+def uniquify_fn(srs):
+	a = srs.pop()
+	unique = [x for i,x in enumerate(a) if i==a.index(x)]
+	if isinstance(a, str):
+		srs.push(''.join(unique))
+	else:
+		srs.push(unique)
 
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -921,9 +933,11 @@ fn_table={
         0xC6:dupe_each_n_fn,
         0xC7:npop_list_fn,
         0xC8:shuffle_fn,
+		0xC9:uniquify_fn,
         0xCA:reg_all_input_fn,
         0xCB:lambda x:x.push(math.pi),
         0xCC:lambda x:x.push(math.e),
+		0xCD:is_unique_fn,
         0xCE:while_fn,
         0xCF:lambda x:x.push(list(map(list,itertools.combinations(x.pop(),x.pop())))),
         0xD0:lambda x:x.push(list(map(list,itertools.permutations(x.pop(),x.pop())))),

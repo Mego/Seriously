@@ -199,11 +199,11 @@ C5 (┼): duplicate each element on stack ([a,b,c] => [a,a,b,b,c,c])
 C6 (╞): pop a: make a total copies of each element on stack (3 [a,b,c] -> [a,a,a,b,b,b,c,c,c])
 C7 (╟): pop a: pop a elements and push a list containing those elements in their original order
 C8 (╚): pop [a]: push random.shuffle(a)
-C9 (╔):
+C9 (╔): pop "a" or [a]: push uniquify(a)
 CA (╩): read all input and push each to its own numbered register, starting with 0
 CB (╦): push pi
 CC (╠): push e
-CD (═):
+CD (═): pop "a" or [a], push 1 if all elements are unique else 0
 CE (╬): pop f: while value on top of stack is truthy (peek), call f
 CF (╧): pop [a] or "a",b: push all b-length combinations of a
 D0 (╨): pop [a] or "a",b: push all b-length permutations of a
