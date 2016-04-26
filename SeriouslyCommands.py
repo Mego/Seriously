@@ -12,6 +12,7 @@ from copy import copy
 import pyshoco
 import collections
 from functools import reduce
+import struct
 
 def memoize(f):
     memo = {}
@@ -259,6 +260,10 @@ def deq_fn(srs):
         b=a.pop(-1)
         srs.push(a)
         srs.push(b)
+    elif isinstance(a, str):
+        b = a[-1]
+        srs.push(''.join(a[:-1]))
+        srs.push(b)
     else:
         srs.push(a)
 
@@ -278,7 +283,10 @@ def to_list_fn(srs):
 def psh_fn(srs):
     a=srs.pop()
     b=srs.pop()
-    a=[b]+a
+    if isinstance(a, str):
+        a = b+a
+    else:
+        a=[b]+a
     srs.push(a)
 
 def p_fn(srs):
@@ -289,12 +297,19 @@ def p_fn(srs):
         b=a.pop(0)
         srs.push(a)
         srs.push(b)
+    elif isinstance(a, str):
+        b = a[0]
+        srs.push(a[1:])
+        srs.push(b)
     else:
         srs.push(a)
 
 def enq_fn(srs):
     a,b=srs.pop(),srs.pop()
-    a.append(b)
+    if isinstance(a, str):
+        a += b
+    else:
+        a.append(b)
     srs.push(a)
 
 def flatten(lst):
@@ -358,12 +373,25 @@ def s_fn(srs):
                 b=''.join(map(repr,b))
         if not anytype(b, list, str):
             b=repr(b)
-        srs.push([''.join(list(g)) for k,g in itertools.groupby(a,lambda x:x in b) if not k])
+        res = [''.join(list(g)) for k,g in itertools.groupby(a,lambda x:x in b) if not k]
+        if a.startswith(b):
+            res = ['']+res
+        if a.endswith(b):
+            res = res+['']
+        srs.push(res)
     elif isinstance(a, list):
         b=srs.pop()
         if not anytype(b, list, str):
             b=[b]
-        srs.push([list(g) for k,g in itertools.groupby(a,lambda x:x in b) if not k])
+        res = [list(g) for k,g in itertools.groupby(a,lambda x:x in b) if not k]
+        splitter = b
+        if isinstance(splitter, str):
+            splitter = list(splitter)
+        if a[:len(b)] == splitter:
+            res = res+[[]]
+        if a[-len(b):] == splitter:
+            res = [[]]+res
+        srs.push(res)
     else:
         srs.push(1 if a>0 else -1 if a<0 else 0)
 
@@ -772,18 +800,73 @@ def reduce_fn(srs):
         b = srs.pop()
         srs.push(b//gcd(a,b))
         srs.push(a//gcd(a,b))
-		
+        
 def is_unique_fn(srs):
-	a = srs.pop()
-	srs.push(1 if all(a.count(x) == 1 for x in a) else 0)
-	
+    a = srs.pop()
+    srs.push(1 if all(a.count(x) == 1 for x in a) else 0)
+    
 def uniquify_fn(srs):
-	a = srs.pop()
-	unique = [x for i,x in enumerate(a) if i==a.index(x)]
-	if isinstance(a, str):
-		srs.push(''.join(unique))
-	else:
-		srs.push(unique)
+    a = srs.pop()
+    unique = [x for i,x in enumerate(a) if i==a.index(x)]
+    if isinstance(a, str):
+        srs.push(''.join(unique))
+    else:
+        srs.push(unique)
+        
+def binrep(val, pad=None):
+    if isinstance(val, int):
+        return ("{:0%sb}"%(pad or '')).format(val)
+    elif isinstance(val, str):
+        if all(ord(x) < 256 for x in val):
+            return ''.join(binrep(ord(x), 8) for x in val)
+        else:
+            raise TypeError
+    elif isinstance(val, float):
+        return ''.join("{:08b}".format(x) for x in struct.pack('>d',val))
+    else:
+        raise TypeError
+        
+def H_fn(srs):
+    if not srs.stack:
+        srs.push("Hello, World!")
+    else:
+        a,b = srs.pop(), srs.pop()
+        srs.push(a[:b])
+        
+def t_fn(srs):
+    a,b = srs.pop(), srs.pop()
+    if isinstance(b, str):
+        c = srs.pop()
+        srs.push(a.translate(str.maketrans(b, c)))
+    else:
+        srs.push(a[b:])
+    
+def V_fn(srs):
+    a,b = srs.pop(), srs.pop()
+    if anytype(a, str, list):
+        res = []
+        # get small head lists
+        for i in range(1, b):
+            res.append(a[:i])
+        # get middle lists
+        for i in range(len(a)-b+1):
+            res.append(a[i:i+b])
+        # get small tail lists
+        for i in range(b-1, 0, -1):
+            res.append(a[-i:])
+        if isinstance(a, str):
+            res = [''.join(x) for x in res]
+        srs.push(res)
+    else:
+        srs.push(random.uniform(a,b))
+        
+def xor(a, b):
+    if isinstance(a,str) and isinstance(b,str):
+        return ''.join(x for x in a+b if (x in a) ^ (x in b))
+    elif isinstance(a,list) and isinstance(b,list):
+        return [x for x in a+b if (x in a) ^ (x in b)]
+    else:
+        return a ^ b
 
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -816,7 +899,7 @@ fn_table={
         0x45:E_fn,
         0x46:lambda x:x.push(Fib(x.pop())),
         0x47:lambda x:x.push(random.random()),
-        0x48:lambda x:x.push("Hello, World!"),
+        0x48:H_fn,
         0x49:if_fn,
         0x4A:j_fn,
         0x4B:lambda x:x.push(math.ceil(x.pop())),
@@ -830,12 +913,12 @@ fn_table={
         0x53:S_fn,
         0x54:T_fn,
         0x55:lambda x:x.push(list(set(x.pop()).union(x.pop()))),
-        0x56:lambda x:x.push(random.uniform(x.pop(),x.pop())),
+        0x56:V_fn,
         0x58:lambda x:x.pop(),
         0x59:lambda x:x.push(0 if x.pop() else 1),
         0x5A:zip_fn,
         0x5C:idiv_fn,
-        0x5E:lambda x:x.push(x.pop() ^ x.pop()),
+        0x5E:lambda x:x.push(xor(x.pop(), x.pop())),
         0x5F:lambda x:x.push(math.log(x.pop())),
         0x61:invert_fn,
         0x62:lambda x:x.push(int(bool(x.pop()))),
@@ -856,7 +939,7 @@ fn_table={
         0x71:enq_fn,
         0x72:lr_fn,
         0x73:s_fn,
-        0x74:flat_explode_fn,
+        0x74:t_fn,
         0x75:lambda x:x.push(x.pop()+1),
         0x76:lambda x:random.seed(x.pop()),
         0x77:lambda x:x.push(full_factor(x.pop())),
@@ -929,15 +1012,16 @@ fn_table={
         0xBF:lambda x:set_reg(x.pop(),x.pop()),
         0xC0:lambda x:x.push(get_reg(x.pop())),
         0xC2:lambda x:x.push(list(map(list, list(zip(*x.pop()))))),
+        0xC3:lambda x:x.push(binrep(x.pop())),
         0xC5:dupe_each_fn,
         0xC6:dupe_each_n_fn,
         0xC7:npop_list_fn,
         0xC8:shuffle_fn,
-		0xC9:uniquify_fn,
+        0xC9:uniquify_fn,
         0xCA:reg_all_input_fn,
         0xCB:lambda x:x.push(math.pi),
         0xCC:lambda x:x.push(math.e),
-		0xCD:is_unique_fn,
+        0xCD:is_unique_fn,
         0xCE:while_fn,
         0xCF:lambda x:x.push(list(map(list,itertools.combinations(x.pop(),x.pop())))),
         0xD0:lambda x:x.push(list(map(list,itertools.permutations(x.pop(),x.pop())))),

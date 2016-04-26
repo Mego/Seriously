@@ -144,6 +144,8 @@ class MathTests(SeriousTest):
         self.assert_serious('25\\', [2])
         self.assert_serious('4'+chr_cp437(0xFD), [16])
         self.assert_serious('32'+chr_cp437(0xFC), [8])
+        self.assert_serious('36'+chr_cp437(0x1F), [2, 1])
+        self.assert_serious('4!', [24])
 
     def test_lists(self):
         self.assert_serious('[1][1,2]-', [[2]])
@@ -155,6 +157,7 @@ class MathTests(SeriousTest):
         self.assert_serious('[1,2,3,4]'+chr_cp437(0xE3), [24])
         self.assert_serious('[1,2,3,4]'+chr_cp437(0xBA), [2.5])
         self.assert_serious('[1,2,3,3]'+chr_cp437(0x9A), [3])
+        self.assert_serious('[3,6,9,12]'+chr_cp437(0x1F), [[1, 2, 3, 4]])
 
     def test_filters(self):
         self.assert_serious("[4]12'3k"+chr_cp437(0x8D), [[1, 2]])
@@ -210,14 +213,30 @@ class StringAndListTests(SeriousTest):
                             ["cafe BABE 123"])
         self.assert_serious('"abcd"3N', ["abc"])
         self.assert_serious('"abcd"30-N', ["bcd"])
+        self.assert_serious("""'0"010203040"s""", [['', '1', '2', '3', '4', '']])
+        self.assert_serious('4"Hello"H', ['Hell'])
+        self.assert_serious('1"Hello"t', ['ello'])
+        self.assert_serious('2"1234"V', [['1', '12', '23', '34', '4']])
+        self.assert_serious('"123""345"^', ['4512'])
+        self.assert_serious('" A""_a""abc_def"t', ['Abc def'])
+        self.assert_serious('"abc"p', ['a', 'bc'])
+        self.assert_serious('"abc"d', ['c', 'ab'])
+        self.assert_serious('\'d"abc"q', ['abcd'])
+        self.assert_serious('\'a"bcd"o', ['abcd'])
         
     def test_list_methods(self):
         self.assert_serious('[1,2,3][4,5,6]'+chr_cp437(0x9D), [[5, 7, 9]])
+        self.assert_serious("""'0"010203040"#s""", [[[],['1'],['2'],['3'],['4'],[]]])
+        self.assert_serious('2[1,2,3,4]V', [[[1],[1,2,],[2,3],[3,4],[4]]])
+        self.assert_serious('[1,2,3],[3,4,5]^', [[4,5,1,2]])
 
 
 class BaseConversionTests(SeriousTest):
     def test_bases(self):
         self.assert_serious('2:5.5'+chr_cp437(0xAD), ["101.1"])
+        self.assert_serious(':11'+chr_cp437(0xC3), ["1011"])
+        self.assert_serious('"Foo"'+chr_cp437(0xC3), ["010001100110111101101111"])
+        self.assert_serious(':3.07'+chr_cp437(0xC3), ['0100000000001000100011110101110000101000111101011100001010001111'])
 
 
 class ListTests(SeriousTest):
