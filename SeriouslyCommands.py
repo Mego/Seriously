@@ -357,10 +357,7 @@ def dupe_each_fn(srs):
 
 def lr_fn(srs):
     a=srs.pop()
-    if isinstance(a, str):
-        list(map(srs.push,a[::-1]))
-    elif isinstance(a, int):
-        srs.push(list(range(a)))
+    srs.push(list(range(a)))
 
 def s_fn(srs):
     a=srs.pop()

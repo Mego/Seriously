@@ -4,6 +4,7 @@ from io import StringIO
 import sys
 import unittest
 from lib.cp437 import CP437
+from lib.iterable import as_list
 from seriously import Seriously
 from SeriouslyCommands import SeriousFunction
 
@@ -11,9 +12,19 @@ ord_cp437 = CP437.ord
 chr_cp437 = CP437.chr
 
 
+class UtilTests(unittest.TestCase):
+    def test_utils(self):
+        self.assertEqual(as_list(range(5)), [0, 1, 2, 3, 4])
+        self.assertEqual(as_list((1,2,3,4) for x in range(3)), [[1, 2, 3, 4]]*3)
+        self.assertEqual(as_list(2), [2])
+        self.assertEqual([chr_cp437(x) for x in range(256)], [x for x in CP437.table])
+        self.assertEqual([ord_cp437(x) for x in CP437.table], [x for x in range(256)])
+
+
 class SeriousTest(unittest.TestCase):
     def __init__(self, *args):
         super().__init__(*args)
+        # fix for Python < 3.4
         if not hasattr(self, 'subTest'):
             self.subTest = self.dummy_manager
 
@@ -229,18 +240,6 @@ class StringAndListTests(SeriousTest):
         self.assert_serious("""'0"010203040"#s""", [[[],['1'],['2'],['3'],['4'],[]]])
         self.assert_serious('2[1,2,3,4]V', [[[1],[1,2,],[2,3],[3,4],[4]]])
         self.assert_serious('[1,2,3],[3,4,5]^', [[4,5,1,2]])
-
-
-class BaseConversionTests(SeriousTest):
-    def test_bases(self):
-        self.assert_serious('2:5.5'+chr_cp437(0xAD), ["101.1"])
-        self.assert_serious(':11'+chr_cp437(0xC3), ["1011"])
-        self.assert_serious('"Foo"'+chr_cp437(0xC3), ["010001100110111101101111"])
-        self.assert_serious(':3.07'+chr_cp437(0xC3), ['0100000000001000100011110101110000101000111101011100001010001111'])
-
-
-class ListTests(SeriousTest):
-    def test_lists(self):
         self.assert_serious('2[1,2,3]'+chr_cp437(0xCF),
                             [[[1, 2], [1, 3], [2, 3]]])
         self.assert_serious('2[1,2,3]'+chr_cp437(0xD0),
@@ -254,6 +253,15 @@ class ListTests(SeriousTest):
                             [[[1, 1], [1, 2], [1, 3],
                              [2, 1], [2, 2], [2, 3],
                              [3, 1], [3, 2], [3, 3]]])
+
+
+class BaseConversionTests(SeriousTest):
+    def test_bases(self):
+        self.assert_serious('2:5.5'+chr_cp437(0xAD), ["101.1"])
+        self.assert_serious(':11'+chr_cp437(0xC3), ["1011"])
+        self.assert_serious('"Foo"'+chr_cp437(0xC3), ["010001100110111101101111"])
+        self.assert_serious(':3.07'+chr_cp437(0xC3), ['0100000000001000100011110101110000101000111101011100001010001111'])
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=3)

@@ -27,7 +27,7 @@ class CP437():
 
     @staticmethod
     def chr(o):
-        if not 0 < o <= 256:
+        if not 0 <= o < 256:
             raise ValueError
         return CP437.table[o]
 
