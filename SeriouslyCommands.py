@@ -823,6 +823,13 @@ def binrep(val, pad=None):
     else:
         raise TypeError
         
+def hexrep(val):
+    br = binrep(val)
+    res = ''
+    for i in range(0, len(br), 8):
+        res += hex(int(br[i:i+8],2))[2:]
+    return res
+        
 def H_fn(srs):
     if not srs.stack:
         srs.push("Hello, World!")
@@ -1010,6 +1017,7 @@ fn_table={
         0xC0:lambda x:x.push(get_reg(x.pop())),
         0xC2:lambda x:x.push(list(map(list, list(zip(*x.pop()))))),
         0xC3:lambda x:x.push(binrep(x.pop())),
+        0xC4:lambda x:x.push(hexrep(x.pop())),
         0xC5:dupe_each_fn,
         0xC6:dupe_each_n_fn,
         0xC7:npop_list_fn,

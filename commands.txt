@@ -194,7 +194,7 @@ C0 (└): pop a: push the value in register a
 C1 (┴):
 C2 (┬): pop a: push transpose(a) ([[1,2,3],[4,5,6]] -> [[1,4],[2,5],[3,6]])
 C3 (├): pop a: push big-endian binary representation of a (bin(a) for ints, binary float data for floats, ascii_to_bin(a) for strings)
-C4 (─):
+C4 (─): pop a: push big-endian hexadecimal representation of a (same as 0xC3 but with hex)
 C5 (┼): duplicate each element on stack ([a,b,c] => [a,a,b,b,c,c])
 C6 (╞): pop a: make a total copies of each element on stack (3 [a,b,c] -> [a,a,a,b,b,b,c,c,c])
 C7 (╟): pop a: pop a elements and push a list containing those elements in their original order
