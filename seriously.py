@@ -14,6 +14,7 @@ import readline
 import traceback
 import SeriouslyCommands
 from lib.cp437 import CP437
+from lib.iterable import deque, as_list
 
 anytype = SeriouslyCommands.anytype
 
@@ -31,10 +32,10 @@ class Seriously(object):
         return self._make_new(init=list(stack), debug_mode=self.debug_mode)
 
     def __init__(self, init_stack=None, debug_mode=False):
-        self.stack = init_stack if init_stack is not None else []
+        self.stack = deque(init_stack if init_stack is not None else [])
         self.debug_mode = debug_mode
-        self.fn_table = SeriouslyCommands.fn_table
         self.code = ''
+        self.fn_table = SeriouslyCommands.fn_table
         self.preserve = False
         self.pop_counter = 0
 
@@ -53,13 +54,13 @@ class Seriously(object):
         return self.stack[-1] if self.stack else None
 
     def prepend(self, val):
-        self.stack[:] = [val] + self.stack
+        self.stack.appendleft(val)
 
     def toggle_preserve(self):
         self.preserve = not self.preserve
 
     def clear_stack(self):
-        self.stack = list()
+        self.stack.clear()
 
     def eval(self, code):
         if self.debug_mode:
@@ -70,7 +71,7 @@ class Seriously(object):
                 self.push(literal_eval(line))
         self.code = code
         while i < len(code):
-            old_stack = self.stack[:]
+            old_stack = self.stack.copy()
             try:
                 c = code[i]
                 if c == '"':
@@ -158,10 +159,10 @@ class Seriously(object):
             except:
                 if self.debug_mode:
                     traceback.print_exc()
-                self.stack = old_stack[:]
+                self.stack = old_stack
             finally:
                 i += 1
-        return self.stack[::-1]
+        return as_list(self.stack)[::-1]
 
 
 def srs_exec(debug_mode=False, file_obj=None, code=None):

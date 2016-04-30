@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import contextlib
 from io import StringIO
 import sys
@@ -10,6 +11,8 @@ from SeriouslyCommands import SeriousFunction
 
 ord_cp437 = CP437.ord
 chr_cp437 = CP437.chr
+
+debug_mode = False
 
 
 class UtilTests(unittest.TestCase):
@@ -33,7 +36,7 @@ class SeriousTest(unittest.TestCase):
         yield
 
     def setUp(self):
-        self.srs = Seriously()
+        self.srs = Seriously(debug_mode=debug_mode)
 
     def tearDown(self):
         self.srs = None
@@ -264,4 +267,11 @@ class BaseConversionTests(SeriousTest):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-d", "--debug", help="turn on debug mode",
+                        action="store_true")
+    parser.add_argument('unittest_args', nargs='*')
+    args = parser.parse_args()
+    debug_mode = args.debug
+    sys.argv[1:] = args.unittest_args
     unittest.main(verbosity=3)

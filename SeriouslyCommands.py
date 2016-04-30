@@ -13,6 +13,7 @@ import pyshoco
 import collections
 from functools import reduce
 import struct
+from lib.iterable import deque, as_list
 
 def memoize(f):
     memo = {}
@@ -84,7 +85,13 @@ class Math(object):
 math = Math()
 
 def anytype(x, *types):
-    return any(isinstance(x,t) for t in types)
+    return any(isinstance(x,t) for t in types) if types else False
+    
+def filter_types(iter,*types,exclude=None):
+    if exclude is not None:
+        return [x for x in iter if anytype(x, *types) and not anytype(x, *exclude)]
+    else:
+        return [x for x in iter if anytype(x, *types)]
 
 class SeriousFunction(object):
     def __init__(self, code):
@@ -278,7 +285,7 @@ def i_fn(srs):
         srs.push(a)
 
 def to_list_fn(srs):
-    srs.stack = [srs.stack]
+    srs.stack = deque([as_list(srs.stack)])
 
 def psh_fn(srs):
     a=srs.pop()
@@ -327,25 +334,25 @@ def flat_explode_fn(srs):
     srs.stack = tmp[:]
 
 def nrrot_fn(srs):
-    a=srs.pop()
-    srs.stack=srs.stack[a:]+srs.stack[:a]
+    a = srs.pop()
+    srs.stack.rotate(-a)
 
 def nlrot_fn(srs):
-    a=-srs.pop()
-    srs.stack=srs.stack[a:]+srs.stack[:a]
+    a = srs.pop()
+    srs.stack.rotate(a)
 
 def ins_top_fn(srs):
     a=srs.pop()
     b=srs.pop()
-    srs.stack=srs.stack[:a]+[b]+srs.stack[a:]
+    srs.stack=deque(srs.stack[:a]+[b]+srs.stack[a:])
 
 def ins_bot_fn(srs):
     a=srs.pop()
     b=srs.pop()
-    srs.stack=srs.stack[:-a]+[b]+srs.stack[-a:]
+    srs.stack=deque(srs.stack[:-a]+[b]+srs.stack[-a:])
 
 def dupe_all_fn(srs):
-    srs.stack=[copy(x) for x in srs.stack[:]]+srs.stack[:]
+    srs.stack.extend(copy(x) for x in srs.stack.copy())
 
 def dupe_each_fn(srs):
     tmp=[]
@@ -353,7 +360,7 @@ def dupe_each_fn(srs):
         a=srs.pop()
         tmp.append(a)
         tmp.append(copy(a))
-    srs.stack=tmp[::-1]
+    srs.stack=deque(tmp[::-1])
 
 def lr_fn(srs):
     a=srs.pop()
@@ -397,7 +404,7 @@ def if_fn(srs):
     srs.push(b if a else c)
 
 def invert_fn(srs):
-    srs.stack=srs.stack[::-1]
+    srs.stack=srs.stack.reversed()
 
 def comp_fn(srs):
     a=srs.pop()
@@ -581,7 +588,7 @@ def dupe_each_n_fn(srs):
     while srs.stack:
         b = srs.pop()
         tmp+=[b for i in range(a)]
-    srs.stack=tmp[::-1]
+    srs.stack=deque(tmp[::-1])
 
 def S_fn(srs):
     a=srs.pop()
@@ -670,12 +677,11 @@ def m_fn(srs):
     else:
         srs.push(list(math.modf(a)))
 
-def filter_types(iter,*types):
-    return [x for x in iter if anytype(x, types)]
-
 def inv_fil_fn(srs):
     a=srs.pop()
-    if isinstance(a, list):
+    if srs.debug_mode:
+        print("numeric filter on:", a)
+    if isinstance(a, collections.Iterable):
         srs.push(filter_types(a, int, float, complex))
     else:
         srs.push(1/a)
@@ -690,7 +696,7 @@ def AE_fn(srs):
 
 def fn_fil_fn(srs):
     a=srs.pop()
-    if isinstance(a, list):
+    if isinstance(a, collections.Iterable):
         srs.push([x for x in a if isinstance(x, SeriousFunction)])
     else:
         srs.push(SeriousFunction(a))
@@ -871,6 +877,16 @@ def xor(a, b):
         return [x for x in a+b if (x in a) ^ (x in b)]
     else:
         return a ^ b
+        
+def rrot_fn(srs):
+    srs.stack.rotate(-1)
+    
+def lrot_fn(srs):
+    srs.stack.rotate(1)
+    
+def fil_iter_fn(srs):
+    a = srs.pop()
+    srs.push(filter_types(a, collections.Iterable, exclude=[str]))
 
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -882,8 +898,8 @@ fn_table={
         0x24:lambda x:x.push(str(x.pop())),
         0x25:mod_fn,
         0x26:lambda x:x.push(x.pop() & x.pop()),
-        0x28:lambda x:x.push(x.stack.pop(0)),
-        0x29:lambda x:x.prepend(x.pop()),
+        0x28:rrot_fn,
+        0x29:lrot_fn,
         0x2A:star_fn,
         0x2B:plus_fn,
         0x2C:get_input_fn,
@@ -992,7 +1008,7 @@ fn_table={
         0xA2:cond_quit_fn,
         0xA3:lambda x:x.push(''.join(map(chr,list(range(97,122+1))))),
         0xA4:lambda x:x.push(list(map(list,enumerate(x.pop())))),
-        0xA5:lambda x:x.push(filter_types(x.pop(), list)),
+        0xA5:fil_iter_fn,
         0xA7:lambda x:x.push(math.degrees(x.pop())),
         0xA8:lambda x:x.push(int(x.pop(),x.pop())),
         0xA9:lambda x:x.push(x.pop()+2),
