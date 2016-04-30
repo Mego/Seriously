@@ -14,6 +14,22 @@ chr_cp437 = CP437.chr
 
 debug_mode = False
 
+def NinetyNineBottles(): 
+    x = 99 
+    res = '' 
+    for i in range(99): 
+        w = 'Take one down and pass it around, '+str((x-(i+1)))+' bottle{0} of beer on the wall.'.format(['s',''][x-i==2]) 
+        y = str((x-i))+' bottle{0} of beer on the wall, '+str((x-i))+' bottle{0} of beer.' 
+        y=y.format(['s',''][x-i==1]) 
+        z = 'Go to the store and buy some more, '+str(x)+' bottles of beer on the wall.' 
+        if i == (x-1): 
+            res += y + '\n' + z 
+        else: 
+            res += y + '\n' + w 
+        i += 1 
+        res += '\n\n' 
+    return res
+
 
 class UtilTests(unittest.TestCase):
     def test_utils(self):
@@ -75,6 +91,9 @@ class IOTests(SeriousTest):
         self.assert_serious(',', [[3, 2, 1]], '[3,2,1]\n')
 
         self.assert_serious(',', [[3, 2, 1]], '3, 2, 1\n')
+        
+    def test_implicit_input(self):
+        self.assert_serious('', ['a'], '"a"\n')
 
 
 class LiteralTests(SeriousTest):
@@ -103,10 +122,15 @@ class LiteralTests(SeriousTest):
 
     def test_functions(self):
         self.assert_serious("`foo`", [SeriousFunction("foo")])
+        self.assert_serious("`foo`$", ["foo"])
 
     def test_eval(self):
         self.assert_serious('"len(set([1,2,2,3]))"{}'.format(chr_cp437(0xF0)),
                             [3])
+                            
+    def test_lists(self):
+        self.assert_serious("[1,2,3]", [[1,2,3]])
+        self.assert_serious("[[1],[2]]", [[[1],[2]]])
 
 
 class StackTests(SeriousTest):
@@ -132,6 +156,8 @@ class StackTests(SeriousTest):
         self.assert_serious('123'+chr_cp437(0xB3), [3, 2, 1, 3, 2, 1])
         self.assert_serious('123'+chr_cp437(0xC5), [3, 3, 2, 2, 1, 1])
         self.assert_serious('12'+chr_cp437(0xC6), [1, 1])
+        self.assert_serious('1'+chr_cp437(0xEC)+'D', [0, 1])
+        self.assert_serious('N', [NinetyNineBottles()])
 
 
 class RegisterTests(SeriousTest):
@@ -160,6 +186,8 @@ class MathTests(SeriousTest):
         self.assert_serious('32'+chr_cp437(0xFC), [8])
         self.assert_serious('36'+chr_cp437(0x1F), [2, 1])
         self.assert_serious('4!', [24])
+        self.assert_serious('24'+chr_cp437(0xDB), [6])
+        self.assert_serious('24'+chr_cp437(0xDC), [12])
 
     def test_lists(self):
         self.assert_serious('[1][1,2]-', [[2]])
@@ -199,6 +227,10 @@ class MathTests(SeriousTest):
             with self.subTest(function=fn):
                 fns = trig_fns[fn]
                 self.assert_serious('1{}{}'.format(*fns), [1], close=True)
+                if fn not in ('sinh', 'cosh', 'tanh'):
+                    #skip hyperbolic functions for complex because they don't work right
+                    # maybe some time in the future I'll learn enough math to make these tests work
+                    self.assert_serious(':1+2j{}{}'.format(*fns), [1+2j], close=True)
 
 
 class StringAndListTests(SeriousTest):
@@ -256,6 +288,7 @@ class StringAndListTests(SeriousTest):
                             [[[1, 1], [1, 2], [1, 3],
                              [2, 1], [2, 2], [2, 3],
                              [3, 1], [3, 2], [3, 3]]])
+        self.assert_serious('[1,2,3]♂D', [[0, 1, 2]])
 
 
 class BaseConversionTests(SeriousTest):
@@ -267,11 +300,4 @@ class BaseConversionTests(SeriousTest):
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-d", "--debug", help="turn on debug mode",
-                        action="store_true")
-    parser.add_argument('unittest_args', nargs='*')
-    args = parser.parse_args()
-    debug_mode = args.debug
-    sys.argv[1:] = args.unittest_args
     unittest.main(verbosity=3)
