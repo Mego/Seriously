@@ -13,7 +13,7 @@ import pyshoco
 import collections
 from functools import reduce
 import struct
-from lib.iterable import deque, as_list
+from lib.iterable import deque, as_list, zip_longest
 
 def memoize(f):
     memo = {}
@@ -364,7 +364,7 @@ def dupe_each_fn(srs):
 
 def lr_fn(srs):
     a=srs.pop()
-    srs.push(list(range(a)))
+    srs.push(range(a))
 
 def s_fn(srs):
     a=srs.pop()
@@ -444,7 +444,7 @@ def r_fn(srs):
     elif anytype(a, str, list):
         srs.push(a[::-1])
     else:
-        srs.push(list(range(1,a+1)))
+        srs.push(range(1,a+1))
 
 def n_fn(srs):
     a,b=srs.pop(),srs.pop()
@@ -607,10 +607,10 @@ def zip_fn(srs):
     a=srs.pop()
     if anytype(a, str, list):
         b=srs.pop()
-        srs.push(list(map(list,[[x for x in zlist if x is not None] for zlist in itertools.zip_longest(a,b)])))
+        srs.push(zip_longest(a,b))
     else:
         lists = [srs.pop() for i in range(a)]
-        srs.push(list(map(list,[[x for x in zlist if x is not None] for zlist in itertools.zip_longest(*lists)])))
+        srs.push(zip_longest(*lists))
 
 def sum_fn(srs):
     a=srs.pop()
@@ -637,7 +637,7 @@ def median_fn(srs):
         srs.push(a[len(a)//2])
     else:
         if all([isinstance(x, str) for x in a[len(a)//2-1:][:2]]):
-            med = median(list(map(ord,a)))
+            med = median(map(ord,a))
             srs.push(chr(med))
         else:
             srs.push(median(a))
@@ -723,7 +723,7 @@ def O_fn(srs):
     a = srs.pop()
     if isinstance(a, list):
         a = ''.join(flatten(a))
-    srs.push(list(map(ord,a)))
+    srs.push(map(ord,a))
 
 def dig_fn(srs):
     a = srs.pop()
@@ -750,18 +750,18 @@ def reg_all_input_fn(srs):
 def range_ab_fn(srs):
     a = srs.pop()
     if isinstance(a, list):
-        srs.push(list(range(*a)))
+        srs.push(range(*a))
     else:
         b = srs.pop()
-        srs.push(list(range(a,b)))
+        srs.push(range(a,b))
 
 def cart_prod_fn(srs):
     #lambda x:x.push(map(list,itertools.product(x.pop(),x.pop())))
     a,b = srs.pop(),srs.pop()
     if anytype(b, int, float):
-        srs.push(list(map(list,itertools.product(a,repeat=b))))
+        srs.push(map(list,itertools.product(a,repeat=b)))
     else:
-        srs.push(list(map(list,itertools.product(a,b))))
+        srs.push(map(list,itertools.product(a,b)))
 
 def print_fn(srs):
     a = srs.pop()
@@ -949,7 +949,7 @@ fn_table={
         0x67:g_fn,
         0x68:lambda x:x.push(math.hypot(x.pop(),x.pop())),
         0x69:i_fn,
-        0x6A:lambda x:x.push(str.join(x.pop(),list(map(str,x.pop())))),
+        0x6A:lambda x:x.push(str.join(x.pop(),map(str,x.pop()))),
         0x6B:to_list_fn,
         0x6C:lambda x:x.push(len(x.pop())),
         0x6D:m_fn,
@@ -1006,8 +1006,8 @@ fn_table={
         0xA0:lambda x:x.push(x.pop().conjugate()),
         0xA1:index_fn,
         0xA2:cond_quit_fn,
-        0xA3:lambda x:x.push(''.join(map(chr,list(range(97,122+1))))),
-        0xA4:lambda x:x.push(list(map(list,enumerate(x.pop())))),
+        0xA3:lambda x:x.push(''.join(map(chr,range(97,122+1)))),
+        0xA4:lambda x:x.push(map(list,enumerate(x.pop()))),
         0xA5:fil_iter_fn,
         0xA7:lambda x:x.push(math.degrees(x.pop())),
         0xA8:lambda x:x.push(int(x.pop(),x.pop())),
@@ -1018,7 +1018,7 @@ fn_table={
         0xAD:lambda x:x.push(str_base(x.pop(),x.pop())),
         0xAE:ins_bot_fn,
         0xAF:ins_top_fn,
-        0xB0:lambda x:x.push(list(itertools.compress(x.pop(),x.pop()))),
+        0xB0:lambda x:x.push(itertools.compress(x.pop(),x.pop())),
         0xB1:lambda x:x.push((lambda y:sum([1 if gcd(i,y)==1 else 0 for i in range(1,y+1)]))(x.pop())),
         0xB2:lambda x:x.push(sum([is_prime(i) for i in range(1,x.pop()+1)])),
         0xB3:dupe_all_fn,
@@ -1031,7 +1031,7 @@ fn_table={
         0xBE:lambda x:x.push(get_reg(1)),
         0xBF:lambda x:set_reg(x.pop(),x.pop()),
         0xC0:lambda x:x.push(get_reg(x.pop())),
-        0xC2:lambda x:x.push(list(map(list, list(zip(*x.pop()))))),
+        0xC2:lambda x:x.push(zip(*x.pop())),
         0xC3:lambda x:x.push(binrep(x.pop())),
         0xC4:lambda x:x.push(hexrep(x.pop())),
         0xC5:dupe_each_fn,
@@ -1044,8 +1044,8 @@ fn_table={
         0xCC:lambda x:x.push(math.e),
         0xCD:is_unique_fn,
         0xCE:while_fn,
-        0xCF:lambda x:x.push(list(map(list,itertools.combinations(x.pop(),x.pop())))),
-        0xD0:lambda x:x.push(list(map(list,itertools.permutations(x.pop(),x.pop())))),
+        0xCF:lambda x:x.push(itertools.combinations(x.pop(),x.pop())),
+        0xD0:lambda x:x.push(itertools.permutations(x.pop(),x.pop())),
         0xD1:lambda x:x.push(pow(10,x.pop())),
         0xD2:lambda x:x.push(math.log(x.pop(),10)),
         0xD3:lambda x:x.push(pow(2,x.pop())),

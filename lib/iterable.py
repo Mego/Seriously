@@ -2,7 +2,7 @@
 
 from collections import deque as _deque
 from collections.abc import Iterable
-from itertools import islice
+from itertools import islice, chain, repeat
 
 def as_list(val, wrap=True):
     #strings are iterables all the way down, so an exception needs to be made
@@ -41,3 +41,17 @@ class deque(_deque):
             
     __radd__ = __add__
     
+def zip_longest(*iterables):
+    its = [iter(x) for x in iterables]
+    res = []
+    for it in its:
+        n = next(it, None)
+        if n is not None:
+            res.append(n)
+    while res:
+        yield res
+        res = []
+        for it in its:
+            n = next(it, None)
+            if n is not None:
+                res.append(n)
