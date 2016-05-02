@@ -2,7 +2,7 @@
 
 from collections import deque as _deque
 from collections.abc import Iterable
-from itertools import islice, chain, repeat
+from itertools import islice, zip_longest as izip
 
 def as_list(val, wrap=True):
     #strings are iterables all the way down, so an exception needs to be made
@@ -22,7 +22,7 @@ class deque(_deque):
     
     def __getitem__(self, key):
         if isinstance(key, slice):
-            return islice(self, key.start, key.stop, key.step)
+            return [x for x in self][key]
         else:
             return _deque.__getitem__(self, key)
             
@@ -40,18 +40,7 @@ class deque(_deque):
             return tmp
             
     __radd__ = __add__
-    
+
 def zip_longest(*iterables):
-    its = [iter(x) for x in iterables]
-    res = []
-    for it in its:
-        n = next(it, None)
-        if n is not None:
-            res.append(n)
-    while res:
-        yield res
-        res = []
-        for it in its:
-            n = next(it, None)
-            if n is not None:
-                res.append(n)
+    for vals in izip(*iterables):
+        yield filter(lambda x:x is not None, vals)

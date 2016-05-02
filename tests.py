@@ -141,6 +141,17 @@ class StackTests(SeriousTest):
         self.assert_serious('123(', [1, 3, 2])
         self.assert_serious('123)', [2, 1, 3])
         self.assert_serious('123@', [2, 3, 1])
+        self.assert_serious('1232{', [2, 1, 3])
+        self.assert_serious('1232}', [1, 3, 2])
+        self.assert_serious('13422'+chr_cp437(0xAF), [4,2,3,1])
+        self.assert_serious('13422'+chr_cp437(0xAE), [4,3,2,1])
+        
+    def test_logic(self):
+        self.assert_serious(r'120I', [1])
+        
+    def test_repeat(self):
+        self.assert_serious('1;', [1,1])
+        self.assert_serious('23n', [3,3])
 
     def test_quine(self):
         self.assert_serious('Q;', ['Q;', 'Q;'])
@@ -188,6 +199,20 @@ class MathTests(SeriousTest):
         self.assert_serious('4!', [24])
         self.assert_serious('24'+chr_cp437(0xDB), [6])
         self.assert_serious('24'+chr_cp437(0xDC), [12])
+        self.assert_serious('21'+chr_cp437(0x80), [1+2j])
+        self.assert_serious(':12w', [[[2,2],[3,1]]])
+        self.assert_serious(':12y', [[2,3]])
+        self.assert_serious(':-3s', [-1])
+        self.assert_serious('3s', [1])
+        self.assert_serious('0s', [0])
+        self.assert_serious('25^', [7])
+        self.assert_serious('24%', [0])
+        self.assert_serious('[1,2,3]3+', [[4,5,6]])
+        self.assert_serious('2[2,4,6]+', [[4, 6, 8]])
+        self.assert_serious('[1,2,3]3*', [[3,6,9]])
+        self.assert_serious('2[2,4,6]*', [[4, 8, 12]])
+        self.assert_serious('2'+chr_cp437(0x8C), [2j])
+        self.assert_serious('[2,3]'+chr_cp437(0x8C), [[2j,3j]])
 
     def test_lists(self):
         self.assert_serious('[1][1,2]-', [[2]])
@@ -198,8 +223,13 @@ class MathTests(SeriousTest):
         self.assert_serious('[2.5,2.5]'+chr_cp437(0xE4), [5.0])
         self.assert_serious('[1,2,3,4]'+chr_cp437(0xE3), [24])
         self.assert_serious('[1,2,3,4]'+chr_cp437(0xBA), [2.5])
+        self.assert_serious('[1,2,6,3,4]'+chr_cp437(0xBA), [6])
         self.assert_serious('[1,2,3,3]'+chr_cp437(0x9A), [3])
         self.assert_serious('[3,6,9,12]'+chr_cp437(0x1F), [[1, 2, 3, 4]])
+        self.assert_serious('4r', [[0,1,2,3]])
+        self.assert_serious('4R', [[1,2,3,4]])
+        self.assert_serious('[1,2,3,4]'+chr_cp437(0x80), [3+4j, 1+2j])
+        self.assert_serious('[1,2,3,4,5]'+chr_cp437(0x80), [5, 3+4j, 1+2j])
 
     def test_filters(self):
         self.assert_serious("[4]12'3k"+chr_cp437(0x8D), [[1, 2]])
@@ -207,9 +237,9 @@ class MathTests(SeriousTest):
         self.assert_serious("[4]12'3k"+chr_cp437(0xA5), [[[4]]])
 
     def test_sequences(self):
-        self.assert_serious('4p', [0])
+        self.assert_serious('2:547*p', [0])
         self.assert_serious(':23p', [1])
-        self.assert_serious('3P', [7])
+        self.assert_serious(':100P', [547])
         self.assert_serious('8f', [6])
         self.assert_serious(':16'+chr_cp437(0xDF), ['0123456789ABCDEF'])
         self.assert_serious('2'+chr_cp437(0xB9), [[1, 2, 1]])
@@ -269,10 +299,17 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('"abc"d', ['c', 'ab'])
         self.assert_serious('\'d"abc"q', ['abcd'])
         self.assert_serious('\'a"bcd"o', ['abcd'])
+        self.assert_serious('"abcd"'+chr_cp437(0x8A), ["'abcd'"])
+        self.assert_serious(':123.45'+chr_cp437(0x8A), ['123.45'])
+        self.assert_serious(':1+2i'+chr_cp437(0x8A), ['(1+2j)'])
+        self.assert_serious('`foo`'+chr_cp437(0x8A), ['`foo`'])
+        self.assert_serious('"1.23"i', [1.23])
+        self.assert_serious('"123"R', ["321"])
         
     def test_list_methods(self):
         self.assert_serious('[1,2,3][4,5,6]'+chr_cp437(0x9D), [[5, 7, 9]])
         self.assert_serious("""'0"010203040"#s""", [[[],['1'],['2'],['3'],['4'],[]]])
+        self.assert_serious('0"10203"s', [['1', '2', '3']])
         self.assert_serious('2[1,2,3,4]V', [[[1],[1,2,],[2,3],[3,4],[4]]])
         self.assert_serious('[1,2,3],[3,4,5]^', [[4,5,1,2]])
         self.assert_serious('2[1,2,3]'+chr_cp437(0xCF),
@@ -289,14 +326,43 @@ class StringAndListTests(SeriousTest):
                              [2, 1], [2, 2], [2, 3],
                              [3, 1], [3, 2], [3, 3]]])
         self.assert_serious('[1,2,3]♂D', [[0, 1, 2]])
+        self.assert_serious('[1,2,3]/', [[3,1,2]])
+        self.assert_serious('[1,2,3]\\', [[2,3,1]])
+        self.assert_serious('[1,2,3]d@q', [[1,2,3]])
+        self.assert_serious('[1,2,3]p@o', [[1,2,3]])
+        self.assert_serious('[1,2,3]i', [1,2,3])
+        self.assert_serious('[1,2,3]R', [[3,2,1]])
+        self.assert_serious('1#', [[1]])
+        self.assert_serious('"123"#', [['1','2','3']])
+        self.assert_serious('[1,2,3]#', [[1,2,3]])
 
 
 class BaseConversionTests(SeriousTest):
     def test_bases(self):
         self.assert_serious('2:5.5'+chr_cp437(0xAD), ["101.1"])
+        self.assert_serious(':16:-26'+chr_cp437(0xAD), ["-1A"])
         self.assert_serious(':11'+chr_cp437(0xC3), ["1011"])
         self.assert_serious('"Foo"'+chr_cp437(0xC3), ["010001100110111101101111"])
         self.assert_serious(':3.07'+chr_cp437(0xC3), ['0100000000001000100011110101110000101000111101011100001010001111'])
+        
+class FunctionTests(SeriousTest):
+    def test_function_methods(self):
+        self.assert_serious('`foo`'+chr_cp437(0x9C), ['foo'])
+        self.assert_serious('"foo"'+chr_cp437(0x9C), [SeriousFunction('foo')])
+        self.assert_serious('5'+chr_cp437(0x9C), [5])
+        self.assert_serious('`foo`l', [3])
+        self.assert_serious('`bar``foo`+', [SeriousFunction('foobar')])
+        self.assert_serious('`foo`3*', [SeriousFunction('foofoofoo')])
+        self.assert_serious('["oo"]`f%s`%', [SeriousFunction('foo')])
+        self.assert_serious('`foo`"foo"=', [1])
+        self.assert_serious('`foo``bar`=', [0])
+        self.assert_serious('`foo`3=', [3, SeriousFunction('foo')])
+        self.assert_serious('[1,2,3]`++`R', [[6]])
+        self.assert_serious('3`1`n', [1,1,1])
+        
+class RandomTests(SeriousTest):
+    def test_random(self):
+        self.assert_serious('2v52BG52V6J"abcd"J"abcd"'+chr_cp437(0xC8), ['abcd', 'c', 1, 3.0831724219508216, 0.09158478740507359, 2])
 
 
 if __name__ == '__main__':
