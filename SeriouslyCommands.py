@@ -548,7 +548,7 @@ def E_fn(srs):
         srs.push(math.erf(a))
     else:
         b=srs.pop()
-        srs.push([x for x in a][b])
+        srs.push(itertools.islice(a,b-1,b))
 
 def peek_print_fn(srs):
     print(' '.join(map(repr, srs.stack[::-1])))
