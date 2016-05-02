@@ -27,17 +27,32 @@ Seriously is a postfix language, meaning that operators come after arguments. ::
 
 Other important operators in arithmetic include: ::
 
-    45^     Exponentiation. This raises 5 to the power of 4, returning 15625.
     7:29:%  Modulo operator. This calculates 29 mod 7, returning 1.
+    4!      Factorial. This calculates 4!, returning 24
 
 1.4. Boolean Operators
 ----------------------
 
-*Description later* ::
+The boolean operators operate on the last two stack elements as follows ::
 
-    33=
-    44<
-    25>
+    33=     Boolean equal. Since 3 = 3, 1 is pushed onto the stack (otherwise 0).
+    44<     Boolean less than. Since 4 is not less than 4, 0 is pushed onto the stack (otherwise 1).
+    25>     Boolean greater than. Since 2 is not greater than 5, 0 is pushed onto the stack (otherwise 1).
 
-1.5. Trigonometric Functions
+The following boolean operators relate to logic gates ::
+
+    01^     XOR. 0 XOR 1 is equal to 1, so 1 is returned. 
+
+1.5. Extended Math Functions
 ----------------------------
+
+    :8:f    Fibbonaci index. Since 8 is the 6th fibbonaci number, 6 is returned. If a non-fibbonaci number is input, returns -1
+
+1.5. Trig Functions
+-------------------
+
+    â       Performs asin on the stack.
+    ä       Performs acos on the stack.
+    à       Performs atan on the stack.
+    å       Performs atan2 on the last two stack elements.
+    
