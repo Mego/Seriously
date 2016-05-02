@@ -46,13 +46,17 @@ The following boolean operators relate to logic gates ::
 1.5. Extended Math Functions
 ----------------------------
 
-     :8:f    Fibbonaci index. Since 8 is the 6th fibbonaci number, 6 is returned. If a non-fibbonaci number is input, returns -1
+More advanced than 1.3. ::
+
+    :8:f    Fibbonaci index. Since 8 is the 6th fibbonaci number, 6 is returned. If a non-fibbonaci number is input, returns -1
 
 1.5. Trig Functions
 -------------------
 
-     â       Performs asin on the stack.
-     ä       Performs acos on the stack.
-     à       Performs atan on the stack.
-     å       Performs atan2 on the last two stack elements.
+These perform trig operations on the stack ::
+
+    â       Performs asin on the stack.
+    ä       Performs acos on the stack.
+    à       Performs atan on the stack.
+    å       Performs atan2 on the last two stack elements.
     
