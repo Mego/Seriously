@@ -49,6 +49,7 @@ The following boolean operators relate to logic gates ::
 More advanced than 1.3. ::
 
     :8:f    Fibbonaci index. Since 8 is the 6th fibbonaci number, 6 is returned. If a non-fibbonaci number is input, returns -1
+    ï       Pushes the imaginary number (no joke, sqrt(-1))
 
 1.5. Trig Functions
 -------------------
@@ -59,4 +60,11 @@ These perform trig operations on the stack ::
     ä       Performs acos on the stack.
     à       Performs atan on the stack.
     å       Performs atan2 on the last two stack elements.
+    ç       Performs asinh on the stack.
+    ê       Performs acosh on the stack.
+    ë       Performs atanh on the stack.
+    Ä       Performs sinh on the stack.
+    Å       Performs cosh on the stack.
+    É       Performs tanh on the stack.
     
+Note that these operate on a degree value. You can create a degree value using º, which will convert an int to a degree.
