@@ -363,6 +363,7 @@ class FunctionTests(SeriousTest):
         self.assert_serious('`foo`3=', [3, SeriousFunction('foo')])
         self.assert_serious('[1,2,3]`++`R', [[6]])
         self.assert_serious('3`1`n', [1,1,1])
+        self.assert_serious('5`2@%Y`'+chr_cp437(0xD6), [[0,2,4,6,8]])
         
 class RandomTests(SeriousTest):
     def test_random(self):
