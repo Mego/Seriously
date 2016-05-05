@@ -174,7 +174,7 @@ AC (¼): pop a: push a/4 (float division)
 AD (¡): pop a,b: push a string representing a in base b
 AE («): pop a,b: insert b at position a, indexed from the bottom of the stack
 AF (»): pop a,b: insert b at position a, indexed from the top of the stack
-B0 (░): pop [a],[b]: push [[b][i] if [a][i] for i in len(b)], pads [a] with 0s if necessary
+B0 (░): pop [a],[b]: push [[b][i] if [a][i] for i in len(b)], pads [a] with 0s if necessary; pop f,[b]: push values of [b] where f returns a truthy value
 B1 (▒): pop a: push totient(a) (# of integers <= a that are coprime with a)
 B2 (▓): pop a: push pi(a) (# of primes <= a)
 B3 (│): duplicate stack ([a,b,c] => [a,b,c,a,b,c])

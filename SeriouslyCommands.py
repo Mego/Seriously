@@ -864,7 +864,16 @@ def fil_iter_fn(srs):
     
 def filter_true_fn(srs):
     a,b = srs.pop(), srs.pop()
-    srs.push(itertools.compress(b,a))
+    if isinstance(a, SeriousFunction):
+        res = []
+        for x in b:
+            s2 = srs.make_new(x)
+            aout = a(s2)
+            if aout and aout[0]:
+                res.append(x)
+        srs.push(res)
+    else:
+        srs.push(itertools.compress(b,a))
 
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
