@@ -335,6 +335,7 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('1#', [[1]])
         self.assert_serious('"123"#', [['1','2','3']])
         self.assert_serious('[1,2,3]#', [[1,2,3]])
+        self.assert_serious('[1,2,3][0,1]'+chr_cp437(0xB0), [[2]])
 
 
 class BaseConversionTests(SeriousTest):

@@ -861,6 +861,10 @@ def lrot_fn(srs):
 def fil_iter_fn(srs):
     a = srs.pop()
     srs.push(filter_types(a, collections.Iterable, exclude=[str]))
+    
+def filter_true_fn(srs):
+    a,b = srs.pop(), srs.pop()
+    srs.push(itertools.compress(b,a))
 
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -992,7 +996,7 @@ fn_table={
         0xAD:lambda x:x.push(str_base(x.pop(),x.pop())),
         0xAE:ins_bot_fn,
         0xAF:ins_top_fn,
-        0xB0:lambda x:x.push(itertools.compress(x.pop(),x.pop())),
+        0xB0:filter_true_fn,
         0xB1:lambda x:x.push((lambda y:sum([1 if gcd(i,y)==1 else 0 for i in range(1,y+1)]))(x.pop())),
         0xB2:lambda x:x.push(sum([is_prime(i) for i in range(1,x.pop()+1)])),
         0xB3:dupe_all_fn,
