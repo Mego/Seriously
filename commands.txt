@@ -68,15 +68,15 @@
 43 (C): pop a: push cos(a)
 44 (D): pop a: push a-1; pop [a]: push stdddev([a])
 45 (E): pop a: push erf(a); pop [a],b: push [a][b] (bth item in [a]) (also works for strings)
-46 (F): pop a: push Fib(a) (Fib(0)=0, Fib(1)=Fib(2)=1)
+46 (F): pop a: push Fib(a) (Fib(0)=0, Fib(1)=Fib(2)=1); pop [a]: push a[0]
 47 (G): push a random float in the range [0,1) (push random())
-48 (H): if stack is empty: push "Hello, World!"; pop "a",b: push a[:b]
+48 (H): if stack is empty: push "Hello, World!"; pop "a" or [a],b: push a[:b]
 49 (I): pop a,b,c: push b if a is truthy, else push c
 4A (J): pop a: push a random integer in [0,a) (randrange(a)); pop [a] or "a": push a random element from [a] or "a" (random.choice([a]|"a"))
 4B (K): pop a: push ceil(a)
 4C (L): pop a: push floor(a)
 4D (M): pop f,[a], execute f for each element in [a], using the element as a temporary stack, push [a] (similar to map(f,[a])); pop [a]: push max([a])
-4E (N): if stack is empty: push the lyrics to "99 Bottles of Beer"; pop a,[b] or "b": push first a elements of b (last if a is negative)
+4E (N): if stack is empty: push the lyrics to "99 Bottles of Beer"; pop [a]: push a[-1]
 4F (O): pop "a" or [a]: push [ord(c) for each c in "a" or [a], starting from the end]. If a list is popped, it is flattened, and if it contains strings of length > 1, the strings are exploded in-place ("ABC" -> [65,66,67], ["A","B","CD"] -> [65,66,67,68])
 50 (P): pop a: push the a-th prime (zero-indexed)
 51 (Q): if stack is empty: push the program's source code
@@ -212,7 +212,7 @@ D2 (╥): pop a: push log(a) (log base 10)
 D3 (╙): pop a: push 2**a
 D4 (╘): pop a: push lg(a) (log base 2)
 D5 (╒): push ln(2)
-D6 (╓):
+D6 (╓): pop f,n: push first n values where f(x) is truthy, starting with f(0)
 D7 (╫):
 D8 (╪):
 D9 (┘):

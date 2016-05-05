@@ -753,8 +753,8 @@ def N_fn(srs):
     if len(srs.stack) == 0:
         srs.push(NinetyNineBottles())
     else:
-        a,b = srs.pop(), srs.pop()
-        srs.push(b[:a] if a>=0 else b[a:])
+        a = srs.pop()
+        srs.push(a[-1])
         
 def shuffle_fn(srs):
     a = srs.pop()
@@ -874,6 +874,25 @@ def filter_true_fn(srs):
         srs.push(res)
     else:
         srs.push(itertools.compress(b,a))
+        
+def first_n_fn(srs):
+    f,n = srs.pop(), srs.pop()
+    res = []
+    for x in itertools.count(0):
+        if len(res) >= n:
+            break
+        s2 = srs.make_new(x)
+        fout = f(s2)
+        if fout and fout[0]:
+            res.append(x)
+    srs.push(res)
+    
+def F_fn(srs):
+    a = srs.pop()
+    if isinstance(a, collections.Iterable):
+        srs.push(a[0])
+    else:
+        srs.push(Fib(a))
 
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -904,7 +923,7 @@ fn_table={
         0x43:lambda x:x.push(math.cos(x.pop())),
         0x44:D_fn,
         0x45:E_fn,
-        0x46:lambda x:x.push(Fib(x.pop())),
+        0x46:F_fn,
         0x47:lambda x:x.push(random.random()),
         0x48:H_fn,
         0x49:if_fn,
@@ -1038,6 +1057,7 @@ fn_table={
         0xD3:lambda x:x.push(pow(2,x.pop())),
         0xD4:lambda x:x.push(math.log(x.pop(),2)),
         0xD5:lambda x:x.push(math.log(2)),
+        0xD6:first_n_fn,
         0xDB:lambda x:x.push(nCr(x.pop(),x.pop())),
         0xDC:lambda x:x.push(nPr(x.pop(),x.pop())),
         0xDD:lambda x:x.push(b64decode(x.pop())),

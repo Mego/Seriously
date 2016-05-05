@@ -287,8 +287,8 @@ class StringAndListTests(SeriousTest):
                             ["Cafe Babe 123"])
         self.assert_serious('"CAFE babe 123"'+chr_cp437(0x99),
                             ["cafe BABE 123"])
-        self.assert_serious('"abcd"3N', ["abc"])
-        self.assert_serious('"abcd"30-N', ["bcd"])
+        self.assert_serious('"abcd"N', ["d"])
+        self.assert_serious('"abcd"F', ["a"])
         self.assert_serious("""'0"010203040"s""", [['', '1', '2', '3', '4', '']])
         self.assert_serious('4"Hello"H', ['Hell'])
         self.assert_serious('1"Hello"t', ['ello'])
@@ -337,6 +337,8 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('[1,2,3]#', [[1,2,3]])
         self.assert_serious('[1,2,3][0,1]'+chr_cp437(0xB0), [[2]])
         self.assert_serious('[1,2,3]`2>`'+chr_cp437(0xB0), [[1]])
+        self.assert_serious('[1,2,3]N', [3])
+        self.assert_serious('[1,2,3]F', [1])
 
 
 class BaseConversionTests(SeriousTest):
