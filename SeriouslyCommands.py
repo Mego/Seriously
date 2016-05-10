@@ -788,7 +788,7 @@ def g_fn(srs):
 def reduce_fn(srs):
     a = srs.pop()
     if isinstance(a, collections.Iterable):
-        srs.push([x//gcd_list(*a) for x in a])
+        srs.push([x//gcd_list(a) for x in a])
     else:
         b = srs.pop()
         srs.push(b//gcd(a,b))
