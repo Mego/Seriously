@@ -46,7 +46,7 @@ def gcd(a,b):
 
 @memoize
 def gcd_list(vals):
-    return reduce(gcd,vals)
+    return reduce(gcd,vals,1)
 
 primes = [2,3]
 
@@ -195,7 +195,8 @@ def is_prime(x):
 
 def init_next_prime(n):
     global primes
-    n = n or max(primes)
+    if n == -1:
+        n = max(primes)
     if max(primes) > n:
         return
     x = max(primes)+2
@@ -208,7 +209,7 @@ def init_next_prime(n):
 def nth_prime(n):
     global primes
     while len(primes)<=n:
-        init_next_prime()
+        init_next_prime(-1)
     return primes[n]
 
 def div_fn(srs):
