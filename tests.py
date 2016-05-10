@@ -213,6 +213,7 @@ class MathTests(SeriousTest):
         self.assert_serious('2[2,4,6]*', [[4, 8, 12]])
         self.assert_serious('2'+chr_cp437(0x8C), [2j])
         self.assert_serious('[2,3]'+chr_cp437(0x8C), [[2j,3j]])
+        self.assert_serious(':1+2j'+chr_cp437(0xD7), [2, 1])
 
     def test_lists(self):
         self.assert_serious('[1][1,2]-', [[2]])

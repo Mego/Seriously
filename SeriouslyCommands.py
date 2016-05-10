@@ -895,6 +895,12 @@ def F_fn(srs):
         srs.push(a[0])
     else:
         srs.push(Fib(a))
+        
+def comp_parts_fn(srs):
+    a = srs.pop()
+    c = complex(a)
+    srs.push(c.real)
+    srs.push(c.imag)
 
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -1060,6 +1066,7 @@ fn_table={
         0xD4:lambda x:x.push(math.log(x.pop(),2)),
         0xD5:lambda x:x.push(math.log(2)),
         0xD6:first_n_fn,
+        0xD7:comp_parts_fn,
         0xDB:lambda x:x.push(nCr(x.pop(),x.pop())),
         0xDC:lambda x:x.push(nPr(x.pop(),x.pop())),
         0xDD:lambda x:x.push(b64decode(x.pop())),
