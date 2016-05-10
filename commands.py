@@ -463,11 +463,19 @@ def plus_fn(srs):
     else:
         srs.push(a+b)
 
+@memoize
 def digit_to_char(digit):
     if digit < 10:
         return str(digit)
     return chr(ord('a') + digit - 10)
 
+@memoize
+def char_to_digit(char):
+    if char <= '9':
+        return int(digit)
+    return ord(char) - 87
+
+@memoize
 def str_base(number,base):
     if number < 0:
         return '-' + str_base(-number, base)
@@ -477,12 +485,17 @@ def str_base(number,base):
         return str_base(d, base) + digit_to_char(m)
     return digit_to_char(m)
 
+@memoize
 def str_base_float(number,base,exp):
     if number >= base:
         return str_base_float(number/base,base,exp+1)
     if exp<-15 or (number == 0 and exp < 0):            #15 places after the dot should be good, right?
         return ""
     return digit_to_char(int(number)) + ("." if exp==0 and number%1 else "") + str_base_float((number%1)*base,base,exp-1)
+
+@memoize
+def int_base(number,base):
+    return reduce(lambda x,y:x*base+y, [char_to_digit(char) for char in number], 0)
 
 def i_mul_fn(srs):
     a=srs.pop()
