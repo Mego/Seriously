@@ -122,14 +122,10 @@ def median(data):
     else:
         i = n//2-1
         return _sum(data[i:i+2])/2
-    
+
 @memoize
 def naive_factorial(x):
-    res = 1
-    while x:
-        res *= x
-        x -= 1
-    return res
+    return nPr(x,x)
     
 @memoize
 def nCr(n, k):
@@ -137,17 +133,20 @@ def nCr(n, k):
         return 0
     elif k==n:
         return 1
+    k = min(k,n-k)
     res = 1
-    while k:
-        res *= (n+1-k)/k
-        k-=1
-    return int(res)
+    for i in range(1,k+1):
+        res *= n+1-i
+        res //= i
+    return res
         
 @memoize
 def nPr(n, k):
-    if k > n:
-        return 0
-    return nCr(n,k)*naive_factorial(k)
+    res = 1
+    for i in range(k):
+        res *= n
+        n -= 1
+    return res
 
 def is_prime(x):
     global primes
