@@ -46,7 +46,11 @@ def gcd(a,b):
 
 @memoize
 def gcd_list(vals):
-    return reduce(gcd,vals,1)
+    if len(vals) == 0:
+        return 1
+    if len(vals) == 1:
+        return vals[0]
+    return reduce(gcd,vals)
 
 primes = [2,3]
 
@@ -211,6 +215,13 @@ def nth_prime(n):
     while len(primes)<=n:
         init_next_prime(-1)
     return primes[n]
+
+@memoize
+def Fib_index(n):
+    i=0
+    while Fib(i)<n:
+        i+=1
+    return i if Fib(i) == n else -1
 
 def div_fn(srs):
     a=srs.pop()
@@ -777,7 +788,7 @@ def g_fn(srs):
 def reduce_fn(srs):
     a = srs.pop()
     if isinstance(a, collections.Iterable):
-        srs.push([x//gcd_list(a) for x in a])
+        srs.push([x//gcd_list(*a) for x in a])
     else:
         b = srs.pop()
         srs.push(b//gcd(a,b))
