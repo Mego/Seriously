@@ -847,7 +847,7 @@ fn_table={
 		0xA5:lambda x:x.push(filter_types(x.pop(),ListType)),
 		0xA6:lambda x:x.push(x.pop()**2),
 		0xA7:lambda x:x.push(math.degrees(x.pop())),
-		0xA8:lambda x:x.push(int(x.pop(),x.pop())),
+		0xA8:lambda x:x.push(int_base(x.pop(),x.pop())),
 		0xA9:lambda x:x.push(x.pop()+2),
 		0xAA:lambda x:x.push(x.pop()-2),
 		0xAB:lambda x:x.push(x.pop()/2),
