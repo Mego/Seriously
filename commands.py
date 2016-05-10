@@ -40,10 +40,7 @@ phi = (1+5**.5)/2
 def Fib(n):
     if n<2:
         return n
-    a,b=1,1
-    while n>2:
-        a,b,n=b,a+b,n-1
-    return b
+    return Fib(n-1)+Fib(n-2)
     
 def prod(iter):
     return reduce(operator.mul, iter, 1)
