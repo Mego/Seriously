@@ -340,6 +340,7 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('[1,2,3]`2>`'+chr_cp437(0xB0), [[1]])
         self.assert_serious('[1,2,3]N', [3])
         self.assert_serious('[1,2,3]F', [1])
+        self.assert_serious('[1,2,3]i', [1,2,3])
 
 
 class BaseConversionTests(SeriousTest):

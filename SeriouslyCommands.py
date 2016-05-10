@@ -272,7 +272,7 @@ def i_fn(srs):
     if isinstance(a, str) and (all([c.isdigit() or c=='.' for c in a]) and a.count('.')<2):
         srs.push(float(a))
     elif isinstance(a, collections.Iterable):
-        for x in a[::-1]:
+        for x in [y for y in a][::-1]:
             srs.push(x)
     else:
         srs.push(a)
