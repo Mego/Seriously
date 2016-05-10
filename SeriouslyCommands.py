@@ -548,7 +548,9 @@ def E_fn(srs):
         srs.push(math.erf(a))
     else:
         b=srs.pop()
-        srs.push(itertools.islice(a,b-1,b))
+        if srs.debug_mode:
+            print("islice indices:",b,b+1)
+        srs.push([x for x in itertools.islice(a,b,b+1)][0])
 
 def peek_print_fn(srs):
     print(' '.join(map(repr, srs.stack[::-1])))
