@@ -45,12 +45,8 @@ def gcd(a,b):
     return b if a==0 else gcd(b%a,a)
 
 @memoize
-def gcd_list(vals):
-    if len(vals) == 0:
-        return 1
-    if len(vals) == 1:
-        return vals[0]
-    return reduce(gcd,vals[1:],vals[0])
+def gcd_list(*vals):
+    return reduce(gcd,vals or [1])
 
 primes = [2,3]
 
@@ -780,7 +776,7 @@ def shuffle_fn(srs):
 def g_fn(srs):
     a = srs.pop()
     if isinstance(a, collections.Iterable):
-        srs.push(gcd_list(a))
+        srs.push(gcd_list(*a))
     else:
         b = srs.pop()
         srs.push(gcd(a,b))
@@ -788,7 +784,7 @@ def g_fn(srs):
 def reduce_fn(srs):
     a = srs.pop()
     if isinstance(a, collections.Iterable):
-        srs.push([x//gcd_list(a) for x in a])
+        srs.push([x//gcd_list(*a) for x in a])
     else:
         b = srs.pop()
         srs.push(b//gcd(a,b))
