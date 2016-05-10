@@ -50,7 +50,7 @@ def gcd_list(vals):
         return 1
     if len(vals) == 1:
         return vals[0]
-    return reduce(gcd,vals)
+    return reduce(gcd,vals[1:],vals[0])
 
 primes = [2,3]
 
