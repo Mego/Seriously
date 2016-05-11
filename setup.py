@@ -1,13 +1,6 @@
 """Seriously - a Python-based golfing language"""
 
 from setuptools import setup, find_packages
-from codecs import open
-from os import path
-
-here = path.abspath(path.dirname(__file__))
-
-with open(path.join(here, 'README.md'), encoding='utf-8') as f:
-    long_description = f.read()
 
 setup(
     name='seriously',
@@ -15,7 +8,7 @@ setup(
     version='2.0.1',
 
     description='A Python-based golfing language',
-    long_description=long_description,
+    long_description='Seriously is a Python-based golfing language. See the GitHub page for more details.',
 
     url='https://github.com/Mego/Seriously',
 
