@@ -6,8 +6,8 @@ import sys
 import unittest
 from lib.cp437 import CP437
 from lib.iterable import as_list
-from seriously import Seriously
-from SeriouslyCommands import SeriousFunction
+from ..seriously import Seriously
+from ..SeriouslyCommands import SeriousFunction
 
 ord_cp437 = CP437.ord
 chr_cp437 = CP437.chr

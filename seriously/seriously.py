@@ -12,7 +12,7 @@ import random
 import re
 import readline
 import traceback
-import SeriouslyCommands
+from . import SeriouslyCommands
 from lib.cp437 import CP437
 from lib.iterable import deque, as_list
 
