@@ -179,7 +179,7 @@ def srs_exec(debug_mode=False, file_obj=None, code=None):
 def ide_mode():
     SeriouslyCommands.fn_table[0xF0] = lambda x: x.push(literal_eval(x.pop()))
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(
                 description="Run the Seriously interpreter")
     parser.add_argument("-d", "--debug", help="turn on debug mode",
@@ -194,4 +194,6 @@ if __name__ == '__main__':
     if args.ide:
         ide_mode()
     srs_exec(args.debug, args.file, args.code)
-
+    
+if __name__ == '__main__':
+    main()
