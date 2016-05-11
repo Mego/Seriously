@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
 
-try:
-    from math import gcd as _gcd
-except:
-    from fractions import gcd as _gcd
 import operator, cmath
 import math as rmath
 import random, itertools, sys, string, binascii, ast
@@ -39,19 +35,18 @@ phi = (1+5**.5)/2
 def Fib(n):
     if n<2:
         return n
-    a,b=1,1
-    while n>2:
-        a,b,n=b,a+b,n-1
-    return b
+    return Fib(n-1) + Fib(n-2)
 
 def prod(iter):
     return reduce(operator.mul, iter, 1)
-    
-def gcd(*vals):
-    if len(vals) == 2:
-        return _gcd(*vals)
-    else:
-        return _gcd(vals[0], gcd(*vals[1:]))
+
+@memoize
+def gcd(a,b):
+    return b if a==0 else gcd(b%a,a)
+
+@memoize
+def gcd_list(*vals):
+    return reduce(gcd,vals or [1])
 
 primes = [2,3]
 
@@ -73,7 +68,7 @@ math = Math()
 
 def anytype(x, *types):
     return any(isinstance(x,t) for t in types) if types else False
-    
+
 def filter_types(iter,*types,exclude=None):
     if exclude is not None:
         return [x for x in iter if anytype(x, *types) and not anytype(x, *exclude)]
@@ -103,17 +98,17 @@ class SeriousFunction:
 
     def __add__(self, other):
         return SeriousFunction(self.code+other.code)
-        
+
     __radd__ = __add__
 
     def __mul__(self, other):
         return SeriousFunction(self.code * other)
-        
+
     __rmul__ = __mul__
 
     def __mod__(self, other):
         return SeriousFunction(self.code % other)
-        
+
     __rmod__ = __mod__
 
     def __eq__(self, other):
@@ -160,11 +155,7 @@ def median(data):
 
 @memoize
 def naive_factorial(x):
-    res = 1
-    while x:
-        res *= x
-        x -= 1
-    return res
+    return nPr(x,x)
 
 @memoize
 def nCr(n, k):
@@ -172,17 +163,20 @@ def nCr(n, k):
         return 0
     elif k==n:
         return 1
+    k = min(k,n-k)
     res = 1
-    while k:
-        res *= (n+1-k)/k
-        k-=1
-    return int(res)
+    for i in range(1,k+1):
+        res *= n+1-i
+        res //= i
+    return res
 
 @memoize
 def nPr(n, k):
-    if k > n:
-        return 0
-    return nCr(n,k)*naive_factorial(k)
+    res = 1
+    for i in range(k):
+        res *= n
+        n -= 1
+    return res
 
 def is_prime(x):
     global primes
@@ -190,7 +184,7 @@ def is_prime(x):
         return 1
     if x<2 or (max(primes) > x):
         return 0
-    for p in [p for p in primes if p*p<=x]:
+    for p in filter(lambda p:p*p<=x,primes):
         if x%p==0:
             return 0
     n = max(primes)+2
@@ -199,22 +193,23 @@ def is_prime(x):
             return 0
     return 1
 
-def init_primes_up_to(n):
+def init_next_prime(n):
     global primes
+    if n == -1:
+        n = max(primes)
     if max(primes) > n:
         return
     x = max(primes)+2
-    while x < n:
+    while True:
         if is_prime(x):
             primes.append(x)
+            return
         x+=2
-
-init_primes_up_to(100)
 
 def nth_prime(n):
     global primes
     while len(primes)<=n:
-        init_primes_up_to(max(primes)+100)
+        init_next_prime(-1)
     return primes[n]
 
 @memoize
@@ -438,17 +433,21 @@ def n_fn(srs):
 
 @memoize
 def full_factor(n):
-    n=abs(n)
     global primes
-    init_primes_up_to(n)
+    n=abs(n)
     res=[]
-    for p in [x for x in primes if x<=n]:
+    index = 0
+    p = 2
+    while n>1:
         a=0
         while n%p==0:
             a+=1
             n//=p
         if a:
             res.append([p,a])
+        init_next_prime(p)
+        index += 1
+        p = primes[index]
     return res
 
 def factor(n):
@@ -509,9 +508,15 @@ def plus_fn(srs):
     else:
         srs.push(a+b)
 
+@memoize
 def digit_to_char(digit):
     return ("0123456789"+string.ascii_uppercase+string.ascii_lowercase+"+/")[digit]
 
+@memoize
+def char_to_digit(char):
+    return ("0123456789"+string.ascii_uppercase+string.ascii_lowercase+"+/").index(char)
+
+@memoize
 def str_base(number,base):
     if number < 0:
         return '-' + str_base(-number, base)
@@ -521,12 +526,17 @@ def str_base(number,base):
         return str_base(d, base) + digit_to_char(m)
     return digit_to_char(m)
 
+@memoize
 def str_base_float(number,base,exp):
     if number >= base:
         return str_base_float(number/base,base,exp+1)
     if exp<-15 or (number == 0 and exp < 0):            #15 places after the dot should be good, right?
         return ""
     return digit_to_char(int(number)) + ("." if exp==0 and number%1 else "") + str_base_float((number%1)*base,base,exp-1)
+
+@memoize
+def int_base(number,base):
+    return reduce(lambda x,y:x*base+y, [char_to_digit(char) for char in number], 0)
 
 def i_mul_fn(srs):
     a=srs.pop()
@@ -750,40 +760,40 @@ def nprint_fn(srs):
     n = srs.pop()
     for i in range(n):
         print_fn(srs)
-        
+
 def N_fn(srs):
     if len(srs.stack) == 0:
         srs.push(NinetyNineBottles())
     else:
         a = srs.pop()
         srs.push(a[-1])
-        
+
 def shuffle_fn(srs):
     a = srs.pop()
     random.shuffle(a)
     srs.push(a)
-    
+
 def g_fn(srs):
     a = srs.pop()
     if isinstance(a, collections.Iterable):
-        srs.push(gcd(*a))
+        srs.push(gcd_list(*a))
     else:
         b = srs.pop()
         srs.push(gcd(a,b))
-        
+
 def reduce_fn(srs):
     a = srs.pop()
     if isinstance(a, collections.Iterable):
-        srs.push([x//gcd(*a) for x in a])
+        srs.push([x//gcd_list(*a) for x in a])
     else:
         b = srs.pop()
         srs.push(b//gcd(a,b))
         srs.push(a//gcd(a,b))
-        
+
 def is_unique_fn(srs):
     a = srs.pop()
     srs.push(1 if all(a.count(x) == 1 for x in a) else 0)
-    
+
 def uniquify_fn(srs):
     a = srs.pop()
     unique = [x for i,x in enumerate(a) if i==a.index(x)]
@@ -791,7 +801,7 @@ def uniquify_fn(srs):
         srs.push(''.join(unique))
     else:
         srs.push(unique)
-        
+
 def binrep(val, pad=None):
     if isinstance(val, int):
         return ("{:0%sb}"%(pad or '')).format(val)
@@ -804,21 +814,21 @@ def binrep(val, pad=None):
         return ''.join("{:08b}".format(x) for x in struct.pack('>d',val))
     else:
         raise TypeError
-        
+
 def hexrep(val):
     br = binrep(val)
     res = ''
     for i in range(0, len(br), 8):
         res += hex(int(br[i:i+8],2))[2:]
     return res
-        
+
 def H_fn(srs):
     if not srs.stack:
         srs.push("Hello, World!")
     else:
         a,b = srs.pop(), srs.pop()
         srs.push(a[:b])
-        
+
 def t_fn(srs):
     a,b = srs.pop(), srs.pop()
     if isinstance(b, str):
@@ -826,7 +836,7 @@ def t_fn(srs):
         srs.push(a.translate(str.maketrans(b, c)))
     else:
         srs.push(a[b:])
-    
+
 def V_fn(srs):
     a,b = srs.pop(), srs.pop()
     if anytype(a, collections.Iterable):
@@ -845,7 +855,7 @@ def V_fn(srs):
         srs.push(res)
     else:
         srs.push(random.uniform(a,b))
-        
+
 def xor(a, b):
     if isinstance(a,str) and isinstance(b,str):
         return ''.join(x for x in a+b if (x in a) ^ (x in b))
@@ -853,17 +863,17 @@ def xor(a, b):
         return [x for x in a+b if (x in a) ^ (x in b)]
     else:
         return a ^ b
-        
+
 def rrot_fn(srs):
     srs.stack.rotate(-1)
-    
+
 def lrot_fn(srs):
     srs.stack.rotate(1)
-    
+
 def fil_iter_fn(srs):
     a = srs.pop()
     srs.push(filter_types(a, collections.Iterable, exclude=[str]))
-    
+
 def filter_true_fn(srs):
     a,b = srs.pop(), srs.pop()
     if isinstance(a, SeriousFunction):
@@ -876,7 +886,7 @@ def filter_true_fn(srs):
         srs.push(res)
     else:
         srs.push(itertools.compress(b,a))
-        
+
 def first_n_fn(srs):
     f,n = srs.pop(), srs.pop()
     res = []
@@ -888,14 +898,14 @@ def first_n_fn(srs):
         if fout and fout[0]:
             res.append(x)
     srs.push(res)
-    
+
 def F_fn(srs):
     a = srs.pop()
     if isinstance(a, collections.Iterable):
         srs.push(a[0])
     else:
         srs.push(Fib(a))
-        
+
 def comp_parts_fn(srs):
     a = srs.pop()
     c = complex(a)
@@ -1024,7 +1034,7 @@ fn_table={
         0xA4:lambda x:x.push(map(list,enumerate(x.pop()))),
         0xA5:fil_iter_fn,
         0xA7:lambda x:x.push(math.degrees(x.pop())),
-        0xA8:lambda x:x.push(int(x.pop(),x.pop())),
+        0xA8:lambda x:x.push(int_base(x.pop(),x.pop())),
         0xA9:lambda x:x.push(x.pop()+2),
         0xAA:lambda x:x.push(x.pop()-2),
         0xAB:lambda x:x.push(x.pop()/2),
