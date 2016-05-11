@@ -242,8 +242,8 @@ F0 (≡): pop a: push eval(a)
 F1 (±): pop a: push -a (unary negate)
 F2 (≥): pop a,b: push a>=b
 F3 (≤): pop a,b: push a<=b
-F4 (⌠): pop "a": push pyshoco.compress("a")
-F5 (⌡): pop "a": push pyshoco.decompress("a")
+F4 (⌠): pop "a": push lzma.compress("a")
+F5 (⌡): pop "a": push lzma.decompress("a")
 F6 (÷):
 F7 (≈): pop a: push int(a)
 F8 (°): pop a: push radians(a)

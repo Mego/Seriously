@@ -9,12 +9,12 @@ import math as rmath
 import random, itertools, sys, string, binascii, ast
 from base64 import *
 from copy import copy
-import pyshoco
 import collections
 from functools import reduce, lru_cache
 import struct
 from itertools import zip_longest as izip
 from lib.iterable import deque, as_list, zip_longest
+import lzma
 
 memoize = lru_cache(maxsize=None)
 
@@ -1085,8 +1085,8 @@ fn_table={
         0xF1:lambda x:x.push(-x.pop()),
         0xF2:lambda x:x.push(x.pop()>=x.pop()),
         0xF3:lambda x:x.push(x.pop()<=x.pop()),
-        0xF4:lambda x:x.push(pyshoco.compress(x.pop())),
-        0xF5:lambda x:x.push(pyshoco.decompress(x.pop())),
+        0xF4:lambda x:x.push(lzma.compress(x.pop().encode('cp437')).decode('cp437')),
+        0xF5:lambda x:x.push(lzma.decompress(x.pop().encode('cp437')).decode('cp437')),
         0xF7:lambda x:x.push(int(x.pop())),
         0xF8:lambda x:x.push(math.radians(x.pop())),
         0xF9:cart_prod_fn,
