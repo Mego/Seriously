@@ -1,13 +1,19 @@
 language: python
 python:
-- '3.3'
-- '3.4'
-- '3.5'
-- 3.5-dev
-- nightly
-- 'pypy3'
+  - '3.3'
+  - '3.4'
+  - '3.5'
+  - 3.5-dev
+  - nightly
+  - 'pypy3'
 matrix:
   allow_failures:
     - python: 'pypy3'
-install: pip install -r requirements.txt
+before_script:
+  - pip install -r requirements.txt
+  - pip install coveralls
 script: python3 setup.py test
+after_success:
+  - coveralls
+cache:
+  - pip
