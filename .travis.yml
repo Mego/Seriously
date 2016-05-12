@@ -11,7 +11,7 @@ matrix:
     - python: 'pypy3'
 before_script:
   - pip install -r requirements.txt
-  - pip install coveralls
+  - pip install python-coveralls
 script: python3 setup.py test
 after_success:
   - coveralls
