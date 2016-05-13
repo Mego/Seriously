@@ -9,6 +9,7 @@ import collections
 from functools import reduce, lru_cache
 import struct
 from itertools import zip_longest as izip
+from lib.cp437 import CP437
 from lib.iterable import deque, as_list, zip_longest
 import lzma
 
@@ -509,12 +510,14 @@ def plus_fn(srs):
         srs.push(a+b)
 
 @memoize
-def digit_to_char(digit):
-    return ("0123456789"+string.ascii_uppercase+string.ascii_lowercase+"+/")[digit]
+def digit_to_char(digit, base):
+    alphabet = ("0123456789"+string.ascii_uppercase+string.ascii_lowercase+"+/") if base <= 64 else CP437.table
+    return alphabet[digit]
 
 @memoize
-def char_to_digit(char):
-    return ("0123456789"+string.ascii_uppercase+string.ascii_lowercase+"+/").index(char)
+def char_to_digit(char, base):
+    alphabet = ("0123456789"+string.ascii_uppercase+string.ascii_lowercase+"+/") if base <= 64 else CP437.table
+    return alphabet.index(char)
 
 @memoize
 def str_base(number,base):
@@ -523,8 +526,8 @@ def str_base(number,base):
     if isinstance(number, float): return str_base_float(number,base,0)
     (d, m) = divmod(number, base)
     if d > 0:
-        return str_base(d, base) + digit_to_char(m)
-    return digit_to_char(m)
+        return str_base(d, base) + digit_to_char(m, base)
+    return digit_to_char(m, base)
 
 @memoize
 def str_base_float(number,base,exp):
@@ -532,11 +535,11 @@ def str_base_float(number,base,exp):
         return str_base_float(number/base,base,exp+1)
     if exp<-15 or (number == 0 and exp < 0):            #15 places after the dot should be good, right?
         return ""
-    return digit_to_char(int(number)) + ("." if exp==0 and number%1 else "") + str_base_float((number%1)*base,base,exp-1)
+    return digit_to_char(int(number), base) + ("." if exp==0 and number%1 else "") + str_base_float((number%1)*base,base,exp-1)
 
 @memoize
 def int_base(number,base):
-    return reduce(lambda x,y:x*base+y, [char_to_digit(char) for char in number], 0)
+    return reduce(lambda x,y:x*base+y, [char_to_digit(char, base) for char in number], 0)
 
 def i_mul_fn(srs):
     a=srs.pop()

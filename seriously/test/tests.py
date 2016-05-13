@@ -352,6 +352,8 @@ class BaseConversionTests(SeriousTest):
         self.assert_serious(':11'+chr_cp437(0xC3), ["1011"])
         self.assert_serious('"Foo"'+chr_cp437(0xC3), ["010001100110111101101111"])
         self.assert_serious(':3.07'+chr_cp437(0xC3), ['0100000000001000100011110101110000101000111101011100001010001111'])
+        self.assert_serious(':256"{}"'.format(chr_cp437(0xA8)+chr_cp437(0xAD))+chr_cp437(0xA8), [0xA8*256+0xAD])
+        self.assert_serious(':256:{}'.format(0xA8*256+0xAD)+chr_cp437(0xAD), [chr_cp437(0xA8)+chr_cp437(0xAD)])
         
 class FunctionTests(SeriousTest):
     def test_function_methods(self):
