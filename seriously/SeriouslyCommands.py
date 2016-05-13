@@ -911,6 +911,13 @@ def comp_parts_fn(srs):
     c = complex(a)
     srs.push(c.real)
     srs.push(c.imag)
+    
+def pow_fn(srs):
+    a,b = srs.pop(), srs.pop()
+    if isinstance(a, collections.Iterable):
+        srs.push(map(lambda x:x**b, a))
+    else:
+        srs.push(pow(a,b))
 
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -1101,7 +1108,7 @@ fn_table={
         0xF8:lambda x:x.push(math.radians(x.pop())),
         0xF9:cart_prod_fn,
         0xFB:lambda x:x.push(x.pop()**.5),
-        0xFC:lambda x:x.push(pow(x.pop(),x.pop())),
+        0xFC:pow_fn,
         0xFD:lambda x:x.push(x.pop()**2),
         0xFE:peek_print_fn,
 }
