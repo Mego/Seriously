@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 setup(
     name='seriously',
 
-    version='2.0.8',
+    version='2.0.9',
 
     description='A Python-based golfing language',
     long_description='Seriously is a Python-based golfing language. See the GitHub page for more details.',

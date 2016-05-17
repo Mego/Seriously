@@ -1038,7 +1038,7 @@ fn_table={
         0x9C:fn_fil_fn,
         0x9D:lambda x:x.push([a+b for a,b in itertools.zip_longest(x.pop(),x.pop(),fillvalue=0)]),
         0x9E:lambda x:x.push(cmath.phase(x.pop())),
-        0x9F:lambda x:SeriouslyFunction(x.pop())(x),
+        0x9F:lambda x:SeriousFunction(x.pop())(x),
         0xA0:lambda x:x.push(x.pop().conjugate()),
         0xA1:index_fn,
         0xA2:cond_quit_fn,
