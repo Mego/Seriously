@@ -245,6 +245,9 @@ class MathTests(SeriousTest):
         self.assert_serious('8f', [6])
         self.assert_serious(':16'+chr_cp437(0xDF), ['0123456789ABCDEF'])
         self.assert_serious('2'+chr_cp437(0xB9), [[1, 2, 1]])
+        self.assert_serious(':12F', [144])
+        self.assert_serious(':20F', [6765])
+        self.assert_serious(':38F', [39088169])
 
     def test_trig(self):
         trig_fns = {

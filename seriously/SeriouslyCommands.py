@@ -32,11 +32,18 @@ memoize = lru_cache(maxsize=None)
 
 phi = (1+5**.5)/2
 
-@memoize
+fib_cache = {0:0, 1:1, 2:1}
+
 def Fib(n):
-    if n<2:
-        return n
-    return Fib(n-1) + Fib(n-2)
+    global fib_cache
+    if n in fib_cache:
+        return fib_cache[n]
+    else:
+        largest = max(fib_cache)
+        while largest < n:
+            fib_cache[largest+1] = Fib(largest) + Fib(largest-1)
+            largest += 1
+        return fib_cache[n]
 
 def prod(iter):
     return reduce(operator.mul, iter, 1)
