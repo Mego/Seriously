@@ -162,22 +162,17 @@ def naive_factorial(x):
 def nCr(n, k):
     if k > n:
         return 0
-    elif k==n:
+    elif k == n:
         return 1
-    k = min(k,n-k)
-    res = 1
-    for i in range(1,k+1):
-        res *= n+1-i
-        res //= i
-    return res
+    return math.factorial(n)/(math.factorial(k)*math.factorial(n-k))
 
 @memoize
 def nPr(n, k):
-    res = 1
-    for i in range(k):
-        res *= n
-        n -= 1
-    return res
+    if k > n:
+        return 0
+    elif k == n:
+        return 1
+    return math.factorial(n)/math.factorial(n-k)
 
 def is_prime(x):
     global primes
