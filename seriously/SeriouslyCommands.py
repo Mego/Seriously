@@ -925,6 +925,16 @@ def pow_fn(srs):
         srs.push(map(lambda x:x**b, a))
     else:
         srs.push(pow(a,b))
+        
+def Y_fn(srs):
+    a = srs.pop()
+    if isinstance(a, SeriousFunction):
+        last_stack = None
+        while last_stack != srs.stack:
+            last_stack = srs.stack.copy()
+            a(srs)
+    else:
+        srs.push(0 if a else 1)
 
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -973,7 +983,7 @@ fn_table={
         0x55:lambda x:x.push(list(set(x.pop()).union(x.pop()))),
         0x56:V_fn,
         0x58:lambda x:x.pop(),
-        0x59:lambda x:x.push(0 if x.pop() else 1),
+        0x59:Y_fn,
         0x5A:zip_fn,
         0x5C:idiv_fn,
         0x5E:lambda x:x.push(xor(x.pop(), x.pop())),

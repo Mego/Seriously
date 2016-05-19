@@ -376,6 +376,9 @@ class FunctionTests(SeriousTest):
         self.assert_serious('3`1`n', [1,1,1])
         self.assert_serious('5`2@%Y`'+chr_cp437(0xD6), [[0,2,4,6,8]])
         
+    def test_combinators(self):
+        self.assert_serious('3`1kMD`Y', [0])
+        
 class RandomTests(SeriousTest):
     def test_random(self):
         self.assert_serious('2v52BG52V6J"abcd"J"abcd"'+chr_cp437(0xC8), ['abcd', 'c', 1, 3.0831724219508216, 0.09158478740507359, 2])

@@ -87,7 +87,7 @@
 56 (V): pop a,b: push uniform(a,b) (random float between a and b); pop "a" or [a],b: push all slices of a of length 1 <= n <= b
 57 (W): loop delimiter: peek top of stack, repeat code in loop while a evaluates to true
 58 (X): pop a: discard
-59 (Y): pop a: push !bool(a) (logical negate, opposite of b)
+59 (Y): pop a: push !bool(a) (logical negate, opposite of b); pop f: call f until there is no change from the last call (fixed-point combinator)
 5A (Z): pop [a],[b]: push zip([a],[b]); pop a, zip the next a lists
 5B ([): begin list literal, values are delimited by commas (,)
 5C (\): pop a,b: push a/b (integer division); pop [a]: rotate [a] left by 1, push [a]

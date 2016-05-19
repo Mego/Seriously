@@ -10,7 +10,6 @@ import binascii
 import hashlib
 import random
 import re
-import readline
 import traceback
 from . import SeriouslyCommands
 from lib.cp437 import CP437
