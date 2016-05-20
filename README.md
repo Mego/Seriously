@@ -9,7 +9,7 @@ Try the [online interpreter](http://actually.tryitonline.net). This is part of [
 
 # Commands
 
-See [commands.txt](commands.txt)
+See [commands.txt](docs/commands.txt)
 
 # Examples
 
