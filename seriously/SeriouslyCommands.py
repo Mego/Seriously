@@ -721,9 +721,7 @@ def dig_fn(srs):
 def D_fn(srs):
     a = srs.pop()
     if isinstance(a, collections.Iterable):
-        a = [x for x in a]
-        E = sum(a)/len(a)
-        srs.push((sum([(E-X)**2 for X in a])/len(a))**.5)
+        srs.push(pstdev(a))
     else:
         srs.push(a-1)
 
