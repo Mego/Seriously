@@ -12,6 +12,7 @@ from itertools import zip_longest as izip
 from lib.cp437 import CP437
 from lib.iterable import deque, as_list, zip_longest
 import lzma
+from statistics import mean, median, mode, pstdev
 
 memoize = lru_cache(maxsize=None)
 
@@ -152,14 +153,6 @@ def _sum(data, start=None):
         return sum(data)
     else:
         return sum(data, start)
-
-def median(data):
-    n = len(data)
-    if n%2 == 1:
-        return data[n//2]
-    else:
-        i = n//2-1
-        return _sum(data[i:i+2])/2
 
 @memoize
 def naive_factorial(x):
@@ -633,7 +626,7 @@ def median_fn(srs):
     else:
         if all([isinstance(x, str) for x in a[len(a)//2-1:][:2]]):
             med = median(map(ord,a))
-            srs.push(chr(med))
+            srs.push(chr(int(med)))
         else:
             srs.push(median(a))
 
@@ -935,7 +928,15 @@ def Y_fn(srs):
             a(srs)
     else:
         srs.push(0 if a else 1)
+        
+def mean_fn(srs):
+    a = srs.pop()
+    srs.push(mean(a))
 
+def mode_fn(srs):
+    a = srs.pop()
+    srs.push(mode(a))
+    
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x0C:lambda x:x.push(sys.stdin.read()),
@@ -1036,7 +1037,7 @@ fn_table={
         0x8E:lambda x:x.push(math.sinh(x.pop())),
         0x8F:lambda x:x.push(math.cosh(x.pop())),
         0x90:lambda x:x.push(math.tanh(x.pop())),
-        0x91:lambda x:x.push((lambda y:mean(y) if y else 0)(x.pop())),
+        0x91:mean_fn,
         0x92:AE_fn,
         0x93:lambda x:x.push(x.pop().strip()),
         0x94:lambda x:x.push(x.pop().lstrip()),
@@ -1045,7 +1046,7 @@ fn_table={
         0x97:lambda x:x.push(x.pop().lower()),
         0x98:lambda x:x.push(x.pop().title()),
         0x99:lambda x:x.push(x.pop().swapcase()),
-        0x9A:lambda x:x.push((lambda y:max(y,key=y.count))(x.pop())),
+        0x9A:mode_fn,
         0x9B:lambda x:x.push(math.copysign(x.pop(),x.pop())),
         0x9C:fn_fil_fn,
         0x9D:lambda x:x.push([a+b for a,b in itertools.zip_longest(x.pop(),x.pop(),fillvalue=0)]),
