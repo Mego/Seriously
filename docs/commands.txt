@@ -215,8 +215,8 @@ D5 (╒): push ln(2)
 D6 (╓): pop f,n: push first n values where f(x) is truthy, starting with f(0)
 D7 (╫): pop a: push Re(a), Im(a) (real and imaginary parts of a)
 D8 (╪):
-D9 (┘):
-DA (┌):
+D9 (┘): pop a: push ord_cp437(a)
+DA (┌): pop a: push chr_cp437(a)
 DB (█): pop a,b: push C(a,b) (aCb)
 DC (▄): pop a,b: push P(a,b) (aPb)
 DD (▌): pop "a": push b64decode("a")

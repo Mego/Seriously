@@ -280,6 +280,8 @@ class StringAndListTests(SeriousTest):
 
     def test_ords(self):
         self.assert_serious('"abc"O', [[0x61, 0x62, 0x63]])
+        self.assert_serious('9'+chr_cp437(0xDA), [chr_cp437(0x09)])
+        self.assert_serious("'"+chr_cp437(0x09)+chr_cp437(0xD9), [9])
 
     def test_string_methods(self):
         self.assert_serious('" ab c "'+chr_cp437(0x93), ["ab c"])

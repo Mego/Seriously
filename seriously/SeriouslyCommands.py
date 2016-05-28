@@ -13,6 +13,10 @@ from lib.cp437 import CP437
 from lib.iterable import deque, as_list, zip_longest
 import lzma
 from statistics import mean, median, mode, pstdev
+from lib.cp437 import CP437
+
+chr_cp437 = CP437.chr
+ord_cp437 = CP437.ord
 
 memoize = lru_cache(maxsize=None)
 
@@ -1100,6 +1104,8 @@ fn_table={
         0xD5:lambda x:x.push(math.log(2)),
         0xD6:first_n_fn,
         0xD7:comp_parts_fn,
+        0xD9:lambda x:x.push(ord_cp437(x.pop())),
+        0xDA:lambda x:x.push(chr_cp437(x.pop())),
         0xDB:lambda x:x.push(nCr(x.pop(),x.pop())),
         0xDC:lambda x:x.push(nPr(x.pop(),x.pop())),
         0xDD:lambda x:x.push(b64decode(x.pop().encode('cp437')).decode('cp437')),
