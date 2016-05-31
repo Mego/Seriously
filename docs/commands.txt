@@ -181,14 +181,14 @@ B3 (│): duplicate stack ([a,b,c] => [a,b,c,a,b,c])
 B4 (┤): pop a,b: push 1 if a and b are coprime else 0
 B5 (╡):
 B6 (╢):
-B7 (╖):
-B8 (╕):
+B7 (╖): pop a: add a to the value in register 0 (equivalent to ╜+╗)
+B8 (╕): pop a: add a to the value in register 1 (equivalent to ╛+╝)
 B9 (╣): pop a: push the ath row in Pascal's triangle
 BA (║): pop [a] or "a": push median([a]/"a") (using ordinals if string)
 BB (╗): pop a: save a in register 0
 BC (╝): pop a: save a in register 1
-BD (╜): push the value in register 0
-BE (╛): push the value in register 1
+BD (╜): push the value in register 0 (initially a 0)
+BE (╛): push the value in register 1 (initially the empty string)
 BF (┐): pop a,b: push b to register a
 C0 (└): pop a: push the value in register a
 C1 (┴):
@@ -248,12 +248,12 @@ F6 (÷):
 F7 (≈): pop a: push int(a)
 F8 (°): pop a: push radians(a)
 F9 (∙): pop [a],[b]: push Cartesian product of [a] and [b]; pop [a],b: push [a]^b (Cartesian product of b copies of [a])
-FA (·):
+FA (·): 
 FB (√): pop a: push sqrt(a)
 FC (ⁿ): pop a,b: push pow(a,b)
 FD (²): pop a: push a*a
 FE (■): print the entire stack without popping, separated by spaces
-FF ( ):
+FF ( ): 
 
 Notes:
 This file should be viewed with code page 437 encoding (CP437, OEM-437, and OEM-US are common names for it)

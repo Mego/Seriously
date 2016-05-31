@@ -648,6 +648,8 @@ def exit_fn(srs):
     exit()
 
 registers = dict()
+registers[0] = 0
+registers[1] = ""
 
 def get_reg(i):
     global registers
@@ -941,6 +943,16 @@ def mode_fn(srs):
     a = srs.pop()
     srs.push(mode(a))
     
+def add_reg0_fn(srs):
+    global registers
+    a = srs.pop()
+    registers[0] += a
+    
+def add_reg1_fn(srs):
+    global registers
+    a = srs.pop()
+    registers[1] += a
+    
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x0C:lambda x:x.push(sys.stdin.read()),
@@ -1076,6 +1088,8 @@ fn_table={
         0xB2:lambda x:x.push(sum([is_prime(i) for i in range(1,x.pop()+1)])),
         0xB3:dupe_all_fn,
         0xB4:lambda x:x.push(1 if gcd(x.pop(),x.pop())==1 else 0),
+        0xB7:add_reg0_fn,
+        0xB8:add_reg1_fn,
         0xB9:lambda x:x.push((lambda y:[nCr(y,k) for k in range(y+1)])(x.pop())),
         0xBA:median_fn,
         0xBB:lambda x:set_reg(0,x.pop()),
