@@ -14,6 +14,8 @@ import traceback
 from . import SeriouslyCommands
 from lib.cp437 import CP437
 from lib.iterable import deque, as_list
+import os
+import os.path
 
 anytype = SeriouslyCommands.anytype
 
@@ -21,8 +23,23 @@ ord_cp437 = CP437.ord
 
 chr_cp437 = CP437.chr
 
+class SeriousLibrary:
+    def __init__(self, fname):
+        self.fn_table = dict()
+        with open(os.path.join(os.path.expanduser('~'), '.srslib', fname), 'r') as f:
+            for line in f:
+                index, fn = line.split(':', 1)
+                if int(index,16) == 0xFF: # FF may not be overridden
+                    continue
+                self.fn_table[int(index,16)] = eval(fn) # todo: this should probably use the ast module
+                
+    def get_fn(self, index):
+        if index in self.fn_table:
+            return self.fn_table[index]
+        else:
+            return SeriouslyCommands.fn_table.get(index, lambda x: x)
 
-class Seriously(object):
+class Seriously:
     @classmethod
     def _make_new(cls, init=None, debug_mode=False):
         return cls([] if init is None else init, debug_mode)
@@ -37,6 +54,12 @@ class Seriously(object):
         self.fn_table = SeriouslyCommands.fn_table
         self.preserve = False
         self.pop_counter = 0
+        self.libraries = dict()
+        for lib in os.listdir(os.path.join(os.path.expanduser('~'),'.srslib')):
+            fname, ext = os.path.splitext(lib)
+            if ext != '.srslib':
+                continue
+            self.libraries[fname] = SeriousLibrary(lib)
 
     def push(self, val):
         self.stack.append(val)
