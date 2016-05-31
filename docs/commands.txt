@@ -98,7 +98,7 @@
 61 (a): invert the stack ([a,b,c,d] -> [d,c,b,a])
 62 (b): pop a: push 0 if a==0 else 1; pop "a" or [a]: push 0 if len(a)==0 else 1; pop f: push 0 if len(f)==0 else 1
 63 (c): pop a: push character at ordinal a%256; pop [a],b: push [a].count(b); pop "a","b": push "a".count("b")
-64 (d): pop [a]: dequeue b from [a], push [a],b
+64 (d): pop [a]: dequeue b from [a], push [a],b; pop a,b: push divmod(a,b) (a//b, a%b)
 65 (e): pop a: push exp(a)
 66 (f): pop a: push the Fibonacci index of a if a is a Fibonacci number, else -1; pop "a",[b]: push "a".format(*[b])
 67 (g): pop a,b: push gcd(a,b); pop [a]: push gcd([a])

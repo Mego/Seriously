@@ -249,7 +249,7 @@ def rot2_fn(srs):
     srs.push(a)
     srs.push(b)
 
-def deq_fn(srs):
+def d_fn(srs):
     a=srs.pop()
     if isinstance(a, collections.Iterable) and not isinstance(a, str):
         b=a.pop(-1)
@@ -260,7 +260,9 @@ def deq_fn(srs):
         srs.push(''.join(a[:-1]))
         srs.push(b)
     else:
-        srs.push(a)
+        b = srs.pop()
+        srs.push(a%b)
+        srs.push(a//b)
 
 def i_fn(srs):
     a=srs.pop()
@@ -994,7 +996,7 @@ fn_table={
         0x61:invert_fn,
         0x62:lambda x:x.push(int(bool(x.pop()))),
         0x63:c_fn,
-        0x64:deq_fn,
+        0x64:d_fn,
         0x65:lambda x:x.push(math.exp(x.pop())),
         0x66:f_fn,
         0x67:g_fn,
