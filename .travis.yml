@@ -22,3 +22,4 @@ deploy:
   distributions: "sdist bdist_wheel"
   on:
     python: 3.5
+    branch: master
