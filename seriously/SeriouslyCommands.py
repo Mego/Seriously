@@ -35,6 +35,8 @@ memoize = lru_cache(maxsize=None)
 
     # return template_specializer
 
+phi = (1+5**.5)/2
+
 @memoize
 def Lucas(n):
     [a,b] = fast_fib(n)
@@ -1173,7 +1175,7 @@ fn_table={
         0xE7:lambda x:x.push(x.pop()*2),
         0xEB:dig_fn,
         0xEC:lambda x:x.toggle_preserve(),
-        0xED:lambda x:x.push(1.618033988749895),
+        0xED:lambda x:x.push(phi),
         0xEE:lambda x:x.push(""),
         0xEF:lambda x:x.push(list(set(x.pop()).intersection(x.pop()))),
         0xF0:lambda x:x.push(eval(x.pop())),
