@@ -68,7 +68,9 @@ def fast_fib(n):
     b2 = b*b
     a,b = a*a+b2, (a<<1)*b+b2
     if n%2 == 1:
+        fib_cache[n-1] = b
         return [b,a+b]
+    fib_cache[n-1] = a
     return [a,b]
 
 def prod(iter):
