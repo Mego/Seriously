@@ -953,6 +953,13 @@ def add_reg1_fn(srs):
     a = srs.pop()
     registers[1] += a
     
+def cumsum_fn(srs):
+    a = srs.pop()
+    sums = []
+    for i in range(len(a)):
+        sums.append(sum(a[:i+1]))
+    srs.push(sums)
+    
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x0C:lambda x:x.push(sys.stdin.read()),
@@ -1130,6 +1137,7 @@ fn_table={
         0xE2:lambda x:x.push(math.gamma(x.pop())),
         0xE3:lambda x:x.push(reduce(operator.mul,x.pop(),1)),
         0xE4:sum_fn,
+        0xE5:cumsum_fn,
         0xE7:lambda x:x.push(x.pop()*2),
         0xEB:dig_fn,
         0xEC:lambda x:x.toggle_preserve(),

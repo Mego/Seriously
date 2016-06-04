@@ -227,7 +227,7 @@ E1 (ß):
 E2 (Γ): pop a: push Gamma(a)
 E3 (π): pop [a]: push product([a])
 E4 (Σ): pop [a]: push sum([a])
-E5 (σ):
+E5 (σ): pop [a]: push cumulative sums of [a]
 E6 (µ):
 E7 (τ): pop a: push 2*a
 E8 (Φ):
