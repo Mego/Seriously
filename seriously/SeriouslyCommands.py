@@ -35,6 +35,11 @@ memoize = lru_cache(maxsize=None)
 
     # return template_specializer
 
+@memoize
+def Lucas(n):
+    [a,b] = fast_fib(n)
+    return (a<<1)+b
+
 fib_cache = {0:0, 1:1, 2:1}
 
 def Fib(n):
