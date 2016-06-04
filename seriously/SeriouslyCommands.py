@@ -663,6 +663,10 @@ def diff_fn(srs):
     a,b=srs.pop(),srs.pop()
     if all([isinstance(x, collections.Iterable) for x in (a,b)]):
         srs.push([x for x in a if x not in b])
+    elif isinstance(a, collections.Iterable):
+        srs.push(map(lambda x:x-b, a))
+    elif isinstance(b, collections.Iterable):
+        srs.push(map(lambda x:a-x, b))
     else:
         srs.push(a-b)
 
