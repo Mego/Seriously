@@ -37,6 +37,11 @@ memoize = lru_cache(maxsize=None)
 
 phi = (1+5**.5)/2
 
+@memoize
+def Lucas(n):
+    [a,b] = fast_fib(n)
+    return (a<<1)+b
+
 fib_cache = {0:0, 1:1, 2:1}
 
 def Fib(n):
@@ -44,11 +49,36 @@ def Fib(n):
     if n in fib_cache:
         return fib_cache[n]
     else:
-        largest = max(fib_cache)
-        while largest < n:
-            fib_cache[largest+1] = Fib(largest) + Fib(largest-1)
-            largest += 1
-        return fib_cache[n]
+        result = fast_fib(n)[1]
+        fib_cache[n] = result
+        return result
+
+# F(2n) = (F(n-1) + F(n+1)) * F(n)
+#       = (F(n-1) + F(n-1) + F(n)) * F(n)
+#       = (2F(n-1) + F(n)) * F(n)
+
+# F(2n-1) = F(n-1)*F(n-1) + F(n)*F(n)
+
+# this returns [F(n-1), F(n)], so
+# the implementation should be
+# fast_fib(1000)[1]
+def fast_fib(n):
+    global fib_cache
+    if n==0: return [1,0]
+    shift = n>>1
+    if shift in fib_cache and shift-1 in fib_cache:
+        [a,b] = [fib_cache[shift-1],fib_cache[shift]]
+    else:
+        [a,b] = fast_fib(shift)
+        fib_cache[shift-1] = a
+        fib_cache[shift] = b
+    b2 = b*b
+    a,b = a*a+b2, (a<<1)*b+b2
+    if n%2 == 1:
+        fib_cache[n-1] = b
+        return [b,a+b]
+    fib_cache[n-1] = a
+    return [a,b]
 
 def prod(iter):
     return reduce(operator.mul, iter, 1)
@@ -663,6 +693,10 @@ def diff_fn(srs):
     a,b=srs.pop(),srs.pop()
     if all([isinstance(x, collections.Iterable) for x in (a,b)]):
         srs.push([x for x in a if x not in b])
+    elif isinstance(a, collections.Iterable):
+        srs.push(map(lambda x:x-b, a))
+    elif isinstance(b, collections.Iterable):
+        srs.push(map(lambda x:a-x, b))
     else:
         srs.push(a-b)
 
@@ -953,6 +987,13 @@ def add_reg1_fn(srs):
     a = srs.pop()
     registers[1] += a
     
+def cumsum_fn(srs):
+    a = srs.pop()
+    sums = []
+    for i in range(len(a)):
+        sums.append(sum(a[:i+1]))
+    srs.push(sums)
+    
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x0C:lambda x:x.push(sys.stdin.read()),
@@ -1130,6 +1171,7 @@ fn_table={
         0xE2:lambda x:x.push(math.gamma(x.pop())),
         0xE3:lambda x:x.push(reduce(operator.mul,x.pop(),1)),
         0xE4:sum_fn,
+        0xE5:cumsum_fn,
         0xE7:lambda x:x.push(x.pop()*2),
         0xEB:dig_fn,
         0xEC:lambda x:x.toggle_preserve(),
