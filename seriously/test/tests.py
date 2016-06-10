@@ -240,7 +240,7 @@ class MathTests(SeriousTest):
         self.assert_serious('[1,2,6,3,4]'+chr_cp437(0xBA), [6])
         self.assert_serious('5R'+chr_cp437(0xBA), [3])
         self.assert_serious('[1,2,3,3]'+chr_cp437(0x9A), [3])
-        self.assert_serious('33Ro'+chr_cp437(0x9A), [3])
+        self.assert_serious('33Rik'+chr_cp437(0x9A), [3])
         self.assert_serious('[3,6,9,12]'+chr_cp437(0x1F), [[1, 2, 3, 4]])
         self.assert_serious('4R3*'+chr_cp437(0x1F), [[1, 2, 3, 4]])
         self.assert_serious('4r', [[0,1,2,3]])

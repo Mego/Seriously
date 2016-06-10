@@ -252,6 +252,7 @@ def Fib_index(n):
 def div_fn(srs):
     a=srs.pop()
     if isinstance(a, collections.Iterable):
+        a = [x for x in a]
         srs.push(a[-1:]+a[:-1])
     elif anytype(a, int, float, complex):
         b=srs.pop()
@@ -262,6 +263,7 @@ def div_fn(srs):
 def idiv_fn(srs):
     a=srs.pop()
     if isinstance(a, collections.Iterable):
+        a = [x for x in a]
         srs.push(a[1:]+a[:1])
     elif anytype(a, int, float, complex):
         b=srs.pop()
@@ -418,6 +420,7 @@ def invert_fn(srs):
 def comp_fn(srs):
     a=srs.pop()
     if isinstance(a, collections.Iterable):
+        a = [x for x in a]
         a = a+[0] if len(a)%2 else a
         while len(a) > 0:
             r,i = a.pop(0),a.pop(0)
@@ -745,6 +748,7 @@ def T_fn(srs):
         if isinstance(a, str):
             a = a[:b] + str(c) + a[b+1:]
         else:
+            a = [x for x in a]
             a[b] = c
         srs.push(a)
 
@@ -975,7 +979,7 @@ def mean_fn(srs):
 
 def mode_fn(srs):
     a = srs.pop()
-    srs.push(mode(a))
+    srs.push(mode([x for x in a]))
     
 def add_reg0_fn(srs):
     global registers
@@ -993,6 +997,26 @@ def cumsum_fn(srs):
     for i in range(len(a)):
         sums.append(sum(a[:i+1]))
     srs.push(sums)
+    
+def u_fn(srs):
+    a = srs.pop()
+    if isinstance(a, collections.Iterable):
+        srs.push(map(lambda x:x+1,a))
+    else:
+        srs.push(a+1)
+        
+def caret_fn(srs):
+    a,b = srs.pop(),srs.pop()
+    isstr = isinstance(a, str)
+    if isinstance(a, collections.Iterable):
+        a = [x for x in a]
+        b = [x for x in b]
+        xor = [x for x in a+b if (x in a) ^ (x in b)]
+        if isstr:
+            xor = ''.join(xor)
+        srs.push(xor)
+    else:
+        srs.push(a^b)
     
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -1044,7 +1068,7 @@ fn_table={
         0x59:Y_fn,
         0x5A:zip_fn,
         0x5C:idiv_fn,
-        0x5E:lambda x:x.push(xor(x.pop(), x.pop())),
+        0x5E:caret_fn,
         0x5F:lambda x:x.push(math.log(x.pop())),
         0x61:invert_fn,
         0x62:lambda x:x.push(int(bool(x.pop()))),
@@ -1066,7 +1090,7 @@ fn_table={
         0x72:lr_fn,
         0x73:s_fn,
         0x74:t_fn,
-        0x75:lambda x:x.push(x.pop()+1),
+        0x75:u_fn,
         0x76:lambda x:random.seed(x.pop()),
         0x77:lambda x:x.push(full_factor(x.pop())),
         0x78:range_ab_fn,
