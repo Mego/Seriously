@@ -1020,7 +1020,7 @@ def caret_fn(srs):
     
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
-        0x0C:lambda x:x.push(sys.stdin.read()),
+        0x15:lambda x:x.push(sys.stdin.read()),
         0x1F:reduce_fn,
         0x20:lambda x:x.push(len(x.stack)),
         0x21:lambda x:x.push(math.factorial(x.pop())),

@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Seriously - a Python-based golfing language"""
 
 from setuptools import setup, find_packages

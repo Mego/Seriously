@@ -65,7 +65,7 @@ class Seriously(object):
         if self.debug_mode:
             print(code)
         i = 0
-        if all(x not in code for x in (',',chr_cp437(0xCA),chr_cp437(0x09),chr_cp437(0x0C))):
+        if all(x not in code for x in (',',chr_cp437(0xCA),chr_cp437(0x09),chr_cp437(0x15))):
             for line in sys.stdin.read().splitlines():
                 self.push(literal_eval(line))
         self.code = code
@@ -144,6 +144,11 @@ class Seriously(object):
                 elif ord_cp437(c) == 0x0B:
                     i += 1
                     self.push(SeriouslyCommands.SeriousFunction(code[i]))
+                    self.fn_table.get(ord_cp437('M'))(self)
+                elif ord_cp437(c) == 0x0C:
+                    i += 1
+                    self.fn_table.get(ord_cp437('Z'))(self)
+                    self.push(SeriouslyCommands.SeriousFunction('i'+code[i]))
                     self.fn_table.get(ord_cp437('M'))(self)
                 else:
                     if self.debug_mode:

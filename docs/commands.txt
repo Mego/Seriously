@@ -10,7 +10,7 @@
 09 (○): push a single byte of unformatted input from STDIN (push sys.stdin.read(1))
 0A (◙):
 0B (♂): take the next command and map it over the top of the stack (for example, ♂A is equivalent to `A`M)
-0C (♀): push all data from stdin as a string
+0C (♀): take the next command and map it over the top 2 stack elements (like ♂ but for binary commands - ♀* is equivalent to Z`i*`M)
 0D (♪):
 0E (♫):
 0F (☼):
@@ -19,7 +19,7 @@
 12 (↕):
 13 (‼):
 14 (¶):
-15 (§):
+15 (§): push all data from stdin as a string
 16 (▬):
 17 (↨):
 18 (↑):

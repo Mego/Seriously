@@ -81,7 +81,7 @@ class SeriousTest(unittest.TestCase):
 class IOTests(SeriousTest):
     def test_raw_input(self):
         self.assert_serious(chr_cp437(0x09), ['a'], "a\n")
-        self.assert_serious(chr_cp437(0x0C), ['abc\n'], "abc\n")
+        self.assert_serious(chr_cp437(0x15), ['abc\n'], "abc\n")
 
     def test_formatted_input(self):
         self.assert_serious(',', ['a'], '"a"\n')
@@ -379,6 +379,8 @@ class StringAndListTests(SeriousTest):
                              [3, 1], [3, 2], [3, 3]]])
         self.assert_serious('[1,2,3]♂D', [[0, 1, 2]])
         self.assert_serious('3R♂D', [[0, 1, 2]])
+        self.assert_serious('[1,2,3];♀ⁿ', [[1, 4, 27]])
+        self.assert_serious('3R;♀ⁿ', [[1, 4, 27]])
         self.assert_serious('[1,2,3]/', [[3,1,2]])
         self.assert_serious('3R/', [[3,1,2]])
         self.assert_serious('[1,2,3]\\', [[2,3,1]])
