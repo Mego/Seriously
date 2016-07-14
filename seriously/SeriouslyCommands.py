@@ -1030,6 +1030,13 @@ def divisors_fn(srs):
     a = srs.pop()
     srs.push((x for x in range(1, a) if a%x==0))
     
+def chunk_len_fn(srs):
+    a = srs.pop()
+    a = [x for x in a] if not isinstance(a, str) else a
+    b = srs.pop()
+    for i in range(0,len(a),b):
+        srs.push(a[i:i+b])
+    
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x15:lambda x:x.push(sys.stdin.read()),
@@ -1197,6 +1204,7 @@ fn_table={
         0xD5:lambda x:x.push(math.log(2)),
         0xD6:first_n_fn,
         0xD7:comp_parts_fn,
+        0xD8:chunk_len_fn,
         0xD9:lambda x:x.push(ord_cp437(x.pop())),
         0xDA:lambda x:x.push(chr_cp437(x.pop())),
         0xDB:lambda x:x.push(nCr(x.pop(),x.pop())),
