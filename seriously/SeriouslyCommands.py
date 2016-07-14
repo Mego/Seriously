@@ -1034,8 +1034,19 @@ def chunk_len_fn(srs):
     a = srs.pop()
     a = [x for x in a] if not isinstance(a, str) else a
     b = srs.pop()
-    for i in range(0,len(a),b):
+    for i in range(0, len(a), b):
         srs.push(a[i:i+b])
+        
+def chunk_num_fn(srs):
+    a = srs.pop()
+    a = [x for x in a] if not isinstance(a, str) else a
+    b = srs.pop()
+    diff = len(a)%b
+    chunksize = [len(a)//b+(i<diff) for i in range(b)][::-1]
+    i = 0
+    while i < len(a):
+        srs.push(a[i:i+chunksize[i]])
+        i += chunksize[i]
     
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -1172,6 +1183,7 @@ fn_table={
         0xB2:lambda x:x.push(sum([is_prime(i) for i in range(1,x.pop()+1)])),
         0xB3:dupe_all_fn,
         0xB4:lambda x:x.push(1 if gcd(x.pop(),x.pop())==1 else 0),
+        0xB5:chunk_num_fn,
         0xB7:add_reg0_fn,
         0xB8:add_reg1_fn,
         0xB9:lambda x:x.push((lambda y:[nCr(y,k) for k in range(y+1)])(x.pop())),

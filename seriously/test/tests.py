@@ -344,6 +344,7 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('"abc"3*', ['abcabcabc'])
         self.assert_serious('3"abc"*', ['abcabcabc'])
         self.assert_serious('3"1234"'+chr_cp437(0xD8), ['4','123'])
+        self.assert_serious('3"1234"'+chr_cp437(0xB5), ['34','2','1'])
         
     def test_list_methods(self):
         self.assert_serious('[1,2,3][4,5,6]'+chr_cp437(0x9D), [[5, 7, 9]])
@@ -409,6 +410,7 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('[1,2,3]F', [1])
         self.assert_serious('3RF', [1])
         self.assert_serious('3[1,2,3,4]'+chr_cp437(0xD8), [[4],[1,2,3]])
+        self.assert_serious('34R'+chr_cp437(0xB5), [[3, 4],[2],[1]])
 
 
 class BaseConversionTests(SeriousTest):
