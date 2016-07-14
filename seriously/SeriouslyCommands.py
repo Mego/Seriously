@@ -12,7 +12,12 @@ from itertools import zip_longest as izip
 from lib.cp437 import CP437
 from lib.iterable import deque, as_list, zip_longest
 import lzma
-from statistics import mean, median, mode, pstdev
+
+try:
+    from statistics import mean, median, mode, pstdev
+except ImportError:
+    from stats import mean, median, mode, pstdev
+
 from lib.cp437 import CP437
 
 chr_cp437 = CP437.chr
