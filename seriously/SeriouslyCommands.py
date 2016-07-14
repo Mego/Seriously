@@ -641,8 +641,11 @@ def zip_fn(srs):
 
 def sum_fn(srs):
     a=srs.pop()
-    res = _sum(a,start=type(a[0])()) if not isinstance(a[0], str) else ''.join(map(str,a))
-    srs.push(res)
+    if a == []:
+        srs.push(0)
+    else:
+        res = _sum(a,start=type(a[0])()) if not isinstance(a[0], str) else ''.join(map(str,a))
+        srs.push(res)
 
 def index_fn(srs):
     b,a=srs.pop(),srs.pop()
