@@ -1,23 +1,25 @@
 language: python
 python:
-- '3.3'
-- '3.4'
-- '3.5'
-- 3.5-dev
-- nightly
-- pypy3
+  - '3.3'
+  - '3.4'
+  - '3.5'
+  - 3.5-dev
+  - nightly
+  - pypy3
 matrix:
   allow_failures:
   - python: pypy3
 before_script:
-- pip install -r requirements.txt
-- pip install coverage
-- pip install codecov
-script: python3 setup.py test
+  - pip install -r requirements.txt
+  - pip install coverage
+  - pip install codecov
+script:
+  - python3 setup.py test
+  - coverage run tests.py
 after_success:
   - codecov
 cache:
-- pip
+  - pip
 deploy:
   provider: pypi
   user: "Mego"
