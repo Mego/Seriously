@@ -244,7 +244,7 @@ F2 (≥): pop a,b: push a>=b
 F3 (≤): pop a,b: push a<=b
 F4 (⌠): pop "a": push lzma.compress("a")
 F5 (⌡): pop "a": push lzma.decompress("a")
-F6 (÷):
+F6 (÷): pop a: push a list of all positive divisors of a that are less than or equal to a
 F7 (≈): pop a: push int(a)
 F8 (°): pop a: push radians(a)
 F9 (∙): pop [a],[b]: push Cartesian product of [a] and [b]; pop [a],b: push [a]^b (Cartesian product of b copies of [a])

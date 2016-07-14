@@ -1017,6 +1017,10 @@ def caret_fn(srs):
         srs.push(xor)
     else:
         srs.push(a^b)
+        
+def divisors_fn(srs):
+    a = srs.pop()
+    srs.push((x for x in range(1, a) if a%x==0))
     
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -1208,6 +1212,7 @@ fn_table={
         0xF3:lambda x:x.push(x.pop()<=x.pop()),
         0xF4:lambda x:x.push(lzma.compress(x.pop().encode('cp437')).decode('cp437')),
         0xF5:lambda x:x.push(lzma.decompress(x.pop().encode('cp437')).decode('cp437')),
+        0xF6:divisors_fn,
         0xF7:lambda x:x.push(int(x.pop())),
         0xF8:lambda x:x.push(math.radians(x.pop())),
         0xF9:cart_prod_fn,

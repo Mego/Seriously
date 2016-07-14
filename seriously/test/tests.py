@@ -271,6 +271,8 @@ class MathTests(SeriousTest):
         self.assert_serious(':12F', [144])
         self.assert_serious(':20F', [6765])
         self.assert_serious(':38F', [39088169])
+        self.assert_serious(':50'+chr_cp437(0xF6), [[1, 2, 5, 10, 25]])
+        self.assert_serious('5'+chr_cp437(0xF6), [[1]])
 
     def test_trig(self):
         trig_fns = {
