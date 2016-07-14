@@ -11,6 +11,7 @@ matrix:
   - python: pypy3
 before_script:
 - pip install -r requirements.txt
+- pip install codecov
 script: python3 setup.py test
 after_success:
   - bash <(curl -s https://codecov.io/bash)
