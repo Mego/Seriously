@@ -442,6 +442,8 @@ class RandomTests(SeriousTest):
     def test_random(self):
         self.assert_serious('2v52BG52V6J"abcd"J"abcd"'+chr_cp437(0xC8), ['abcd', 'c', 1, 3.0831724219508216, 0.09158478740507359, 2])
 
+def runTests(exit=False):
+    unittest.main(verbosity=3, exit=exit)
 
 if __name__ == '__main__':
-    unittest.main(verbosity=3)
+    runtests(exit=True)
