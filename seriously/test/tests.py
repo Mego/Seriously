@@ -38,6 +38,9 @@ class UtilTests(unittest.TestCase):
         self.assertEqual(as_list(2), [2])
         self.assertEqual([chr_cp437(x) for x in range(256)], [x for x in CP437.table])
         self.assertEqual([ord_cp437(x) for x in CP437.table], [x for x in range(256)])
+        with self.assertRaises(ValueError):
+            chr_cp437(257)
+        self.assertEqual(CP437.from_Unicode(chr_cp437(0x8D)+'\u2266'), [0x8D, 0xE2, 0x89, 0xA6])
 
 
 class SeriousTest(unittest.TestCase):
