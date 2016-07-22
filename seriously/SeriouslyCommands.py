@@ -497,7 +497,7 @@ def mod_fn(srs):
     a=srs.pop()
     b=srs.pop()
     if anytype(a, str, SeriousFunction):
-        srs.push(a%tuple(b))
+        srs.push(a%(tuple(b) if not isinstance(b, str) else (b,)))
     else:
         srs.push(a%b)
 
