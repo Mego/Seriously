@@ -1224,6 +1224,7 @@ fn_table={
         0xDD:lambda x:x.push(b64decode(x.pop().encode('cp437')).decode('cp437')),
         0xDE:lambda x:x.push(b64encode(x.pop().encode('cp437')).decode('cp437')),
         0xDF:lambda x:x.push(("0123456789"+string.ascii_uppercase+string.ascii_lowercase+"+/")[:x.pop()]),
+        0xE0:lambda x:x.push([x.pop()]*x.pop()),
         0xE2:lambda x:x.push(math.gamma(x.pop())),
         0xE3:lambda x:x.push(reduce(operator.mul,x.pop(),1)),
         0xE4:sum_fn,
