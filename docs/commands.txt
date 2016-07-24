@@ -222,7 +222,7 @@ DC (▄): pop a,b: push P(a,b) (aPb)
 DD (▌): pop "a": push b64decode("a")
 DE (▐): pop "a": push b64encode("a")
 DF (▀): pop a: push digits in base a
-E0 (α):
+E0 (α): pop a,[b]: push a list containing all the elements of [b] repeated a times
 E1 (ß):
 E2 (Γ): pop a: push Gamma(a)
 E3 (π): pop [a]: push product([a])
