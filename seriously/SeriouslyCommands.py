@@ -1047,6 +1047,16 @@ def chunk_num_fn(srs):
     while i < len(a):
         srs.push(a[i:i+chunksize[i]])
         i += chunksize[i]
+        
+def list_repeat_fn(srs):
+    a = srs.pop()
+    b = srs.pop()
+    if isinstance(b, str):
+        srs.push([b]*a)
+    elif isinstance(b, collections.Iterable):
+        srs.push([x for x in b]*a)
+    else:
+        srs.push([b]*a)
     
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -1224,7 +1234,7 @@ fn_table={
         0xDD:lambda x:x.push(b64decode(x.pop().encode('cp437')).decode('cp437')),
         0xDE:lambda x:x.push(b64encode(x.pop().encode('cp437')).decode('cp437')),
         0xDF:lambda x:x.push(("0123456789"+string.ascii_uppercase+string.ascii_lowercase+"+/")[:x.pop()]),
-        0xE0:lambda x:x.push(x.pop()*[x.pop()]),
+        0xE0:list_repeat_fn,
         0xE2:lambda x:x.push(math.gamma(x.pop())),
         0xE3:lambda x:x.push(reduce(operator.mul,x.pop(),1)),
         0xE4:sum_fn,
