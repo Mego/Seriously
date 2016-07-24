@@ -454,6 +454,3 @@ class RandomTests(SeriousTest):
 
 def runTests(exit=False):
     unittest.main(verbosity=3, exit=exit)
-
-if __name__ == '__main__':
-    runtests(exit=True)

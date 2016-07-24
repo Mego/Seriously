@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 if sys.version_info[0] != 3:
-    print("You must use Python 3 to run this script!")
+    print("You must use Python 3 to run Seriously!")
     exit()
 
 import argparse
