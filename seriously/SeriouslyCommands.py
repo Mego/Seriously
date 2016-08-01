@@ -1034,8 +1034,10 @@ def chunk_len_fn(srs):
     a = srs.pop()
     a = [x for x in a] if not isinstance(a, str) else a
     b = srs.pop()
+    res = []
     for i in range(0, len(a), b):
-        srs.push(a[i:i+b])
+        res.append(a[i:i+b])
+    srs.push(res[::-1])
         
 def chunk_num_fn(srs):
     a = srs.pop()
@@ -1044,9 +1046,11 @@ def chunk_num_fn(srs):
     diff = len(a)%b
     chunksize = [len(a)//b+(i<diff) for i in range(b)][::-1]
     i = 0
+    res = []
     while i < len(a):
-        srs.push(a[i:i+chunksize[i]])
+        res.append(a[i:i+chunksize[i]])
         i += chunksize[i]
+    srs.push(res[::-1])
         
 def list_repeat_fn(srs):
     a = srs.pop()
