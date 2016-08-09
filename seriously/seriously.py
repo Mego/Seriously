@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import sys
-if sys.version_info[0] != 3:
+if sys.version_info[0] != 3: # pragma: no cover
     print("You must use Python 3 to run Seriously!")
     exit()
 
@@ -179,8 +179,7 @@ class Seriously(object):
                 i += 1
         return as_list(self.stack)[::-1]
 
-#pragma: no cover
-def srs_exec(debug_mode=False, file_obj=None, code=None, ide_mode=False):
+def srs_exec(debug_mode=False, file_obj=None, code=None, ide_mode=False): # pragma: no cover
     code = code or file_obj.read()
     if (not ide_mode) and hashlib.sha256(code.encode()).hexdigest() == 'e8809dfaff977e1b36210203b7b44e83102263444695c1123799bc43358ae1c2':
         hidden = binascii.unhexlify(b'f2ac048e406d7244ca202e34841611e115a9c97d554d0681a9ad1bb8f3d7f30b083ae2bae60721228fa5caaa39d205e4e8c61421b9e8fdcbd4b03cafa0e6d726540de6e8bbddf42796a63eb3112c0890bc2f32a435ae304c1bc8d9a463402c9ef1b3fcdbf53743cb737a147bb1aa16e4a71a22adac29d1b310358c40699edf897942e83ff7e1949777eebc02e9ecf24e')
@@ -196,7 +195,7 @@ def srs_exec(debug_mode=False, file_obj=None, code=None, ide_mode=False):
 def ide_mode():
     SeriouslyCommands.fn_table[0xF0] = lambda x: x.push(literal_eval(x.pop()))
 
-def main():
+def main(): # pragma: no cover
     parser = argparse.ArgumentParser(
                 description="Run the Seriously interpreter")
     parser.add_argument("-d", "--debug", help="turn on debug mode",
