@@ -179,7 +179,7 @@ class Seriously(object):
                 i += 1
         return as_list(self.stack)[::-1]
 
-
+#pragma: no cover
 def srs_exec(debug_mode=False, file_obj=None, code=None, ide_mode=False):
     code = code or file_obj.read()
     if (not ide_mode) and hashlib.sha256(code.encode()).hexdigest() == 'e8809dfaff977e1b36210203b7b44e83102263444695c1123799bc43358ae1c2':
