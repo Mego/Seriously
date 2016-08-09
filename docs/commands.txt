@@ -223,7 +223,7 @@ DD (▌): pop "a": push b64decode("a")
 DE (▐): pop "a": push b64encode("a")
 DF (▀): pop a: push digits in base a
 E0 (α): pop a,[b]: push a list containing all the elements of [b] repeated a times; pop a,b: push a list containing a copies of b
-E1 (ß):
+E1 (ß): pop a: push the ath input value (defaults to 0 if a is not an integer or is >= the number of inputs currently read (without consuming a), or if the stack is empty)
 E2 (Γ): pop a: push Gamma(a)
 E3 (π): pop [a]: push product([a])
 E4 (Σ): pop [a]: push sum([a])
@@ -238,7 +238,7 @@ EC (∞): toggle preserve mode; if on, stack items are peeked rather than popped
 ED (φ): push phi (golden ratio)
 EE (ε): push "" (empty string)
 EF (∩): pop [a],[b]: push intersection of [a] and [b]
-F0 (≡): pop a: push eval(a)
+F0 (≡): pop a: push eval(a) (Python-style evaluation)
 F1 (±): pop a: push -a (unary negate)
 F2 (≥): pop a,b: push a>=b
 F3 (≤): pop a,b: push a<=b

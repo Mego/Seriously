@@ -745,6 +745,7 @@ def fn_fil_fn(srs):
 def get_input_fn(srs):
     a=input()
     b = ast.literal_eval(a)
+    srs.inputs.append(b)
     srs.push(b)
 
 def T_fn(srs):
@@ -783,6 +784,7 @@ def reg_all_input_fn(srs):
     global registers
     for i,n in enumerate(sys.stdin.read().split('\n')):
         a = ast.literal_eval(n)
+        srs.inputs.append(a)
         registers[i] = a
 
 
@@ -1061,6 +1063,14 @@ def list_repeat_fn(srs):
         srs.push([x for x in b]*a)
     else:
         srs.push([b]*a)
+        
+def nth_input_fn(srs):
+    a = srs.pop() if len(srs.stack) else 0
+    try:
+        srs.push(srs.inputs[a])
+    except:
+        srs.push(a)
+        srs.push(srs.inputs[0])
     
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -1239,6 +1249,7 @@ fn_table={
         0xDE:lambda x:x.push(b64encode(x.pop().encode('cp437')).decode('cp437')),
         0xDF:lambda x:x.push(("0123456789"+string.ascii_uppercase+string.ascii_lowercase+"+/")[:x.pop()]),
         0xE0:list_repeat_fn,
+        0xE1:nth_input_fn,
         0xE2:lambda x:x.push(math.gamma(x.pop())),
         0xE3:lambda x:x.push(reduce(operator.mul,x.pop(),1)),
         0xE4:sum_fn,

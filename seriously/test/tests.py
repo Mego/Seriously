@@ -97,6 +97,11 @@ class IOTests(SeriousTest):
         
     def test_implicit_input(self):
         self.assert_serious('', ['a'], '"a"\n')
+        
+    def test_nth_input(self):
+        self.assert_serious(chr_cp437(0xE1), ['a','a'], '"a"\n')
+        self.assert_serious('0'+chr_cp437(0xE1), ['a','b','a'], '"a"\n"b"\n')
+        self.assert_serious("'r"+chr_cp437(0xE1), ['a', 'r', 'a'], '"a"\n')
 
 
 class LiteralTests(SeriousTest):

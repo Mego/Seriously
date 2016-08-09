@@ -38,6 +38,7 @@ class Seriously(object):
         self.fn_table = SeriouslyCommands.fn_table
         self.preserve = False
         self.pop_counter = 0
+        self.inputs = []
 
     def push(self, val):
         self.stack.append(val)
@@ -69,6 +70,7 @@ class Seriously(object):
         if all(x not in code for x in (',',chr_cp437(0xCA),chr_cp437(0x09),chr_cp437(0x15))):
             for line in sys.stdin.read().splitlines():
                 self.push(literal_eval(line))
+                self.inputs.append(literal_eval(line))
         self.code = code
         while i < len(code):
             old_stack = self.stack.copy()
@@ -100,6 +102,14 @@ class Seriously(object):
                         if self.debug_mode:
                             print(val)
                     except:
+                        while val:
+                            v = v[:-1]
+                            i -= 1
+                            try:
+                                val = literal_eval(v)
+                                break
+                            except:
+                                continue
                         if self.debug_mode:
                             print("Failed to eval numeric")
                     val = val if anytype(val, int, float, complex) else 0
