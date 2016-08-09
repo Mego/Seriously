@@ -43,7 +43,7 @@ memoize = lru_cache(maxsize=None)
 phi = (1+5**.5)/2
 
 @memoize
-def Lucas(n):
+def Lucas(n): # pragma: no cover
     [a,b] = fast_fib(n)
     return (a<<1)+b
 
@@ -192,10 +192,6 @@ def _sum(data, start=None):
         return sum(data)
     else:
         return sum(data, start)
-
-@memoize
-def naive_factorial(x):
-    return nPr(x,x)
 
 @memoize
 def nCr(n, k):

@@ -169,7 +169,7 @@ class Seriously(object):
                         print(self.stack)
             except SystemExit:
                 exit()
-            except KeyboardInterrupt:
+            except KeyboardInterrupt: # pragma: no cover
                 exit()
             except:
                 if self.debug_mode:
