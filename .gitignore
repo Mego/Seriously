@@ -1,10 +1,10 @@
 __pycache__/
+dist/
+htmlcov/
+build/
+seriously.egg-info/
+.coverage
 *.py[cod]
 *$py.class
 *.bak
-publish.sh
 *.srs
-wiki.txt
-wikify.py
-consecutive.py
-output.txt

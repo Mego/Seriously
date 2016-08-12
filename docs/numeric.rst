@@ -8,6 +8,7 @@ Commands for numbers.
 
 Pushing numbers is as easy as typing the number itself! ::
 
+<<<<<<< HEAD
     1234    Pushes 1, 2, 3, and 4 individually.
     :144:   Pushes 144 as a single number.
     "40"÷   Converts a string or float to an integer, int(x).
@@ -103,3 +104,7 @@ Here are some important constants. ::
     Ë       pi
     Ì       e
     TBC
+=======
+    1234   Pushes 1, 2, 3, and 4 individually
+
+>>>>>>> refs/remotes/Mego/master
