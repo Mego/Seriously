@@ -170,8 +170,8 @@ Here are the rest of Seriously's numeric operators. ::
     38▄      P(a,b). This returns 336.
     
     :20:_    ln(x). This returns ln(20).
-    2E       erf(x). This returns erf(2).
     7e       exp(x). This returns exp(7).
+    2E       erf(x). This returns erf(2).
     5╥       10**a. This returns 100000.
     4╙       log10(a). This returns log10(4).
     :20:Ó    2**a. This returns 1048576.
