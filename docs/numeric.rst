@@ -35,12 +35,13 @@ Other important operators in arithmetic include: ::
 
     45ⁿ      Exponentiation. This raises 5 to the power of 4, returning 15625.
     7:29:%   Modulo operator. This calculates 29 mod 7, returning 1.
-    3ì       Push 1/a.
-
+    37d      divmod(a,b). This returns 2, 1.
+    :3.2:K   Pushes ceil(a). This returns 4.
+    :3.2:L   Pushes floor(a). This returns 3.
     :-5:A    The absolute value of a number.
     :-4:s    sgn(x). If positive, return 1. If negative, return -1. Else, return 0.
-    2:-3:¢   abs(a)*sgn(b)
-    :4.2:m   Returns int(4.2), frac(4.2).
+    2:-3:¢   abs(a)*sgn(b). This returns 3.
+    :4.2:m   This returns int(4.2), frac(4.2).
     35┤      Checks if a and b are coprime.
     TBC
 
@@ -83,8 +84,9 @@ Here are some of the ::
     12Ç    Pushes a+bi. This returns (2+1i).
     ï      Pushes 0+1i.
     4î     Pushes 0+ai. This returns (0+4i).
-    72Çá   Pushes the complex conjugate of z. This returns (2-7i)
+    72Çá   Pushes the complex conjugate of z. This returns (2-7i).
     ï₧     phase(z) or the argument of z. This returns 1.57079632679.
+    12Ç╫   Pushes Re(z), Im(z).
     TBC
 
 1.7. Trigonometric Functions
@@ -98,9 +100,9 @@ Here are the trigonometric functions. ::
     2C     Cosine in radians.
     4T     Tangent in radians.
     9â     asin(a)
-    7à     acos(a)
-    3å     atan(a)
-    13†    atan2(a,b)
+    7ä     acos(a)
+    3à     atan(a)
+    13å    atan2(a,b)
     4Ä     sinh(a)
     1Å     cosh(a)
     5É     tanh(a)
@@ -141,10 +143,11 @@ Here are the rest of Seriously's numeric operators. ::
     9D       Decrement once, or push a-1.
     3⌐       Increment twice, or push a+2.
     5¬       Decrement twice, or push a-2.
+    3ì       Pushes 1/a.
     8½       Pushes a/2 (float division).
     8¼       Pushes a/4 (float division).
     4τ       Pushes 2*a.
-    4ª       Pushes a*a.
+    4²       Pushes a*a.
     4√       Pushes sqrt(a).
 
     3:20:¿   Interprets a as a base-b int.
@@ -155,8 +158,9 @@ Here are the rest of Seriously's numeric operators. ::
     8Γ       The gamma function.
 
     54g      gcd(a,b). This returns the gcd of 4 and 5.
+    :12:9▼   Pushes b//gcd(a,b), a//gcd(a,b). This returns 3, 4.
     5▒       totient(a), the number of integers <= a that are coprime with a.
-    98h      The Euclidean norm of a and b, a*a+b*b. This returns 8*8+9*9 = 145.
+    68h      The Euclidean norm of a and b, sqrt(a*a+b*b). This returns sqrt(8*8+6*6) = 10.
 
     :13:F    Returns the a-th Fibonacci number.
     7f       Returns the Fibonacci index of a if a is a Fibonacci number, else, returns -1.
