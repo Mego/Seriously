@@ -820,7 +820,11 @@ def N_fn(srs):
 
 def shuffle_fn(srs):
     a = srs.pop()
+    isstr = isinstance(a, str)
+    a = [x for x in a]
     random.shuffle(a)
+    if isstr:
+        a = ''.join(a)
     srs.push(a)
 
 def g_fn(srs):
