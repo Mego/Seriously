@@ -36,12 +36,12 @@ Other important operators in arithmetic include: ::
     45ⁿ      Exponentiation. This raises 5 to the power of 4, returning 15625.
     7:29:%   Modulo operator. This calculates 29 mod 7, returning 1.
     37d      divmod(a,b). This returns 2, 1.
-    :3.2K   Pushes ceil(a). This returns 4.
-    :3.2L   Pushes floor(a). This returns 3.
-    :-5A    The absolute value of a number.
-    :-4s    sgn(x). If positive, return 1. If negative, return -1. Else, return 0.
-    2:-3¢   abs(a)*sgn(b). This returns 3.
-    :4.2m   This returns int(4.2), frac(4.2).
+    :3.2K    Pushes ceil(a). This returns 4.
+    :3.2L    Pushes floor(a). This returns 3.
+    :-5A     The absolute value of a number.
+    :-4s     sgn(x). If positive, return 1. If negative, return -1. Else, return 0.
+    2:-3¢    abs(a)*sgn(b). This returns 3.
+    :4.2m    This returns int(4.2), frac(4.2).
     35┤      Checks if a and b are coprime. This returns 1.
     7u       Increment once, or push a+1. This returns 8.
     9D       Decrement once, or push a-1. This returns 8.
@@ -103,21 +103,36 @@ Here are some of the commands for complex mathematics ::
 
 Here are the trigonometric functions. ::
 
-    :30°   Converts to radians. This returns pi/6.
-    2º     Converts to degrees. This returns 114.59155902616465.
-    3S     Sine in radians. This returns sin(3) = 0.1411200080598672.
-    2C     Cosine in radians. This returns cos(2) = -0.4161468365471424.
-    4T     Tangent in radians. This returns tan(4) = 1.1578212823495775.
-    1â     asin(a) (arcsine or inverse sine). This returns 1.5707963267948966.
-    0ä     acos(a) (arccosine or inverse cosine). This returns 1.5707963267948966.
-    3à     atan(a) (arctangent or inverse tangent). This returns 1.2490457723982544.
-    13å    atan2(a,b) (2-argument arctangent, returns angle between positive x-axis and (a,b)). This returns 1.2490457723982544.
-    4Ä     sinh(a) (hyperbolic sine). This returns 27.28991719712775.
-    1Å     cosh(a) (hyperbolic cosine). This returns 1.5430806348152437.
-    5É     tanh(a) (hyperbolic tangent). This returns 0.9999092042625951.
-    6ç     asinh(a) (hyperbolic arcsine). This returns 2.491779852644912.
-    9ê     acosh(a) (hyperbolic arccosine). This returns 2.8872709503576206.
-    1ë     atanh(a) (hyperbolic arctangent). This returns 1.
+    :30°   Converts to radians.
+                This returns pi/6.
+    2º     Converts to degrees.
+                This returns 114.59155902616465.
+    3S     Sine in radians.
+                This returns sin(3) = 0.1411200080598672.
+    2C     Cosine in radians.
+                This returns cos(2) = -0.4161468365471424.
+    4T     Tangent in radians.
+                This returns tan(4) = 1.1578212823495775.
+    1â     asin(a) (arcsine or inverse sine).
+                This returns 1.5707963267948966.
+    0ä     acos(a) (arccosine or inverse cosine).
+                This returns 1.5707963267948966.
+    3à     atan(a) (arctangent or inverse tangent).
+                This returns 1.2490457723982544.
+    13å    atan2(a,b) (2-argument arctangent, returns angle between positive x-axis and (a,b)).
+                This returns 1.2490457723982544.
+    4Ä     sinh(a) (hyperbolic sine).
+                This returns 27.28991719712775.
+    1Å     cosh(a) (hyperbolic cosine).
+                This returns 1.5430806348152437.
+    5É     tanh(a) (hyperbolic tangent).
+                This returns 0.9999092042625951.
+    6ç     asinh(a) (hyperbolic arcsine).
+                This returns 2.491779852644912.
+    9ê     acosh(a) (hyperbolic arccosine).
+                This returns 2.8872709503576206.
+    1ë     atanh(a) (hyperbolic arctangent).
+                This returns 1.
 
 1.8. Randomization Functions
 ----------------------------
