@@ -1,1 +1,2 @@
-pyshoco>=1.2
+stats
+pycryptodome

@@ -1,0 +1,268 @@
+00 (NUL):
+01 (☺):
+02 (☻):
+03 (♥):
+04 (♦):
+05 (♣):
+06 (♣):
+07 (•):
+08 (◘):
+09 (○): push a single byte of unformatted input from STDIN (push sys.stdin.read(1))
+0A (◙):
+0B (♂): take the next command and map it over the top of the stack (for example, ♂A is equivalent to `A`M)
+0C (♀): take the next command and map it over the top 2 stack elements (like ♂ but for binary commands - ♀* is equivalent to Z`i*`M)
+0D (♪):
+0E (♫):
+0F (☼):
+10 (►):
+11 (◄):
+12 (↕):
+13 (‼):
+14 (¶):
+15 (§): push all data from stdin as a string
+16 (▬):
+17 (↨):
+18 (↑):
+19 (↓):
+1A (→):
+1B (←):
+1C (∟):
+1D (↔):
+1E (▲):
+1F (▼): pop a,b: push b//gcd(a,b),a//gcd(a,b); pop [a]: push [x//gcd([a]) for x in [a]]
+20 ( ): push the # of elements on the stack (push len(stack))
+21 (!): pop a: push a! (factorial(a))
+22 ("): string literal, reads until next " and pushes value onto stack. An implied " is present at EOF if needed.
+23 (#): pop a: push list(a)
+24 ($): pop a: push str(a)
+25 (%): pop a,b: push a%b; pop "a",[b]: push "a"%[b]
+26 (&): pop a,b: push (a & b)
+27 ('): pushes next character onto stack as character literal (length-1 string)
+28 ((): rotates stack right by 1
+29 ()): rotates stack left by 1
+2A (*): pop a,b: push a*b; pop "a",b: repeat "a" b times, push "a" ("a"*b); pop a,[b] or [b],a: apply a* to each element in the array; pop [a],[b]: push dot product of [a] and [b] (sum([a[i]*b[i] for i in len(a)])) (shorter is padded with 0s)
+2B (+): pop a,b: push a+b; pop "a","b": push concatenation of "a" and "b"; pop [a],[b]: push [a][b] (append [b] to [a]); pop a,[b] or [b],a: apply a+ to each element in the array
+2C (,): read value from stdin and push
+2D (-): pop a,b: push a-b; pop [a],[b] (or "a",[b] or [a],"b" or "a","b"): push [a]-[b] (all elements of [a] not in [b])
+2E (.): pop a: write a to stdout; pop f: f. (call f and execute . recursively)
+2F (/): pop a,b: push a/b (float division); pop [a]: rotate [a] right by 1, push [a]
+30 (0): push 0
+31 (1): push 1
+32 (2): push 2
+33 (3): push 3
+34 (4): push 4
+35 (5): push 5
+36 (6): push 6
+37 (7): push 7
+38 (8): push 8
+39 (9): push 9
+3A (:): numeric literal delimiter: pushes the longest string of characters in '0123456789+-.ij' as a numeric
+3B (;): pop a: push a,a (duplicates top element)
+3C (<): pop a,b: push 1 if a<b else 0
+3D (=): pop a,b: push 1 if a==b else 0
+3E (>): pop a,b: push 1 if a>b else 0
+3F (?): NOP, extended expressions if -e flag is passed
+40 (@): pop a,b: push a,b (rotate top 2 elements)
+41 (A): pop a: push abs(a)
+42 (B): pop a,b: push a random integer in [a,b) (randrange(a,b))
+43 (C): pop a: push cos(a)
+44 (D): pop a: push a-1; pop [a]: push stdddev([a])
+45 (E): pop a: push erf(a); pop [a],b: push [a][b] (bth item in [a]) (also works for strings)
+46 (F): pop a: push Fib(a) (Fib(0)=0, Fib(1)=Fib(2)=1); pop [a]: push a[0]
+47 (G): push a random float in the range [0,1) (push random())
+48 (H): if stack is empty: push "Hello, World!"; pop "a" or [a],b: push a[:b]
+49 (I): pop a,b,c: push b if a is truthy, else push c
+4A (J): pop a: push a random integer in [0,a) (randrange(a)); pop [a] or "a": push a random element from [a] or "a" (random.choice([a]|"a"))
+4B (K): pop a: push ceil(a)
+4C (L): pop a: push floor(a)
+4D (M): pop f,[a], execute f for each element in [a], using the element as a temporary stack, push [a] (similar to map(f,[a])); pop [a]: push max([a])
+4E (N): if stack is empty: push the lyrics to "99 Bottles of Beer"; pop [a]: push a[-1]
+4F (O): pop "a" or [a]: push [ord(c) for each c in "a" or [a], starting from the end]. If a list is popped, it is flattened, and if it contains strings of length > 1, the strings are exploded in-place ("ABC" -> [65,66,67], ["A","B","CD"] -> [65,66,67,68])
+50 (P): pop a: push the a-th prime (zero-indexed)
+51 (Q): if stack is empty: push the program's source code
+52 (R): pop f,[a]: call f, using [a] as a temporary stack, push [a] (similar to reduce(f,[a])); pop "a" or [a]: push reversed value ("a".reverse() or [a][::-1]); pop a: push [1,2,...,a] (range(1,a+1))
+53 (S): pop a: push sin(a); pop "a" or [a]: push sorted(a)
+54 (T): pop a: push tan(a); pop [a],b,c: set [a][b] to c, push [a]
+55 (U): pop [a],[b]: push union of [a] and [b]
+56 (V): pop a,b: push uniform(a,b) (random float between a and b); pop "a" or [a],b: push all slices of a of length 1 <= n <= b
+57 (W): loop delimiter: peek top of stack, repeat code in loop while a evaluates to true
+58 (X): pop a: discard
+59 (Y): pop a: push !bool(a) (logical negate, opposite of b); pop f: call f until there is no change from the last call (fixed-point combinator)
+5A (Z): pop [a],[b]: push zip([a],[b]); pop a, zip the next a lists
+5B ([): begin list literal, values are delimited by commas (,)
+5C (\): pop a,b: push a/b (integer division); pop [a]: rotate [a] left by 1, push [a]
+5D (]): end list literal
+5E (^): pop a,b: push a XOR b
+5F (_): pop a: push ln(a)
+60 (`): function literal delimiter, pushes function whose body contains all of the commands until the next `. An implied ` is present at EOF if needed.
+61 (a): invert the stack ([a,b,c,d] -> [d,c,b,a])
+62 (b): pop a: push 0 if a==0 else 1; pop "a" or [a]: push 0 if len(a)==0 else 1; pop f: push 0 if len(f)==0 else 1
+63 (c): pop a: push character at ordinal a%256; pop [a],b: push [a].count(b); pop "a","b": push "a".count("b")
+64 (d): pop [a]: dequeue b from [a], push [a],b; pop a,b: push divmod(a,b) (a//b, a%b)
+65 (e): pop a: push exp(a)
+66 (f): pop a: push the Fibonacci index of a if a is a Fibonacci number, else -1; pop "a",[b]: push "a".format(*[b])
+67 (g): pop a,b: push gcd(a,b); pop [a]: push gcd([a])
+68 (h): pop a,b: push sqrt(a*a+b*b) (Euclidean norm)
+69 (i): pop "a": push atof(a); pop [a]: push each element from [a], starting from end (flatten)
+6A (j): pop "a",[b]: push "a".join([b]) (converting values in [b] to strings with $ if necessary)
+6B (k): pop all elements from stack, convert to list (in the order they were on the stack, starting from the top), and push
+6C (l): pop "a" or [a] or f: push len(a) (or len(f))
+6D (m): pop a: push int(a),frac(a) (modf(a)); pop [a]: push min([a])
+6E (n): pop a,b: push a b times; pop f,b: call f b times
+6F (o): pop [a],b: push b to [a], push [a]
+70 (p): pop a: push 1 if a is prime else 0; pop [a]: pop b from [a], push [a],b
+71 (q): pop [a],b: enqueue b in [a], push [a]
+72 (r): pop a: push [0,1,...,a-1] (range(0,a))
+73 (s): pop a: push sgn(a); pop [a],[b]: push a list of sublists of [a] split by any occurrences of elements of [b] (with "a", the sublists are strings)
+74 (t): pop "a" or [a],b: push a[b:]; pop "a","b","c": push a.translate(str.maketrans(b,c))
+75 (u): pop a: push a+1
+76 (v): pop a: seed the RNG with a (random.seed(a))
+77 (w): pop a: push the full positive prime factorization of |a| (18 -> [[2,1],[3,2]], -5 -> [[5,1]])
+78 (x): pop a,b: push [a,b) (range(a,b)); pop [a]: push range(*a)
+79 (y): pop a: push the positive prime factors of |a| (18 -> [2,3], -5 -> [5])
+7A (z): pop a: repeat . a times (pop a times and print to stdout)
+7B ({): pop a: rotate stack right a times
+7C (|): pop a,b: push (a | b)
+7D (}): pop a: rotate stack left a times
+7E (~): pop a: push ~a (unary bitwise negate)
+7F (⌂): terminate the program (without implicit stack popping and printing)
+80 (Ç): pop a,b: push a+bi; pop [a]: pop pairs of real numerics b,c from [a] and push b+ci (appending 0 to [a] if len([a]) is odd)
+81 (ü): pop entire stack and print to stdout
+82 (é): pop entire stack (clear stack)
+83 (â): pop a: push asin(a)
+84 (ä): pop a: push acos(a)
+85 (à): pop a: push atan(a)
+86 (å): pop a,b: push atan2(a,b)
+87 (ç): pop a: push asinh(a)
+88 (ê): pop a: push acosh(a)
+89 (ë): pop a: push atanh(a)
+8A (è): pop a: push repr(a)
+8B (ï): push i, the imaginary unit (sqrt(-1) or 0+1i)
+8C (î): pop a, push 0+ai; pop [a], push [a] with every element multiplied by i
+8D (ì): pop a: push 1/a; pop [a]: push numerics from [a]
+8E (Ä): pop a: push sinh(a)
+8F (Å): pop a: push cosh(a)
+90 (É): pop a: push tanh(a)
+91 (æ): pop [a]: push mean([a])
+92 (Æ): pop "a","b","c": push "a".replace("b","c"); pop [a]: push strings from [a]
+93 (ô): pop "a": push "a".strip()
+94 (ö): pop "a": push "a".lstrip()
+95 (ò): pop "a": push "a".rstrip()
+96 (û): pop "a": push "a".upper()
+97 (ù): pop "a": push "a".lower()
+98 (ÿ): pop "a": push "a".title()
+99 (Ö): pop "a": push "a".swapcase()
+9A (Ü): pop [a]: push mode([a])
+9B (¢): pop a,b: push abs(a)*sgn(b)
+9C (£): pop "a": push a function whose code is "a"; pop [a]: push functions from [a]
+9D (¥): pop [a],[b]: push the result of pairwise addition of [a] and [b], padding the shorter with 0s
+9E (₧): pop z: push phase(z)
+9F (ƒ): pop f: call f
+A0 (á): pop z: push the complex conjugate of z
+A1 (í): pop [a],b: push [a].index(b) (0-based, -1 if not found)
+A2 (ó): pop a: if bool(a) push a, else terminate the program (conditional exit); terminate the program if the stack is empty
+A3 (ú): push the lowercase English alphabet (ordinals 97-122)
+A4 (ñ): pop [a]: push enumerate([a]) ([[i,a[i]] for i in range(len(a))])
+A5 (Ñ): pop [a]: push lists from [a]
+A6 (ª):
+A7 (º): pop a: push degrees(a)
+A8 (¿): pop a,b: push int(a,b) (interpret a as a base-b int)
+A9 (⌐): pop a: push a+2
+AA (¬): pop a: push a-2
+AB (½): pop a: push a/2 (float division)
+AC (¼): pop a: push a/4 (float division)
+AD (¡): pop a,b: push a string representing a in base b
+AE («): pop a,b: insert b at position a, indexed from the bottom of the stack
+AF (»): pop a,b: insert b at position a, indexed from the top of the stack
+B0 (░): pop [a],[b]: push [[b][i] if [a][i] for i in len(b)], pads [a] with 0s if necessary; pop f,[b]: push values of [b] where f returns a truthy value
+B1 (▒): pop a: push totient(a) (# of integers <= a that are coprime with a)
+B2 (▓): pop a: push pi(a) (# of primes <= a)
+B3 (│): duplicate stack ([a,b,c] => [a,b,c,a,b,c])
+B4 (┤): pop a,b: push 1 if a and b are coprime else 0
+B5 (╡): pop [a],b: push a list containing b non-overlapping sublists of [a] (chunk by number)
+B6 (╢):
+B7 (╖): pop a: add a to the value in register 0 (equivalent to ╜+╗)
+B8 (╕): pop a: add a to the value in register 1 (equivalent to ╛+╝)
+B9 (╣): pop a: push the ath row in Pascal's triangle
+BA (║): pop [a] or "a": push median([a]/"a") (using ordinals if string)
+BB (╗): pop a: save a in register 0
+BC (╝): pop a: save a in register 1
+BD (╜): push the value in register 0 (initially a 0)
+BE (╛): push the value in register 1 (initially the empty string)
+BF (┐): pop a,b: push b to register a
+C0 (└): pop a: push the value in register a
+C1 (┴):
+C2 (┬): pop a: push transpose(a) ([[1,2,3],[4,5,6]] -> [[1,4],[2,5],[3,6]])
+C3 (├): pop a: push big-endian binary representation of a (bin(a) for ints, binary float data for floats, ascii_to_bin(a) for strings)
+C4 (─): pop a: push big-endian hexadecimal representation of a (same as 0xC3 but with hex)
+C5 (┼): duplicate each element on stack ([a,b,c] => [a,a,b,b,c,c])
+C6 (╞): pop a: make a total copies of each element on stack (3 [a,b,c] -> [a,a,a,b,b,b,c,c,c])
+C7 (╟): pop a: pop a elements and push a list containing those elements in their original order
+C8 (╚): pop [a]: push random.shuffle(a)
+C9 (╔): pop "a" or [a]: push uniquify(a)
+CA (╩): read all input and push each to its own numbered register, starting with 0
+CB (╦): push pi
+CC (╠): push e
+CD (═): pop "a" or [a], push 1 if all elements are unique else 0
+CE (╬): pop f: while value on top of stack is truthy (peek), call f
+CF (╧): pop [a] or "a",b: push all b-length combinations of a
+D0 (╨): pop [a] or "a",b: push all b-length permutations of a
+D1 (╤): pop a: push 10**a
+D2 (╥): pop a: push log(a) (log base 10)
+D3 (╙): pop a: push 2**a
+D4 (╘): pop a: push lg(a) (log base 2)
+D5 (╒): push ln(2)
+D6 (╓): pop f,n: push first n values where f(x) is truthy, starting with f(0)
+D7 (╫): pop a: push Re(a), Im(a) (real and imaginary parts of a)
+D8 (╪): pop [a],b: push a list containing each non-overlapping b-length sublist of [a] (chunk by length)
+D9 (┘): pop a: push ord_cp437(a)
+DA (┌): pop a: push chr_cp437(a)
+DB (█): pop a,b: push C(a,b) (aCb)
+DC (▄): pop a,b: push P(a,b) (aPb)
+DD (▌): pop "a": push b64decode("a")
+DE (▐): pop "a": push b64encode("a")
+DF (▀): pop a: push digits in base a
+E0 (α): pop a,[b]: push a list containing all the elements of [b] repeated a times; pop a,b: push a list containing a copies of b
+E1 (ß): pop a: push the ath input value (defaults to 0 if a is not an integer or is >= the number of inputs currently read (without consuming a), or if the stack is empty)
+E2 (Γ): pop a: push Gamma(a)
+E3 (π): pop [a]: push product([a])
+E4 (Σ): pop [a]: push sum([a])
+E5 (σ): pop [a]: push cumulative sums of [a]
+E6 (µ):
+E7 (τ): pop a: push 2*a
+E8 (Φ):
+E9 (Θ):
+EA (Ω):
+EB (δ): pop a: bring the (a mod len(stack))'th item on the stack to the top
+EC (∞): toggle preserve mode; if on, stack items are peeked rather than popped; implicitly turned off at EOF
+ED (φ): push phi (golden ratio)
+EE (ε): push "" (empty string)
+EF (∩): pop [a],[b]: push intersection of [a] and [b]
+F0 (≡): pop a: push eval(a) (Python-style evaluation)
+F1 (±): pop a: push -a (unary negate)
+F2 (≥): pop a,b: push a>=b
+F3 (≤): pop a,b: push a<=b
+F4 (⌠): pop "a": push lzma.compress("a")
+F5 (⌡): pop "a": push lzma.decompress("a")
+F6 (÷): pop a: push a list of all positive divisors of a that are less than or equal to a
+F7 (≈): pop a: push int(a)
+F8 (°): pop a: push radians(a)
+F9 (∙): pop [a],[b]: push Cartesian product of [a] and [b]; pop [a],b: push [a]^b (Cartesian product of b copies of [a])
+FA (·): 
+FB (√): pop a: push sqrt(a)
+FC (ⁿ): pop a,b: push pow(a,b)
+FD (²): pop a: push a*a
+FE (■): print the entire stack without popping, separated by spaces
+FF ( ): 
+
+Notes:
+This file should be viewed with code page 437 encoding (CP437, OEM-437, and OEM-US are common names for it)
+There are 4 data types in Seriously: numeric, string, list, and function.
+a represents any value. This usually means numeric values, but can represent any value of a type not specified in an alternate command definition.
+"a" represents a string value.
+[a] represents a list value (in most cases, a string value is also acceptable).
+z represents a complex value. Complex values are a proper subset of numeric values.
+f represents a function value.
+Some commands have fixed arity. Others have variable arity. This is denoted by the number of values listed in the pop. Those commands that are not functional commands (such as delimiters) do not have arities, and so do not pop from the stack.
+The functional commands each operate differently based on the data types of the values popped from the stack. In some cases, that order matters. In others, it does not. Each operation will be denoted by the different data types popped. If there is a conflict, the most restrictive applicable definition is used.
+When possible, the character at each code point is listed in parentheses following the ordinal. For non-printing characters (ordinals 0-31), this is not possible, so a description is provided instead.
