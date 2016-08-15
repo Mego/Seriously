@@ -36,10 +36,10 @@ class SeriouslyLibrary:
         libfile = os.path.join(SeriouslyLibrary.libpath, filename+'.py')
         mname = 'Serious' + os.path.splitext(os.path.basename(filename))[0]
         try:
-            lib = importlib.machinery.SourceFileLoader(mname, libfile).load_module()
+            libmod = importlib.machinery.SourceFileLoader(mname, libfile).load_module()
         except:
-            lib = importlib.machinery.SourceFileLoader(mname, os.path.join(lib.__path__[0], 'stdlib', filename+'.py')).load_module()
-        self.fn_table = {ordinal:fn for ordinal,fn in lib.fn_table.items() if ordinal != 0xFF}
+            libmod = importlib.machinery.SourceFileLoader(mname, os.path.join(lib.__path__[0], 'stdlib', filename+'.py')).load_module()
+        self.fn_table = {ordinal:fn for ordinal,fn in libmod.fn_table.items() if ordinal != 0xFF}
         self.fn_table[0xFF] = Seriously.load_main_lib
 
 class Seriously:
