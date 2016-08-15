@@ -7,6 +7,7 @@ if sys.version_info[0] != 3: # pragma: no cover
 import argparse
 from ast import literal_eval
 import binascii
+import collections
 import hashlib
 import random
 import re
@@ -158,6 +159,13 @@ class Seriously(object):
                     self.fn_table.get(ord_cp437('M'))(self)
                 elif ord_cp437(c) == 0x0C:
                     i += 1
+                    a,b = self.pop(), self.pop()
+                    if not isinstance(a, collections.Iterable):
+                        a = [a for _ in (b if isinstance(b, collections.Iterable) else [1])]
+                    if not isinstance(b, collections.Iterable):
+                        b = [b for _ in a]
+                    self.push(b)
+                    self.push(a)
                     self.fn_table.get(ord_cp437('Z'))(self)
                     self.push(SeriouslyCommands.SeriousFunction('i'+code[i]))
                     self.fn_table.get(ord_cp437('M'))(self)
