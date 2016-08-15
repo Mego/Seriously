@@ -1071,6 +1071,10 @@ def nth_input_fn(srs):
     except:
         srs.push(a)
         srs.push(srs.inputs[0])
+        
+def load_lib_fn(srs):
+    a = srs.pop()
+    srs.load(srs.get_lib_class()(a))
     
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -1274,4 +1278,5 @@ fn_table={
         0xFC:pow_fn,
         0xFD:lambda x:x.push(x.pop()**2),
         0xFE:peek_print_fn,
+        0xFF:load_lib_fn,
 }

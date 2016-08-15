@@ -462,3 +462,7 @@ class RandomTests(SeriousTest):
     def test_random(self):
         random.seed(0)
         self.assert_serious('2v52BG52V6J"abcd"J"abcd"'+chr_cp437(0xC8), ['badc', 'c', 1, 3.0831724219508216, 0.09158478740507359, 2])
+        
+class LibTests(SeriousTest):
+    def test_regex_lib(self):
+        self.assert_serious("'R"+chr_cp437(0xFF)+'"aa"".+"M', [1])

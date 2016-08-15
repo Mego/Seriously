@@ -9,10 +9,15 @@ from ast import literal_eval
 import binascii
 import collections
 import hashlib
+import importlib.machinery
+import os
+import os.path
 import random
 import re
+import shutil
 import traceback
 from . import SeriouslyCommands
+import lib
 from lib.cp437 import CP437
 from lib.iterable import deque, as_list
 from Crypto.Cipher import AES
@@ -24,9 +29,26 @@ ord_cp437 = CP437.ord
 chr_cp437 = CP437.chr
 
 class SeriouslyLibrary:
-    pass
+    def __init__(self, filename):
+        libfile = os.path.join(os.path.expanduser('~'), '.srslib', filename+'.py')
+        mname = 'Serious' + os.path.splitext(os.path.basename(filename))[0]
+        lib = importlib.machinery.SourceFileLoader(mname, libfile).load_module()
+        self.fn_table = {ordinal:fn for ordinal,fn in lib.fn_table.items() if ordinal != 0xFF}
+        self.fn_table[0xFF] = Seriously.load_main_lib
 
 class Seriously:
+
+    @staticmethod
+    def get_lib_class():
+        return SeriouslyLibrary
+        
+    def load(self, lib):
+        self.fn_table = lib.fn_table
+
+    @staticmethod
+    def load_main_lib(srs):
+        srs.fn_table = SeriouslyCommands.fn_table
+            
     @classmethod
     def _make_new(cls, init=None, debug_mode=False):
         return cls([] if init is None else init, debug_mode)
@@ -219,6 +241,12 @@ def main(): # pragma: no cover
     args = parser.parse_args()
     if args.ide:
         ide_mode()
+    else:
+        libdir = os.path.join(os.path.expanduser('~'), '.srslib')
+        if not os.path.isdir(libdir):
+            libpath = os.path.join(lib.__path__[0], 'stdlib')
+            print('Failed to locate standard library files, copying from {}...'.format(libpath))
+            shutil.copytree(libpath, libdir)
     srs_exec(args.debug, args.file, args.code, args.ide)
     
 if __name__ == '__main__':
