@@ -265,4 +265,3 @@ z represents a complex value. Complex values are a proper subset of numeric valu
 f represents a function value.
 Some commands have fixed arity. Others have variable arity. This is denoted by the number of values listed in the pop. Those commands that are not functional commands (such as delimiters) do not have arities, and so do not pop from the stack.
 The functional commands each operate differently based on the data types of the values popped from the stack. In some cases, that order matters. In others, it does not. Each operation will be denoted by the different data types popped. If there is a conflict, the most restrictive applicable definition is used.
-When possible, the character at each code point is listed in parentheses following the ordinal. For non-printing characters (ordinals 0-31), this is not possible, so a description is provided instead.
