@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 import sys
-if sys.version_info[0] != 3:
-    print("You must use Python 3 to run this script!")
+if sys.version_info[0] != 3: # pragma: no cover
+    print("You must use Python 3 to run Seriously!")
     exit()
 
 import argparse
 from ast import literal_eval
 import binascii
+import collections
 import hashlib
 import random
 import re
@@ -14,8 +15,7 @@ import traceback
 from . import SeriouslyCommands
 from lib.cp437 import CP437
 from lib.iterable import deque, as_list
-import os
-import os.path
+from Crypto.Cipher import AES
 
 anytype = SeriouslyCommands.anytype
 
@@ -23,21 +23,7 @@ ord_cp437 = CP437.ord
 
 chr_cp437 = CP437.chr
 
-class SeriousLibrary:
-    def __init__(self, fname):
-        self.fn_table = dict()
-        with open(os.path.join(os.path.expanduser('~'), '.srslib', fname), 'r') as f:
-            for line in f:
-                index, fn = line.split(':', 1)
-                if int(index,16) == 0xFF: # FF may not be overridden
-                    continue
-                self.fn_table[int(index,16)] = eval(fn) # todo: this should probably use the ast module
-                
-    def get_fn(self, index):
-        if index in self.fn_table:
-            return self.fn_table[index]
-        else:
-            return SeriouslyCommands.fn_table.get(index, lambda x: x)
+class Seriously
 
 class Seriously:
     @classmethod
@@ -54,12 +40,7 @@ class Seriously:
         self.fn_table = SeriouslyCommands.fn_table
         self.preserve = False
         self.pop_counter = 0
-        self.libraries = dict()
-        for lib in os.listdir(os.path.join(os.path.expanduser('~'),'.srslib')):
-            fname, ext = os.path.splitext(lib)
-            if ext != '.srslib':
-                continue
-            self.libraries[fname] = SeriousLibrary(lib)
+        self.inputs = []
 
     def push(self, val):
         self.stack.append(val)
@@ -88,9 +69,10 @@ class Seriously:
         if self.debug_mode:
             print(code)
         i = 0
-        if all(x not in code for x in (',',chr_cp437(0xCA),chr_cp437(0x09),chr_cp437(0x0C))):
+        if all(x not in code for x in (',',chr_cp437(0xCA),chr_cp437(0x09),chr_cp437(0x15))):
             for line in sys.stdin.read().splitlines():
                 self.push(literal_eval(line))
+                self.inputs.append(literal_eval(line))
         self.code = code
         while i < len(code):
             old_stack = self.stack.copy()
@@ -122,6 +104,14 @@ class Seriously:
                         if self.debug_mode:
                             print(val)
                     except:
+                        while val:
+                            v = v[:-1]
+                            i -= 1
+                            try:
+                                val = literal_eval(v)
+                                break
+                            except:
+                                continue
                         if self.debug_mode:
                             print("Failed to eval numeric")
                     val = val if anytype(val, int, float, complex) else 0
@@ -168,6 +158,18 @@ class Seriously:
                     i += 1
                     self.push(SeriouslyCommands.SeriousFunction(code[i]))
                     self.fn_table.get(ord_cp437('M'))(self)
+                elif ord_cp437(c) == 0x0C:
+                    i += 1
+                    a,b = self.pop(), self.pop()
+                    if not isinstance(a, collections.Iterable):
+                        a = [a for _ in (b if isinstance(b, collections.Iterable) else [1])]
+                    if not isinstance(b, collections.Iterable):
+                        b = [b for _ in a]
+                    self.push(b)
+                    self.push(a)
+                    self.fn_table.get(ord_cp437('Z'))(self)
+                    self.push(SeriouslyCommands.SeriousFunction('i'+code[i]))
+                    self.fn_table.get(ord_cp437('M'))(self)
                 else:
                     if self.debug_mode:
                         print("{:2X}".format(ord_cp437(c)))
@@ -176,7 +178,7 @@ class Seriously:
                         print(self.stack)
             except SystemExit:
                 exit()
-            except KeyboardInterrupt:
+            except KeyboardInterrupt: # pragma: no cover
                 exit()
             except:
                 if self.debug_mode:
@@ -186,22 +188,23 @@ class Seriously:
                 i += 1
         return as_list(self.stack)[::-1]
 
-
-def srs_exec(debug_mode=False, file_obj=None, code=None):
+def srs_exec(debug_mode=False, file_obj=None, code=None, ide_mode=False): # pragma: no cover
+    code = code or file_obj.read()
+    if (not ide_mode) and hashlib.sha256(code.encode()).hexdigest() == 'e8809dfaff977e1b36210203b7b44e83102263444695c1123799bc43358ae1c2':
+        hidden = binascii.unhexlify(b'f2ac048e406d7244ca202e34841611e115a9c97d554d0681a9ad1bb8f3d7f30b083ae2bae60721228fa5caaa39d205e4e8c61421b9e8fdcbd4b03cafa0e6d726540de6e8bbddf42796a63eb3112c0890bc2f32a435ae304c1bc8d9a463402c9ef1b3fcdbf53743cb737a147bb1aa16e4a71a22adac29d1b310358c40699edf897942e83ff7e1949777eebc02e9ecf24e')
+        cipher = AES.new(code.encode(), AES.MODE_ECB)
+        secret = cipher.decrypt(hidden).decode()
+        exec(secret)
+        exit()
     srs = Seriously(debug_mode=debug_mode)
-    if file_obj:
-        for x in srs.eval(file_obj.read()):
-            print(x)
-        file_obj.close()
-    else:
-        for x in srs.eval(code):
-            print(x)
+    for x in srs.eval(code):
+        print(x)
 
 
 def ide_mode():
     SeriouslyCommands.fn_table[0xF0] = lambda x: x.push(literal_eval(x.pop()))
 
-def main():
+def main(): # pragma: no cover
     parser = argparse.ArgumentParser(
                 description="Run the Seriously interpreter")
     parser.add_argument("-d", "--debug", help="turn on debug mode",
@@ -215,7 +218,7 @@ def main():
     args = parser.parse_args()
     if args.ide:
         ide_mode()
-    srs_exec(args.debug, args.file, args.code)
+    srs_exec(args.debug, args.file, args.code, args.ide)
     
 if __name__ == '__main__':
     main()

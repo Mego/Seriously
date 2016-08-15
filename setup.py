@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """Seriously - a Python-based golfing language"""
 
 from setuptools import setup, find_packages
@@ -5,7 +6,7 @@ from setuptools import setup, find_packages
 setup(
     name='seriously',
 
-    version='2.0.19',
+    version='2.1.0',
 
     description='A Python-based golfing language',
     long_description='Seriously is a Python-based golfing language. See the GitHub page for more details.',
