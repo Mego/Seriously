@@ -24,7 +24,7 @@ ord_cp437 = CP437.ord
 chr_cp437 = CP437.chr
 
 
-class Seriously(object):
+class Seriously:
     @classmethod
     def _make_new(cls, init=None, debug_mode=False):
         return cls([] if init is None else init, debug_mode)
