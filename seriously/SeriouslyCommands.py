@@ -12,7 +12,12 @@ from itertools import zip_longest as izip
 from lib.cp437 import CP437
 from lib.iterable import deque, as_list, zip_longest
 import lzma
-from statistics import mean, median, mode, pstdev
+
+try:
+    from statistics import mean, median, mode, pstdev
+except ImportError:
+    from stats import mean, median, mode, pstdev
+
 from lib.cp437 import CP437
 
 chr_cp437 = CP437.chr
@@ -38,7 +43,7 @@ memoize = lru_cache(maxsize=None)
 phi = (1+5**.5)/2
 
 @memoize
-def Lucas(n):
+def Lucas(n): # pragma: no cover
     [a,b] = fast_fib(n)
     return (a<<1)+b
 
@@ -189,10 +194,6 @@ def _sum(data, start=None):
         return sum(data, start)
 
 @memoize
-def naive_factorial(x):
-    return nPr(x,x)
-
-@memoize
 def nCr(n, k):
     if k > n:
         return 0
@@ -252,6 +253,7 @@ def Fib_index(n):
 def div_fn(srs):
     a=srs.pop()
     if isinstance(a, collections.Iterable):
+        a = [x for x in a]
         srs.push(a[-1:]+a[:-1])
     elif anytype(a, int, float, complex):
         b=srs.pop()
@@ -262,6 +264,7 @@ def div_fn(srs):
 def idiv_fn(srs):
     a=srs.pop()
     if isinstance(a, collections.Iterable):
+        a = [x for x in a]
         srs.push(a[1:]+a[:1])
     elif anytype(a, int, float, complex):
         b=srs.pop()
@@ -418,6 +421,7 @@ def invert_fn(srs):
 def comp_fn(srs):
     a=srs.pop()
     if isinstance(a, collections.Iterable):
+        a = [x for x in a]
         a = a+[0] if len(a)%2 else a
         while len(a) > 0:
             r,i = a.pop(0),a.pop(0)
@@ -489,7 +493,7 @@ def mod_fn(srs):
     a=srs.pop()
     b=srs.pop()
     if anytype(a, str, SeriousFunction):
-        srs.push(a%tuple(b))
+        srs.push(a%(tuple(b) if not isinstance(b, str) else (b,)))
     else:
         srs.push(a%b)
 
@@ -638,8 +642,11 @@ def zip_fn(srs):
 
 def sum_fn(srs):
     a=srs.pop()
-    res = _sum(a,start=type(a[0])()) if not isinstance(a[0], str) else ''.join(map(str,a))
-    srs.push(res)
+    if a == []:
+        srs.push(0)
+    else:
+        res = _sum(a,start=type(a[0])()) if not isinstance(a[0], str) else ''.join(map(str,a))
+        srs.push(res)
 
 def index_fn(srs):
     b,a=srs.pop(),srs.pop()
@@ -734,6 +741,7 @@ def fn_fil_fn(srs):
 def get_input_fn(srs):
     a=input()
     b = ast.literal_eval(a)
+    srs.inputs.append(b)
     srs.push(b)
 
 def T_fn(srs):
@@ -745,6 +753,7 @@ def T_fn(srs):
         if isinstance(a, str):
             a = a[:b] + str(c) + a[b+1:]
         else:
+            a = [x for x in a]
             a[b] = c
         srs.push(a)
 
@@ -771,6 +780,7 @@ def reg_all_input_fn(srs):
     global registers
     for i,n in enumerate(sys.stdin.read().split('\n')):
         a = ast.literal_eval(n)
+        srs.inputs.append(a)
         registers[i] = a
 
 
@@ -810,7 +820,11 @@ def N_fn(srs):
 
 def shuffle_fn(srs):
     a = srs.pop()
+    isstr = isinstance(a, str)
+    a = [x for x in a]
     random.shuffle(a)
+    if isstr:
+        a = ''.join(a)
     srs.push(a)
 
 def g_fn(srs):
@@ -975,7 +989,7 @@ def mean_fn(srs):
 
 def mode_fn(srs):
     a = srs.pop()
-    srs.push(mode(a))
+    srs.push(mode([x for x in a]))
     
 def add_reg0_fn(srs):
     global registers
@@ -994,9 +1008,73 @@ def cumsum_fn(srs):
         sums.append(sum(a[:i+1]))
     srs.push(sums)
     
+def u_fn(srs):
+    a = srs.pop()
+    if isinstance(a, collections.Iterable):
+        srs.push(map(lambda x:x+1,a))
+    else:
+        srs.push(a+1)
+        
+def caret_fn(srs):
+    a,b = srs.pop(),srs.pop()
+    isstr = isinstance(a, str)
+    if isinstance(a, collections.Iterable):
+        a = [x for x in a]
+        b = [x for x in b]
+        xor = [x for x in a+b if (x in a) ^ (x in b)]
+        if isstr:
+            xor = ''.join(xor)
+        srs.push(xor)
+    else:
+        srs.push(a^b)
+        
+def divisors_fn(srs):
+    a = srs.pop()
+    srs.push((x for x in range(1, a) if a%x==0))
+    
+def chunk_len_fn(srs):
+    a = srs.pop()
+    a = [x for x in a] if not isinstance(a, str) else a
+    b = srs.pop()
+    res = []
+    for i in range(0, len(a), b):
+        res.append(a[i:i+b])
+    srs.push(res[::-1])
+        
+def chunk_num_fn(srs):
+    a = srs.pop()
+    a = [x for x in a] if not isinstance(a, str) else a
+    b = srs.pop()
+    diff = len(a)%b
+    chunksize = [len(a)//b+(i<diff) for i in range(b)][::-1]
+    i = 0
+    res = []
+    while i < len(a):
+        res.append(a[i:i+chunksize[i]])
+        i += chunksize[i]
+    srs.push(res[::-1])
+        
+def list_repeat_fn(srs):
+    a = srs.pop()
+    b = srs.pop()
+    if isinstance(b, str):
+        srs.push([b]*a)
+    elif isinstance(b, collections.Iterable):
+        srs.push([x for x in b]*a)
+    else:
+        srs.push([b]*a)
+        
+def nth_input_fn(srs):
+    a = srs.pop() if len(srs.stack) else 0
+    try:
+        srs.push(srs.inputs[a])
+    except:
+        srs.push(a)
+        srs.push(srs.inputs[0])
+    
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
-        0x0C:lambda x:x.push(sys.stdin.read()),
+        0x15:lambda x:x.push(sys.stdin.read()),
         0x1F:reduce_fn,
         0x20:lambda x:x.push(len(x.stack)),
         0x21:lambda x:x.push(math.factorial(x.pop())),
@@ -1044,7 +1122,7 @@ fn_table={
         0x59:Y_fn,
         0x5A:zip_fn,
         0x5C:idiv_fn,
-        0x5E:lambda x:x.push(xor(x.pop(), x.pop())),
+        0x5E:caret_fn,
         0x5F:lambda x:x.push(math.log(x.pop())),
         0x61:invert_fn,
         0x62:lambda x:x.push(int(bool(x.pop()))),
@@ -1066,7 +1144,7 @@ fn_table={
         0x72:lr_fn,
         0x73:s_fn,
         0x74:t_fn,
-        0x75:lambda x:x.push(x.pop()+1),
+        0x75:u_fn,
         0x76:lambda x:random.seed(x.pop()),
         0x77:lambda x:x.push(full_factor(x.pop())),
         0x78:range_ab_fn,
@@ -1129,6 +1207,7 @@ fn_table={
         0xB2:lambda x:x.push(sum([is_prime(i) for i in range(1,x.pop()+1)])),
         0xB3:dupe_all_fn,
         0xB4:lambda x:x.push(1 if gcd(x.pop(),x.pop())==1 else 0),
+        0xB5:chunk_num_fn,
         0xB7:add_reg0_fn,
         0xB8:add_reg1_fn,
         0xB9:lambda x:x.push((lambda y:[nCr(y,k) for k in range(y+1)])(x.pop())),
@@ -1161,6 +1240,7 @@ fn_table={
         0xD5:lambda x:x.push(math.log(2)),
         0xD6:first_n_fn,
         0xD7:comp_parts_fn,
+        0xD8:chunk_len_fn,
         0xD9:lambda x:x.push(ord_cp437(x.pop())),
         0xDA:lambda x:x.push(chr_cp437(x.pop())),
         0xDB:lambda x:x.push(nCr(x.pop(),x.pop())),
@@ -1168,6 +1248,8 @@ fn_table={
         0xDD:lambda x:x.push(b64decode(x.pop().encode('cp437')).decode('cp437')),
         0xDE:lambda x:x.push(b64encode(x.pop().encode('cp437')).decode('cp437')),
         0xDF:lambda x:x.push(("0123456789"+string.ascii_uppercase+string.ascii_lowercase+"+/")[:x.pop()]),
+        0xE0:list_repeat_fn,
+        0xE1:nth_input_fn,
         0xE2:lambda x:x.push(math.gamma(x.pop())),
         0xE3:lambda x:x.push(reduce(operator.mul,x.pop(),1)),
         0xE4:sum_fn,
@@ -1184,6 +1266,7 @@ fn_table={
         0xF3:lambda x:x.push(x.pop()<=x.pop()),
         0xF4:lambda x:x.push(lzma.compress(x.pop().encode('cp437')).decode('cp437')),
         0xF5:lambda x:x.push(lzma.decompress(x.pop().encode('cp437')).decode('cp437')),
+        0xF6:divisors_fn,
         0xF7:lambda x:x.push(int(x.pop())),
         0xF8:lambda x:x.push(math.radians(x.pop())),
         0xF9:cart_prod_fn,

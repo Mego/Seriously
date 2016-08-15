@@ -30,16 +30,6 @@ class deque(_deque):
         tmp = self.copy()
         tmp.reverse()
         return tmp
-        
-    def __add__(self, other):
-        if hasattr(_deque, 'add'):
-            return _deque.__add__(self, other)
-        else:
-            tmp = self.copy()
-            tmp.extend(other)
-            return tmp
-            
-    __radd__ = __add__
 
 def zip_longest(*iterables):
     for vals in izip(*iterables):
