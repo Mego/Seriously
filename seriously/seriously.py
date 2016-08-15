@@ -33,7 +33,7 @@ class SeriouslyLibrary:
     libpath = os.path.join(os.path.expanduser('~'), '.srslib')
 
     def __init__(self, filename):
-        libfile = os.path.join(libpath, filename+'.py')
+        libfile = os.path.join(SeriouslyLibrary.libpath, filename+'.py')
         mname = 'Serious' + os.path.splitext(os.path.basename(filename))[0]
         lib = importlib.machinery.SourceFileLoader(mname, libfile).load_module()
         self.fn_table = {ordinal:fn for ordinal,fn in lib.fn_table.items() if ordinal != 0xFF}
