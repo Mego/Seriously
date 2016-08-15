@@ -1074,6 +1074,8 @@ def nth_input_fn(srs):
         
 def load_lib_fn(srs):
     a = srs.pop()
+    if srs.debug_mode:
+        print('Loading library {}...'.format(a))
     srs.load(srs.get_lib_class()(a))
     
 fn_table={

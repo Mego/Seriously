@@ -43,7 +43,6 @@ class SeriouslyLibrary:
         self.fn_table[0xFF] = Seriously.load_main_lib
 
 class Seriously:
-
     @staticmethod
     def get_lib_class():
         return SeriouslyLibrary
