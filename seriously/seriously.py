@@ -23,7 +23,8 @@ ord_cp437 = CP437.ord
 
 chr_cp437 = CP437.chr
 
-class Seriously
+class SeriouslyLibrary:
+    pass
 
 class Seriously:
     @classmethod
