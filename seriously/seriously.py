@@ -29,8 +29,11 @@ ord_cp437 = CP437.ord
 chr_cp437 = CP437.chr
 
 class SeriouslyLibrary:
+
+    libpath = os.path.join(os.path.expanduser('~'), '.srslib')
+
     def __init__(self, filename):
-        libfile = os.path.join(os.path.expanduser('~'), '.srslib', filename+'.py')
+        libfile = os.path.join(libpath, filename+'.py')
         mname = 'Serious' + os.path.splitext(os.path.basename(filename))[0]
         lib = importlib.machinery.SourceFileLoader(mname, libfile).load_module()
         self.fn_table = {ordinal:fn for ordinal,fn in lib.fn_table.items() if ordinal != 0xFF}
@@ -246,7 +249,11 @@ def main(): # pragma: no cover
         if not os.path.isdir(libdir):
             libpath = os.path.join(lib.__path__[0], 'stdlib')
             print('Failed to locate standard library files, copying from {}...'.format(libpath))
-            shutil.copytree(libpath, libdir)
+            try:
+                shutil.copytree(libpath, libdir)
+            except:
+                print('Unable to copy standard library files, using them in-place instead...')
+                SeriousLibrary.libpath = libpath
     srs_exec(args.debug, args.file, args.code, args.ide)
     
 if __name__ == '__main__':
