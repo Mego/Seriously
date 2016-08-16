@@ -725,11 +725,11 @@ def inv_fil_fn(srs):
 
 def AE_fn(srs):
     a=srs.pop()
-    if isinstance(a, collections.Iterable):
-        srs.push(filter_types(a, str))
-    else:
+    if isinstance(a, str):
         b,c=srs.pop(),srs.pop()
         srs.push(a.replace(b,c))
+    else:
+        srs.push(filter_types(a, str))
 
 def fn_fil_fn(srs):
     a=srs.pop()
