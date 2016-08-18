@@ -1030,7 +1030,7 @@ def caret_fn(srs):
         
 def divisors_fn(srs):
     a = srs.pop()
-    srs.push((x for x in range(1, a) if a%x==0))
+    srs.push([x for x in range(1, a+1) if a%x==0])
     
 def chunk_len_fn(srs):
     a = srs.pop()
@@ -1218,7 +1218,7 @@ fn_table={
         0xBE:lambda x:x.push(get_reg(1)),
         0xBF:lambda x:set_reg(x.pop(),x.pop()),
         0xC0:lambda x:x.push(get_reg(x.pop())),
-        0xC2:lambda x:x.push(zip(*x.pop())),
+        0xC2:lambda x:x.push(list(zip(*x.pop()))),
         0xC3:lambda x:x.push(binrep(x.pop())),
         0xC4:lambda x:x.push(hexrep(x.pop())),
         0xC5:dupe_each_fn,
