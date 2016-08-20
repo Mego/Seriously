@@ -166,7 +166,7 @@ A4 (ñ): pop [a]: push enumerate([a]) ([[i,a[i]] for i in range(len(a))])
 A5 (Ñ): pop [a]: push lists from [a]
 A6 (ª):
 A7 (º): pop a: push degrees(a)
-A8 (¿): pop a,b: push int(a,b) (interpret a as a base-b int)
+A8 (¿): pop [a],b: push int([a],b) (interpret [a] as a base-b int)
 A9 (⌐): pop a: push a+2
 AA (¬): pop a: push a-2
 AB (½): pop a: push a/2 (float division)

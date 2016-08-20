@@ -280,8 +280,8 @@ class MathTests(SeriousTest):
         self.assert_serious(':12F', [144])
         self.assert_serious(':20F', [6765])
         self.assert_serious(':38F', [39088169])
-        self.assert_serious(':50'+chr_cp437(0xF6), [[1, 2, 5, 10, 25]])
-        self.assert_serious('5'+chr_cp437(0xF6), [[1]])
+        self.assert_serious(':50'+chr_cp437(0xF6), [[1, 2, 5, 10, 25, 50]])
+        self.assert_serious('5'+chr_cp437(0xF6), [[1, 5]])
 
     def test_trig(self):
         trig_fns = {
@@ -438,6 +438,7 @@ class BaseConversionTests(SeriousTest):
         self.assert_serious(':3.07'+chr_cp437(0xC3), ['0100000000001000100011110101110000101000111101011100001010001111'])
         self.assert_serious(':256"{}"'.format(chr_cp437(0xA8)+chr_cp437(0xAD))+chr_cp437(0xA8), [0xA8*256+0xAD])
         self.assert_serious(':256:{}'.format(0xA8*256+0xAD)+chr_cp437(0xAD), [chr_cp437(0xA8)+chr_cp437(0xAD)])
+        self.assert_serious('20k:16@'+chr_cp437(0xA8), [0x20])
         
 class FunctionTests(SeriousTest):
     def test_function_methods(self):
