@@ -825,7 +825,8 @@ def N_fn(srs):
         srs.push(NinetyNineBottles())
     else:
         a = srs.pop()
-        srs.push(a[-1])
+        dd = collections.deque(a, maxlen=1)
+        srs.push(dd.pop())
 
 def shuffle_fn(srs):
     a = srs.pop()
@@ -965,7 +966,7 @@ def first_n_fn(srs):
 def F_fn(srs):
     a = srs.pop()
     if isinstance(a, collections.Iterable):
-        srs.push(a[0])
+        srs.push(next(a))
     else:
         srs.push(Fib(a))
 
