@@ -430,6 +430,7 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('4#5'+chr_cp437(0xE0), [[4,4,4,4,4]])
         self.assert_serious('[4,5]5'+chr_cp437(0xE0), [[4, 5, 4, 5, 4, 5, 4, 5, 4, 5]])
         self.assert_serious('2R3'+chr_cp437(0xE0), [[1, 2, 1, 2, 1, 2]])
+        self.assert_serious('3R'+chr_cp437(0xE6), [2.160246899469287])
 
 class BaseConversionTests(SeriousTest):
     def test_bases(self):

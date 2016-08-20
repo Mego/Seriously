@@ -1081,6 +1081,10 @@ def nth_input_fn(srs):
     except:
         srs.push(a)
         srs.push(srs.inputs[0])
+        
+def mu_fn(srs):
+    a = srs.pop()
+    srs.push(math.sqrt(mean(x**2 for x in a)))
     
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -1264,6 +1268,7 @@ fn_table={
         0xE3:lambda x:x.push(reduce(operator.mul,x.pop(),1)),
         0xE4:sum_fn,
         0xE5:cumsum_fn,
+        0xE6:mu_fn,
         0xE7:lambda x:x.push(x.pop()*2),
         0xEB:dig_fn,
         0xEC:lambda x:x.toggle_preserve(),
