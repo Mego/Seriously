@@ -966,7 +966,7 @@ def first_n_fn(srs):
 def F_fn(srs):
     a = srs.pop()
     if isinstance(a, collections.Iterable):
-        srs.push(next(a))
+        srs.push(next(iter(a)))
     else:
         srs.push(Fib(a))
 
