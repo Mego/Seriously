@@ -360,6 +360,8 @@ class StringAndListTests(SeriousTest):
     def test_list_methods(self):
         self.assert_serious('[1,2,3][4,5,6]'+chr_cp437(0x9D), [[5, 7, 9]])
         self.assert_serious('3R;3+'+chr_cp437(0x9D), [[5, 7, 9]])
+        self.assert_serious('3R5#+', [[5, 1, 2, 3]])
+        self.assert_serious('3R"abc"+', [["abc", 1, 2, 3]])
         self.assert_serious("""'0"010203040"#s""", [[[],['1'],['2'],['3'],['4'],[]]])
         self.assert_serious('0"10203"s', [['1', '2', '3']])
         self.assert_serious('2[1,2,3,4]V', [[[1],[1,2,],[2,3],[3,4],[4]]])

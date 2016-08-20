@@ -447,7 +447,7 @@ def M_fn(srs):
             res.extend(r)
         srs.push(res)
 
-def r_fn(srs):
+def R_fn(srs):
     a=srs.pop()
     if isinstance(a,SeriousFunction):
         b=srs.pop()
@@ -543,6 +543,15 @@ def plus_fn(srs):
             srs.push([x+b for x in a])
         elif isinstance(b, collections.Iterable):
             srs.push([x+a for x in b])
+    elif isinstance(a, collections.Iterable) and isinstance(b, collections.Iterable):
+        if isinstance(a, str) and isinstance(b, str):
+            srs.push(a+b)
+        elif isinstance(a, str):
+            srs.push(itertools.chain([a], b))
+        elif isinstance(b, str):
+            srs.push(itertools.chain(a, [b]))
+        else:
+            srs.push(itertools.chain(a, b))
     else:
         srs.push(a+b)
 
@@ -1113,7 +1122,7 @@ fn_table={
         0x4F:O_fn,
         0x50:lambda x:x.push(nth_prime(x.pop())),
         0x51:lambda x:x.push(x.code),
-        0x52:r_fn,
+        0x52:R_fn,
         0x53:S_fn,
         0x54:T_fn,
         0x55:lambda x:x.push(list(set(x.pop()).union(x.pop()))),
