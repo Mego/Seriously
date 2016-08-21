@@ -1020,8 +1020,11 @@ def cumsum_fn(srs):
     
 def u_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.Iterable) and not isinstance(a, str):
         srs.push(map(lambda x:x+1,a))
+    elif isinstance(a, str):
+        if len(a) == 1:
+            srs.push(chr_cp437(ord_cp437(a)+1%256))
     else:
         srs.push(a+1)
         
