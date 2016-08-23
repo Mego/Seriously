@@ -96,8 +96,6 @@ def gcd(a,b):
 def gcd_list(*vals):
     return reduce(gcd,vals or [1])
 
-primes = [2,3]
-
 class MathSelector(object):
     def __init__(self, fn):
         self.fn = fn
@@ -209,6 +207,9 @@ def nPr(n, k):
         return 1
     return math.factorial(n)/math.factorial(n-k)
 
+primes = [2,3]
+max_tested = 4
+
 def isqrt(n):
     lo=1
     hi=n
@@ -238,23 +239,33 @@ def is_prime(x):
             return 0
     return 1
 
-def init_next_prime(n):
-    global primes
-    if n == -1:
-        n = primes[-1]
-    if primes[-1] > n:
-        return
-    x = primes[-1]+2
-    while True:
-        if is_prime(x):
-            primes.append(x)
-            return
-        x+=2
+def init_n_primes(n):
+    global primes, max_tested
+    while len(primes)<=n:
+        temp=[1]*max_tested
+        for p in primes:
+            for q in range((p-max_tested)%p,max_tested,p):
+                temp[q] = 0
+        primes += [x+max_tested for x in range(max_tested) if temp[x]]
+        max_tested *= 2
+
+def init_primes_up_to(n):
+    global primes, max_tested
+    if max_tested<n:
+        temp=[1]*(n-max_tested)
+        for p in primes:
+            for q in range((p-max_tested)%p,n-max_tested,p):
+                temp[q] = 0
+        for p in range(n//2-max_tested):
+            if temp[p]:
+                for q in range(p+p+max_tested,n-max_tested,p+max_tested):
+                    temp[q] = 0
+        primes += [x+max_tested for x in range(n-max_tested) if temp[x]]
+        max_tested = n
 
 def nth_prime(n):
     global primes
-    while len(primes)<=n:
-        init_next_prime(-1)
+    init_n_primes(n)
     return primes[n]
 
 @memoize
@@ -487,17 +498,21 @@ def full_factor(n):
     n=abs(n)
     res=[]
     index = 0
-    p = 2
-    while n>1:
+    init_primes_up_to(isqrt(n))
+    for p in primes:
         a=0
         while n%p==0:
             a+=1
             n//=p
         if a:
             res.append([p,a])
-        init_next_prime(p)
-        index += 1
-        p = primes[index]
+        if n==1:
+            break
+    if n>1:
+        # n is a prime at this point, but please don't add
+        # it to the prime list as it would mess up the prime
+        # list since the prime list would not be continuous
+        res.append([n,1])
     return res
 
 def factor(n):
