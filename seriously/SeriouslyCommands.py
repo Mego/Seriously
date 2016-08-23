@@ -215,12 +215,10 @@ def isqrt(n):
     hi=n
     while lo<hi-1:
         test = (lo+hi)//2
-        if test*test<n:
+        if test*test<=n:
             lo=test
-        elif test*test==n:
-            return test
         else:
-            hi=test-1
+            hi=test
     return lo
 
 def is_prime(x):
@@ -277,14 +275,12 @@ def prime_count_fn(srs):
         if max_tested >= n >= primes[-1]:
             return len(primes)
         #binary search
-        lo=0;hi=len(primes)-1
+        lo=0
+        hi=len(primes)-1
         while lo<hi-1:
             test = (lo+hi)//2
-            if primes[test]<n:
+            if primes[test]<=n:
                 lo=test
-            elif primes[test]==n:
-                srs.push(test+1)
-                return
             else:
                 hi=test
         srs.push(lo+1)
