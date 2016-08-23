@@ -209,6 +209,19 @@ def nPr(n, k):
         return 1
     return math.factorial(n)/math.factorial(n-k)
 
+def isqrt(n):
+    lo=1
+    hi=n
+    while lo<hi-1:
+        test = (lo+hi)//2
+        if test*test<n:
+            lo=test
+        elif test*test==n:
+            return test
+        else:
+            hi=test-1
+    return lo
+
 def is_prime(x):
     global primes
     if x in primes:
@@ -220,9 +233,8 @@ def is_prime(x):
             return 0
         if p*p>x:
             break
-    n = primes[-1]+2
-    while n*n<=x:
-        if x%n==0:
+    for test in range(primes[-1]+2,isqrt(x)):
+        if x%test==0:
             return 0
     return 1
 
