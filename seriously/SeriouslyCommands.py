@@ -253,6 +253,7 @@ def init_primes_up_to(n):
     global primes, max_tested
     if max_tested<n:
         temp=[1]*(n-max_tested)
+        max_tested += 1
         for p in primes:
             for q in range((p-max_tested)%p,n-max_tested,p):
                 temp[q] = 0
@@ -260,13 +261,35 @@ def init_primes_up_to(n):
             if temp[p]:
                 for q in range(p+p+max_tested,n-max_tested,p+max_tested):
                     temp[q] = 0
-        primes += [x+max_tested for x in range(n-max_tested) if temp[x]]
+        primes += [x+max_tested for x in range(n-max_tested+1) if temp[x]]
         max_tested = n
 
 def nth_prime(n):
     global primes
     init_n_primes(n)
     return primes[n]
+
+def prime_count_fn(srs):
+    a=srs.pop()
+    if isinstance(a,int):
+        global primes, max_tested
+        init_primes_up_to(n)
+        if max_tested >= n >= primes[-1]:
+            return len(primes)
+        #binary search
+        lo=0;hi=len(primes)-1
+        while lo<hi-1:
+            test = (lo+hi)//2
+            if primes[test]<n:
+                lo=test
+            elif primes[test]==n:
+                srs.push(test+1)
+                return
+            else:
+                hi=test
+        srs.push(lo+1)
+    else:
+        srs.push(a)
 
 @memoize
 def Fib_index(n):
@@ -1253,7 +1276,7 @@ fn_table={
         0xAF:ins_top_fn,
         0xB0:filter_true_fn,
         0xB1:lambda x:x.push((lambda y:sum([1 if gcd(i,y)==1 else 0 for i in range(1,y+1)]))(x.pop())),
-        0xB2:lambda x:x.push(sum([is_prime(i) for i in range(1,x.pop()+1)])),
+        0xB2:prime_count_fn,
         0xB3:dupe_all_fn,
         0xB4:lambda x:x.push(1 if gcd(x.pop(),x.pop())==1 else 0),
         0xB5:chunk_num_fn,
