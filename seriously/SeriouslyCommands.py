@@ -213,12 +213,14 @@ def is_prime(x):
     global primes
     if x in primes:
         return 1
-    if x<2 or (max(primes) > x):
+    if x<2 or (primes[-1] > x):
         return 0
-    for p in filter(lambda p:p*p<=x,primes):
+    for p in primes:
         if x%p==0:
             return 0
-    n = max(primes)+2
+        if p*p>x:
+            break
+    n = primes[-1]+2
     while n*n<=x:
         if x%n==0:
             return 0
@@ -227,10 +229,10 @@ def is_prime(x):
 def init_next_prime(n):
     global primes
     if n == -1:
-        n = max(primes)
-    if max(primes) > n:
+        n = primes[-1]
+    if primes[-1] > n:
         return
-    x = max(primes)+2
+    x = primes[-1]+2
     while True:
         if is_prime(x):
             primes.append(x)
