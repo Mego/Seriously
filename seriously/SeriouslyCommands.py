@@ -96,8 +96,6 @@ def gcd(a,b):
 def gcd_list(*vals):
     return reduce(gcd,vals or [1])
 
-primes = [2,3]
-
 class MathSelector(object):
     def __init__(self, fn):
         self.fn = fn
@@ -209,6 +207,20 @@ def nPr(n, k):
         return 1
     return math.factorial(n)/math.factorial(n-k)
 
+primes = [2,3]
+max_tested = 4
+
+def isqrt(n):
+    lo=1
+    hi=n
+    while lo<hi-1:
+        test = (lo+hi)//2
+        if test*test<=n:
+            lo=test
+        else:
+            hi=test
+    return lo
+
 def is_prime(x):
     global primes
     if x in primes:
@@ -220,30 +232,60 @@ def is_prime(x):
             return 0
         if p*p>x:
             break
-    n = primes[-1]+2
-    while n*n<=x:
-        if x%n==0:
+    for test in range(primes[-1]+2,isqrt(x)):
+        if x%test==0:
             return 0
     return 1
 
-def init_next_prime(n):
-    global primes
-    if n == -1:
-        n = primes[-1]
-    if primes[-1] > n:
-        return
-    x = primes[-1]+2
-    while True:
-        if is_prime(x):
-            primes.append(x)
-            return
-        x+=2
+def init_n_primes(n):
+    global primes, max_tested
+    while len(primes)<=n:
+        temp=[1]*max_tested
+        for p in primes:
+            for q in range((p-max_tested)%p,max_tested,p):
+                temp[q] = 0
+        primes += [x+max_tested for x in range(max_tested) if temp[x]]
+        max_tested *= 2
+
+def init_primes_up_to(n):
+    global primes, max_tested
+    if max_tested<n:
+        temp=[1]*(n-max_tested)
+        max_tested += 1
+        for p in primes:
+            for q in range((p-max_tested)%p,n-max_tested,p):
+                temp[q] = 0
+        for p in range(n//2-max_tested):
+            if temp[p]:
+                for q in range(p+p+max_tested,n-max_tested,p+max_tested):
+                    temp[q] = 0
+        primes += [x+max_tested for x in range(n-max_tested+1) if temp[x]]
+        max_tested = n
 
 def nth_prime(n):
     global primes
-    while len(primes)<=n:
-        init_next_prime(-1)
+    init_n_primes(n)
     return primes[n]
+
+def prime_count_fn(srs):
+    a=srs.pop()
+    if isinstance(a,int):
+        global primes, max_tested
+        init_primes_up_to(n)
+        if max_tested >= n >= primes[-1]:
+            return len(primes)
+        #binary search
+        lo=0
+        hi=len(primes)-1
+        while lo<hi-1:
+            test = (lo+hi)//2
+            if primes[test]<=n:
+                lo=test
+            else:
+                hi=test
+        srs.push(lo+1)
+    else:
+        srs.push(a)
 
 @memoize
 def Fib_index(n):
@@ -475,17 +517,21 @@ def full_factor(n):
     n=abs(n)
     res=[]
     index = 0
-    p = 2
-    while n>1:
+    init_primes_up_to(isqrt(n))
+    for p in primes:
         a=0
         while n%p==0:
             a+=1
             n//=p
         if a:
             res.append([p,a])
-        init_next_prime(p)
-        index += 1
-        p = primes[index]
+        if n==1:
+            break
+    if n>1:
+        # n is a prime at this point, but please don't add
+        # it to the prime list as it would mess up the prime
+        # list since the prime list would not be continuous
+        res.append([n,1])
     return res
 
 def factor(n):
@@ -1226,7 +1272,7 @@ fn_table={
         0xAF:ins_top_fn,
         0xB0:filter_true_fn,
         0xB1:lambda x:x.push((lambda y:sum([1 if gcd(i,y)==1 else 0 for i in range(1,y+1)]))(x.pop())),
-        0xB2:lambda x:x.push(sum([is_prime(i) for i in range(1,x.pop()+1)])),
+        0xB2:prime_count_fn,
         0xB3:dupe_all_fn,
         0xB4:lambda x:x.push(1 if gcd(x.pop(),x.pop())==1 else 0),
         0xB5:chunk_num_fn,
