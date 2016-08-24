@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import collections
 import contextlib
 import random
 from io import StringIO
@@ -42,6 +43,12 @@ class UtilTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             chr_cp437(257)
         self.assertEqual(CP437.from_Unicode(chr_cp437(0x8D)+'\u2266'), [0x8D, 0xE2, 0x89, 0xA6])
+        
+    def test_seriously_class(self):
+        srs = Seriously()
+        srs.push(1)
+        srs.prepend(0)
+        self.assertEqual(srs.stack, collections.deque([0, 1]))
 
 
 class SeriousTest(unittest.TestCase):
@@ -128,6 +135,7 @@ class LiteralTests(SeriousTest):
         self.assert_serious(':.5', [0.5])
 
         self.assert_serious(':1+2.2i', [1+2.2j])
+        self.assert_serious(':12+', [12])
 
     def test_functions(self):
         self.assert_serious("`foo`", [SeriousFunction("foo")])
