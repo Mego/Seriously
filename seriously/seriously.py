@@ -125,7 +125,7 @@ class Seriously:
                         if self.debug_mode:
                             print(val)
                     except:
-                        while not val:
+                        while not val and v:
                             v = v[:-1]
                             i -= 1
                             try:

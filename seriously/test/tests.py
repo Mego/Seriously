@@ -136,6 +136,7 @@ class LiteralTests(SeriousTest):
 
         self.assert_serious(':1+2.2i', [1+2.2j])
         self.assert_serious(':12+', [12])
+        self.assert_serious(':+', [0])
 
     def test_functions(self):
         self.assert_serious("`foo`", [SeriousFunction("foo")])
