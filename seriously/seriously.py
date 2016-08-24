@@ -23,6 +23,28 @@ ord_cp437 = CP437.ord
 
 chr_cp437 = CP437.chr
 
+def remove_lists(code):
+    result = ''
+    i = 0
+    while i < len(code):
+        c = code[i]
+        if c == '[':
+            l = ''
+            i += 1
+            nest = 1
+            while i < len(code):
+                if code[i] == '[':
+                    nest += 1
+                elif code[i] == ']':
+                    nest -= 1
+                    if nest == 0:
+                        break
+                l += code[i]
+                i += 1
+        else:
+            result += code[i]
+            i += 1
+    return result
 
 class Seriously:
     @classmethod
@@ -68,7 +90,7 @@ class Seriously:
         if self.debug_mode:
             print(code)
         i = 0
-        if all(x not in code for x in (',',chr_cp437(0xCA),chr_cp437(0x09),chr_cp437(0x15))):
+        if all(x not in remove_lists(code) for x in (',',chr_cp437(0xCA),chr_cp437(0x09),chr_cp437(0x15))):
             for line in sys.stdin.read().splitlines():
                 self.push(literal_eval(line))
                 self.inputs.append(literal_eval(line))
