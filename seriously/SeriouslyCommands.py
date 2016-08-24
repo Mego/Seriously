@@ -210,17 +210,6 @@ def nPr(n, k):
 primes = [2,3]
 max_tested = 4
 
-def isqrt(n):
-    lo=1
-    hi=n
-    while lo<hi-1:
-        test = (lo+hi)//2
-        if test*test<=n:
-            lo=test
-        else:
-            hi=test
-    return lo
-
 def is_prime(x):
     global primes
     if x in primes:
@@ -232,7 +221,7 @@ def is_prime(x):
             return 0
         if p*p>x:
             break
-    for test in range(primes[-1]+2,isqrt(x)):
+    for test in range(primes[-1]+2,int(rmath.sqrt(x))):
         if x%test==0:
             return 0
     return 1
@@ -517,7 +506,7 @@ def full_factor(n):
     n=abs(n)
     res=[]
     index = 0
-    init_primes_up_to(isqrt(n))
+    init_primes_up_to(int(rmath.sqrt(n)))
     for p in primes:
         a=0
         while n%p==0:
