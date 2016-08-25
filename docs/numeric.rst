@@ -91,6 +91,7 @@ Here are the bitwise operators. ::
 Here are some of the commands for complex mathematics ::
 
     12Ç    Pushes a+bi. This returns (2+1i).
+    :2+1i  : also pushes complex numbers. This returns (2+1i).
     ï      Pushes 0+1i.
     4î     Pushes 0+ai. This returns (0+4i).
     72Çá   Pushes the complex conjugate of z. This returns (2-7i).

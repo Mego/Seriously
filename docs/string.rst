@@ -10,11 +10,12 @@ Pushing strings is as simple as `'1'2'3`! ::
 
     'a     Pushes one character.
     "b     Pushes a string until the next " or the end of the file is reached.
-    "c5*   This repeats "c" 5 times.
+    'c5*   This repeats "c" 5 times.
     25$    str(a). This returns "25".
     ,      This reads a value from STDIN and pushes it to the stack.
+             Actually automatically reads STDIN and pushes it to the stack at the beginning of the program if you omit ","
     §      Pushes all data from STDIN as a string.
-    ○      Pushes a single byte of unformatted input from STDIN.
+    ○      Pushes a single byte of unformatted input from STDIN. (This character is not lowercase o)
     .      Writes the top value of the stack to STDOUT.
 
 2.2. Strings, Elements and Indices
