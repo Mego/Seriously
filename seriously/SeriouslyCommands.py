@@ -197,7 +197,7 @@ def nCr(n, k):
         return 0
     elif k == n:
         return 1
-    return math.factorial(n)/(math.factorial(k)*math.factorial(n-k))
+    return math.factorial(n)//(math.factorial(k)*math.factorial(n-k))
 
 @memoize
 def nPr(n, k):
@@ -205,7 +205,7 @@ def nPr(n, k):
         return 0
     elif k == n:
         return 1
-    return math.factorial(n)/math.factorial(n-k)
+    return math.factorial(n)//math.factorial(n-k)
 
 primes = [2,3]
 max_tested = 4
