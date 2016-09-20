@@ -4,13 +4,13 @@
 03 (♥):
 04 (♦):
 05 (♣):
-06 (♣):
+06 (♠):
 07 (•):
 08 (◘):
 09 (○): push a single byte of unformatted input from STDIN (push sys.stdin.read(1))
 0A (◙):
 0B (♂): take the next command and map it over the top of the stack (for example, ♂A is equivalent to `A`M)
-0C (♀): take the next command and map it over the top 2 stack elements (like ♂ but for binary commands - ♀* is equivalent to Z`i*`M)
+0C (♀): take the next command and map it over the top 2 stack elements (like ♂ but for binary commands - ♀* is equivalent to Z`i*`M). If either of the top two stack elements are scalars (i.e. not iterables), it is reused for every element in the other iterable.
 0D (♪):
 0E (♫):
 0F (☼):
@@ -166,7 +166,7 @@ A4 (ñ): pop [a]: push enumerate([a]) ([[i,a[i]] for i in range(len(a))])
 A5 (Ñ): pop [a]: push lists from [a]
 A6 (ª):
 A7 (º): pop a: push degrees(a)
-A8 (¿): pop a,b: push int(a,b) (interpret a as a base-b int)
+A8 (¿): pop [a],b: push int([a],b) (interpret [a] as a base-b int)
 A9 (⌐): pop a: push a+2
 AA (¬): pop a: push a-2
 AB (½): pop a: push a/2 (float division)
@@ -212,7 +212,7 @@ D2 (╥): pop a: push log(a) (log base 10)
 D3 (╙): pop a: push 2**a
 D4 (╘): pop a: push lg(a) (log base 2)
 D5 (╒): push ln(2)
-D6 (╓): pop f,n: push first n values where f(x) is truthy, starting with f(0)
+D6 (╓): pop f,n: push first n values where f(x) is truthy, starting with f(0) (the function is called each time with a stack only containing n)
 D7 (╫): pop a: push Re(a), Im(a) (real and imaginary parts of a)
 D8 (╪): pop [a],b: push a list containing each non-overlapping b-length sublist of [a] (chunk by length)
 D9 (┘): pop a: push ord_cp437(a)
@@ -228,7 +228,7 @@ E2 (Γ): pop a: push Gamma(a)
 E3 (π): pop [a]: push product([a])
 E4 (Σ): pop [a]: push sum([a])
 E5 (σ): pop [a]: push cumulative sums of [a]
-E6 (µ):
+E6 (µ): pop [a]: push rms (root-mean-square) of [a]
 E7 (τ): pop a: push 2*a
 E8 (Φ):
 E9 (Θ):
@@ -265,4 +265,3 @@ z represents a complex value. Complex values are a proper subset of numeric valu
 f represents a function value.
 Some commands have fixed arity. Others have variable arity. This is denoted by the number of values listed in the pop. Those commands that are not functional commands (such as delimiters) do not have arities, and so do not pop from the stack.
 The functional commands each operate differently based on the data types of the values popped from the stack. In some cases, that order matters. In others, it does not. Each operation will be denoted by the different data types popped. If there is a conflict, the most restrictive applicable definition is used.
-When possible, the character at each code point is listed in parentheses following the ordinal. For non-printing characters (ordinals 0-31), this is not possible, so a description is provided instead.

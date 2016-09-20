@@ -96,8 +96,6 @@ def gcd(a,b):
 def gcd_list(*vals):
     return reduce(gcd,vals or [1])
 
-primes = [2,3]
-
 class MathSelector(object):
     def __init__(self, fn):
         self.fn = fn
@@ -199,7 +197,7 @@ def nCr(n, k):
         return 0
     elif k == n:
         return 1
-    return math.factorial(n)/(math.factorial(k)*math.factorial(n-k))
+    return math.factorial(n)//(math.factorial(k)*math.factorial(n-k))
 
 @memoize
 def nPr(n, k):
@@ -207,41 +205,76 @@ def nPr(n, k):
         return 0
     elif k == n:
         return 1
-    return math.factorial(n)/math.factorial(n-k)
+    return math.factorial(n)//math.factorial(n-k)
+
+primes = [2,3]
+max_tested = 4
 
 def is_prime(x):
     global primes
     if x in primes:
         return 1
-    if x<2 or (max(primes) > x):
+    if x<2 or (primes[-1] > x):
         return 0
-    for p in filter(lambda p:p*p<=x,primes):
+    for p in primes:
         if x%p==0:
             return 0
-    n = max(primes)+2
-    while n*n<=x:
-        if x%n==0:
+        if p*p>x:
+            break
+    for test in range(primes[-1]+2,int(rmath.sqrt(x))):
+        if x%test==0:
             return 0
     return 1
 
-def init_next_prime(n):
-    global primes
-    if n == -1:
-        n = max(primes)
-    if max(primes) > n:
-        return
-    x = max(primes)+2
-    while True:
-        if is_prime(x):
-            primes.append(x)
-            return
-        x+=2
+def init_n_primes(n):
+    global primes, max_tested
+    while len(primes)<=n:
+        temp=[1]*max_tested
+        for p in primes:
+            for q in range((p-max_tested)%p,max_tested,p):
+                temp[q] = 0
+        primes += [x+max_tested for x in range(max_tested) if temp[x]]
+        max_tested *= 2
+
+def init_primes_up_to(n):
+    global primes, max_tested
+    if max_tested<n:
+        temp=[1]*(n-max_tested)
+        max_tested += 1
+        for p in primes:
+            for q in range((p-max_tested)%p,n-max_tested,p):
+                temp[q] = 0
+        for p in range(n//2-max_tested):
+            if temp[p]:
+                for q in range(p+p+max_tested,n-max_tested,p+max_tested):
+                    temp[q] = 0
+        primes += [x+max_tested for x in range(n-max_tested+1) if temp[x]]
+        max_tested = n
 
 def nth_prime(n):
     global primes
-    while len(primes)<=n:
-        init_next_prime(-1)
+    init_n_primes(n)
     return primes[n]
+
+def prime_count_fn(srs):
+    a=srs.pop()
+    if isinstance(a,int):
+        global primes, max_tested
+        init_primes_up_to(n)
+        if max_tested >= n >= primes[-1]:
+            return len(primes)
+        #binary search
+        lo=0
+        hi=len(primes)-1
+        while lo<hi-1:
+            test = (lo+hi)//2
+            if primes[test]<=n:
+                lo=test
+            else:
+                hi=test
+        srs.push(lo+1)
+    else:
+        srs.push(a)
 
 @memoize
 def Fib_index(n):
@@ -447,7 +480,7 @@ def M_fn(srs):
             res.extend(r)
         srs.push(res)
 
-def r_fn(srs):
+def R_fn(srs):
     a=srs.pop()
     if isinstance(a,SeriousFunction):
         b=srs.pop()
@@ -473,17 +506,21 @@ def full_factor(n):
     n=abs(n)
     res=[]
     index = 0
-    p = 2
-    while n>1:
+    init_primes_up_to(int(rmath.sqrt(n)))
+    for p in primes:
         a=0
         while n%p==0:
             a+=1
             n//=p
         if a:
             res.append([p,a])
-        init_next_prime(p)
-        index += 1
-        p = primes[index]
+        if n==1:
+            break
+    if n>1:
+        # n is a prime at this point, but please don't add
+        # it to the prime list as it would mess up the prime
+        # list since the prime list would not be continuous
+        res.append([n,1])
     return res
 
 def factor(n):
@@ -543,6 +580,15 @@ def plus_fn(srs):
             srs.push([x+b for x in a])
         elif isinstance(b, collections.Iterable):
             srs.push([x+a for x in b])
+    elif isinstance(a, collections.Iterable) and isinstance(b, collections.Iterable):
+        if isinstance(a, str) and isinstance(b, str):
+            srs.push(a+b)
+        elif isinstance(a, str):
+            srs.push(itertools.chain([a], b))
+        elif isinstance(b, str):
+            srs.push(itertools.chain(a, [b]))
+        else:
+            srs.push(itertools.chain(a, b))
     else:
         srs.push(a+b)
 
@@ -725,11 +771,11 @@ def inv_fil_fn(srs):
 
 def AE_fn(srs):
     a=srs.pop()
-    if isinstance(a, collections.Iterable):
-        srs.push(filter_types(a, str))
-    else:
+    if isinstance(a, str):
         b,c=srs.pop(),srs.pop()
         srs.push(a.replace(b,c))
+    else:
+        srs.push(filter_types(a, str))
 
 def fn_fil_fn(srs):
     a=srs.pop()
@@ -771,8 +817,11 @@ def dig_fn(srs):
 
 def D_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.Iterable) and not isinstance(a, str):
         srs.push(pstdev(a))
+    elif isinstance(a, str):
+        if len(a) == 1:
+            srs.push(chr_cp437(ord_cp437(a)-1%256))
     else:
         srs.push(a-1)
 
@@ -816,11 +865,16 @@ def N_fn(srs):
         srs.push(NinetyNineBottles())
     else:
         a = srs.pop()
-        srs.push(a[-1])
+        dd = collections.deque(a, maxlen=1)
+        srs.push(dd.pop())
 
 def shuffle_fn(srs):
     a = srs.pop()
+    isstr = isinstance(a, str)
+    a = [x for x in a]
     random.shuffle(a)
+    if isstr:
+        a = ''.join(a)
     srs.push(a)
 
 def g_fn(srs):
@@ -952,7 +1006,7 @@ def first_n_fn(srs):
 def F_fn(srs):
     a = srs.pop()
     if isinstance(a, collections.Iterable):
-        srs.push(a[0])
+        srs.push(next(iter(a)))
     else:
         srs.push(Fib(a))
 
@@ -1006,8 +1060,11 @@ def cumsum_fn(srs):
     
 def u_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.Iterable) and not isinstance(a, str):
         srs.push(map(lambda x:x+1,a))
+    elif isinstance(a, str):
+        if len(a) == 1:
+            srs.push(chr_cp437(ord_cp437(a)+1%256))
     else:
         srs.push(a+1)
         
@@ -1026,7 +1083,7 @@ def caret_fn(srs):
         
 def divisors_fn(srs):
     a = srs.pop()
-    srs.push((x for x in range(1, a) if a%x==0))
+    srs.push([x for x in range(1, a+1) if a%x==0])
     
 def chunk_len_fn(srs):
     a = srs.pop()
@@ -1067,6 +1124,10 @@ def nth_input_fn(srs):
     except:
         srs.push(a)
         srs.push(srs.inputs[0])
+        
+def mu_fn(srs):
+    a = srs.pop()
+    srs.push(math.sqrt(mean(x**2 for x in a)))
     
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -1109,7 +1170,7 @@ fn_table={
         0x4F:O_fn,
         0x50:lambda x:x.push(nth_prime(x.pop())),
         0x51:lambda x:x.push(x.code),
-        0x52:r_fn,
+        0x52:R_fn,
         0x53:S_fn,
         0x54:T_fn,
         0x55:lambda x:x.push(list(set(x.pop()).union(x.pop()))),
@@ -1190,7 +1251,7 @@ fn_table={
         0xA4:lambda x:x.push(map(list,enumerate(x.pop()))),
         0xA5:fil_iter_fn,
         0xA7:lambda x:x.push(math.degrees(x.pop())),
-        0xA8:lambda x:x.push(int_base(x.pop(),x.pop())),
+        0xA8:lambda x:x.push(int_base(''.join(map(str,x.pop())),x.pop())),
         0xA9:lambda x:x.push(x.pop()+2),
         0xAA:lambda x:x.push(x.pop()-2),
         0xAB:lambda x:x.push(x.pop()/2),
@@ -1200,7 +1261,7 @@ fn_table={
         0xAF:ins_top_fn,
         0xB0:filter_true_fn,
         0xB1:lambda x:x.push((lambda y:sum([1 if gcd(i,y)==1 else 0 for i in range(1,y+1)]))(x.pop())),
-        0xB2:lambda x:x.push(sum([is_prime(i) for i in range(1,x.pop()+1)])),
+        0xB2:prime_count_fn,
         0xB3:dupe_all_fn,
         0xB4:lambda x:x.push(1 if gcd(x.pop(),x.pop())==1 else 0),
         0xB5:chunk_num_fn,
@@ -1214,7 +1275,7 @@ fn_table={
         0xBE:lambda x:x.push(get_reg(1)),
         0xBF:lambda x:set_reg(x.pop(),x.pop()),
         0xC0:lambda x:x.push(get_reg(x.pop())),
-        0xC2:lambda x:x.push(zip(*x.pop())),
+        0xC2:lambda x:x.push(list(zip(*x.pop()))),
         0xC3:lambda x:x.push(binrep(x.pop())),
         0xC4:lambda x:x.push(hexrep(x.pop())),
         0xC5:dupe_each_fn,
@@ -1250,6 +1311,7 @@ fn_table={
         0xE3:lambda x:x.push(reduce(operator.mul,x.pop(),1)),
         0xE4:sum_fn,
         0xE5:cumsum_fn,
+        0xE6:mu_fn,
         0xE7:lambda x:x.push(x.pop()*2),
         0xEB:dig_fn,
         0xEC:lambda x:x.toggle_preserve(),

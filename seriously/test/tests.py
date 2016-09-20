@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import argparse
+import collections
 import contextlib
+import random
 from io import StringIO
 import sys
 import unittest
@@ -41,6 +43,12 @@ class UtilTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             chr_cp437(257)
         self.assertEqual(CP437.from_Unicode(chr_cp437(0x8D)+'\u2266'), [0x8D, 0xE2, 0x89, 0xA6])
+        
+    def test_seriously_class(self):
+        srs = Seriously()
+        srs.push(1)
+        srs.prepend(0)
+        self.assertEqual(srs.stack, collections.deque([0, 1]))
 
 
 class SeriousTest(unittest.TestCase):
@@ -127,6 +135,8 @@ class LiteralTests(SeriousTest):
         self.assert_serious(':.5', [0.5])
 
         self.assert_serious(':1+2.2i', [1+2.2j])
+        self.assert_serious(':12+', [12])
+        self.assert_serious(':+', [0])
 
     def test_functions(self):
         self.assert_serious("`foo`", [SeriousFunction("foo")])
@@ -279,8 +289,8 @@ class MathTests(SeriousTest):
         self.assert_serious(':12F', [144])
         self.assert_serious(':20F', [6765])
         self.assert_serious(':38F', [39088169])
-        self.assert_serious(':50'+chr_cp437(0xF6), [[1, 2, 5, 10, 25]])
-        self.assert_serious('5'+chr_cp437(0xF6), [[1]])
+        self.assert_serious(':50'+chr_cp437(0xF6), [[1, 2, 5, 10, 25, 50]])
+        self.assert_serious('5'+chr_cp437(0xF6), [[1, 5]])
 
     def test_trig(self):
         trig_fns = {
@@ -355,10 +365,14 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('3"1234"'+chr_cp437(0xB5), [['34','2','1']])
         self.assert_serious('"abc"3'+chr_cp437(0xE0), [["abc", "abc", "abc"]])
         self.assert_serious('53'+chr_cp437(0xE0), [[5, 5, 5]])
+        self.assert_serious("' u", ['!'])
+        self.assert_serious("'!D", [' '])
         
     def test_list_methods(self):
         self.assert_serious('[1,2,3][4,5,6]'+chr_cp437(0x9D), [[5, 7, 9]])
         self.assert_serious('3R;3+'+chr_cp437(0x9D), [[5, 7, 9]])
+        self.assert_serious('3R5#+', [[5, 1, 2, 3]])
+        self.assert_serious('3R"abc"+', [["abc", 1, 2, 3]])
         self.assert_serious("""'0"010203040"#s""", [[[],['1'],['2'],['3'],['4'],[]]])
         self.assert_serious('0"10203"s', [['1', '2', '3']])
         self.assert_serious('2[1,2,3,4]V', [[[1],[1,2,],[2,3],[3,4],[4]]])
@@ -395,6 +409,9 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('3R♂D', [[0, 1, 2]])
         self.assert_serious('[1,2,3];♀ⁿ', [[1, 4, 27]])
         self.assert_serious('3R;♀ⁿ', [[1, 4, 27]])
+        self.assert_serious('[1,2,3]2♀>', [[1, 0, 0]])
+        self.assert_serious('3R2♀>', [[1, 0, 0]])
+        self.assert_serious('12♀>', [[1]])
         self.assert_serious('[1,2,3]/', [[3,1,2]])
         self.assert_serious('3R/', [[3,1,2]])
         self.assert_serious('[1,2,3]\\', [[2,3,1]])
@@ -424,6 +441,7 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('4#5'+chr_cp437(0xE0), [[4,4,4,4,4]])
         self.assert_serious('[4,5]5'+chr_cp437(0xE0), [[4, 5, 4, 5, 4, 5, 4, 5, 4, 5]])
         self.assert_serious('2R3'+chr_cp437(0xE0), [[1, 2, 1, 2, 1, 2]])
+        self.assert_serious('3R'+chr_cp437(0xE6), [2.160246899469287])
 
 class BaseConversionTests(SeriousTest):
     def test_bases(self):
@@ -434,6 +452,7 @@ class BaseConversionTests(SeriousTest):
         self.assert_serious(':3.07'+chr_cp437(0xC3), ['0100000000001000100011110101110000101000111101011100001010001111'])
         self.assert_serious(':256"{}"'.format(chr_cp437(0xA8)+chr_cp437(0xAD))+chr_cp437(0xA8), [0xA8*256+0xAD])
         self.assert_serious(':256:{}'.format(0xA8*256+0xAD)+chr_cp437(0xAD), [chr_cp437(0xA8)+chr_cp437(0xAD)])
+        self.assert_serious('20k:16@'+chr_cp437(0xA8), [0x20])
         
 class FunctionTests(SeriousTest):
     def test_function_methods(self):
@@ -456,4 +475,5 @@ class FunctionTests(SeriousTest):
         
 class RandomTests(SeriousTest):
     def test_random(self):
-        self.assert_serious('2v52BG52V6J"abcd"J"abcd"'+chr_cp437(0xC8), ['abcd', 'c', 1, 3.0831724219508216, 0.09158478740507359, 2])
+        random.seed(0)
+        self.assert_serious('2v52BG52V6J"abcd"J"abcd"'+chr_cp437(0xC8), ['badc', 'c', 1, 3.0831724219508216, 0.09158478740507359, 2])

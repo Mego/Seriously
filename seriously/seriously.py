@@ -7,6 +7,7 @@ if sys.version_info[0] != 3: # pragma: no cover
 import argparse
 from ast import literal_eval
 import binascii
+import collections
 import hashlib
 import random
 import re
@@ -22,8 +23,30 @@ ord_cp437 = CP437.ord
 
 chr_cp437 = CP437.chr
 
+def remove_lists(code):
+    result = ''
+    i = 0
+    while i < len(code):
+        c = code[i]
+        if c == '[':
+            l = ''
+            i += 1
+            nest = 1
+            while i < len(code):
+                if code[i] == '[':
+                    nest += 1
+                elif code[i] == ']':
+                    nest -= 1
+                    if nest == 0:
+                        break
+                l += code[i]
+                i += 1
+        else:
+            result += code[i]
+            i += 1
+    return result
 
-class Seriously(object):
+class Seriously:
     @classmethod
     def _make_new(cls, init=None, debug_mode=False):
         return cls([] if init is None else init, debug_mode)
@@ -67,7 +90,7 @@ class Seriously(object):
         if self.debug_mode:
             print(code)
         i = 0
-        if all(x not in code for x in (',',chr_cp437(0xCA),chr_cp437(0x09),chr_cp437(0x15))):
+        if all(x not in remove_lists(code) for x in (',',chr_cp437(0xCA),chr_cp437(0x09),chr_cp437(0x15))):
             for line in sys.stdin.read().splitlines():
                 self.push(literal_eval(line))
                 self.inputs.append(literal_eval(line))
@@ -102,7 +125,7 @@ class Seriously(object):
                         if self.debug_mode:
                             print(val)
                     except:
-                        while val:
+                        while not val and v:
                             v = v[:-1]
                             i -= 1
                             try:
@@ -158,6 +181,13 @@ class Seriously(object):
                     self.fn_table.get(ord_cp437('M'))(self)
                 elif ord_cp437(c) == 0x0C:
                     i += 1
+                    a,b = self.pop(), self.pop()
+                    if not isinstance(a, collections.Iterable):
+                        a = [a for _ in (b if isinstance(b, collections.Iterable) else [1])]
+                    if not isinstance(b, collections.Iterable):
+                        b = [b for _ in a]
+                    self.push(b)
+                    self.push(a)
                     self.fn_table.get(ord_cp437('Z'))(self)
                     self.push(SeriouslyCommands.SeriousFunction('i'+code[i]))
                     self.fn_table.get(ord_cp437('M'))(self)
