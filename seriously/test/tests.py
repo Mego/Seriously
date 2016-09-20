@@ -273,6 +273,12 @@ class MathTests(SeriousTest):
         self.assert_serious('4R'+chr_cp437(0x91), [2.5])
         self.assert_serious('[1,2,3,4]'+chr_cp437(0xE5), [[1, 3, 6, 10]])
         self.assert_serious('4R'+chr_cp437(0xE5), [[1, 3, 6, 10]])
+        self.assert_serious('[1,2,3]3R=', [1])
+        self.assert_serious('[65,66,67]"ABC"O=', [1])
+        self.assert_serious('2Rx', [[1]])
+        self.assert_serious('"ABC"OΣ', [65+66+67])
+        self.assert_serious('4RΣ', [1+2+3+4])
+        self.assert_serious('3r:65+"ABC"O=', [1])
 
     def test_filters(self):
         self.assert_serious("[4]12'3k"+chr_cp437(0x8D), [[1, 2]])
