@@ -318,6 +318,7 @@ def rot2_fn(srs):
 def d_fn(srs):
     a=srs.pop()
     if isinstance(a, collections.Iterable) and not isinstance(a, str):
+        a=[x for x in a]
         b=a.pop(-1)
         srs.push(a)
         srs.push(b)
@@ -357,6 +358,7 @@ def p_fn(srs):
     if isinstance(a, int):
         srs.push(is_prime(a))
     elif isinstance(a, collections.Iterable) and not isinstance(a, str):
+        a=[x for x in a]
         b=a.pop(0)
         srs.push(a)
         srs.push(b)
