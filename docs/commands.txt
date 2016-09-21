@@ -28,7 +28,7 @@
 1B (←):
 1C (∟):
 1D (↔):
-1E (▲):
+1E (▲): pop a,b: push lcm(a,b); pop [a]: push lcm([a])
 1F (▼): pop a,b: push b//gcd(a,b),a//gcd(a,b); pop [a]: push [x//gcd([a]) for x in [a]]
 20 ( ): push the # of elements on the stack (push len(stack))
 21 (!): pop a: push a! (factorial(a))

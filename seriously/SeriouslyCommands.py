@@ -1135,10 +1135,25 @@ def equal_fn(srs):
         srs.push(int(as_list(a) == as_list(b)))
     else:
         srs.push(int(a == b))
+        
+def lcm(a, b):
+    return a*b//gcd(a,b) if a and b else a or b
+    
+def lcm_many(*args):
+    return reduce(lcm, args)
+    
+def lcm_fn(srs):
+    a = srs.pop()
+    if isinstance(a, collections.Iterable):
+        srs.push(lcm_many(*a) if a else a)
+    else:
+        b = srs.pop()
+        srs.push(lcm(a,b))
     
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x15:lambda x:x.push(sys.stdin.read()),
+        0x1E:lcm_fn,
         0x1F:reduce_fn,
         0x20:lambda x:x.push(len(x.stack)),
         0x21:lambda x:x.push(math.factorial(x.pop())),
