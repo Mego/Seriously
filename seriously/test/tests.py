@@ -238,6 +238,7 @@ class MathTests(SeriousTest):
         self.assert_serious('[2,3]'+chr_cp437(0x8C), [[2j,3j]])
         self.assert_serious('2Ru'+chr_cp437(0x8C), [[2j,3j]])
         self.assert_serious(':1+2j'+chr_cp437(0xD7), [2, 1])
+        self.assert_serious('6:21▲', [42])
 
     def test_lists(self):
         self.assert_serious('[1][1,2]-', [[2]])
@@ -273,6 +274,15 @@ class MathTests(SeriousTest):
         self.assert_serious('4R'+chr_cp437(0x91), [2.5])
         self.assert_serious('[1,2,3,4]'+chr_cp437(0xE5), [[1, 3, 6, 10]])
         self.assert_serious('4R'+chr_cp437(0xE5), [[1, 3, 6, 10]])
+        self.assert_serious('[1,2,3]3R=', [1])
+        self.assert_serious('[65,66,67]"ABC"O=', [1])
+        self.assert_serious('2Rx', [[1]])
+        self.assert_serious('"ABC"OΣ', [65+66+67])
+        self.assert_serious('4RΣ', [1+2+3+4])
+        self.assert_serious('3r:65+"ABC"O=', [1])
+        self.assert_serious('[8,9,21]▲', [504])
+        self.assert_serious('[42]▲', [42])
+        self.assert_serious('[]▲', [[]])
 
     def test_filters(self):
         self.assert_serious("[4]12'3k"+chr_cp437(0x8D), [[1, 2]])

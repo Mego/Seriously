@@ -687,8 +687,8 @@ def zip_fn(srs):
         srs.push(zip_longest(*lists))
 
 def sum_fn(srs):
-    a=srs.pop()
-    if a == []:
+    a=[x for x in srs.pop()]
+    if len(a) == 0:
         srs.push(0)
     else:
         res = _sum(a,start=type(a[0])()) if not isinstance(a[0], str) else ''.join(map(str,a))
@@ -836,7 +836,7 @@ def reg_all_input_fn(srs):
 def range_ab_fn(srs):
     a = srs.pop()
     if isinstance(a, collections.Iterable):
-        srs.push(range(*a))
+        srs.push(range(*[x for x in a]))
     else:
         b = srs.pop()
         srs.push(range(a,b))
@@ -1129,9 +1129,31 @@ def mu_fn(srs):
     a = srs.pop()
     srs.push(math.sqrt(mean(x**2 for x in a)))
     
+def equal_fn(srs):
+    a,b = srs.pop(), srs.pop()
+    if isinstance(a, collections.Iterable) and isinstance(b, collections.Iterable):
+        srs.push(int(as_list(a) == as_list(b)))
+    else:
+        srs.push(int(a == b))
+        
+def lcm(a, b):
+    return a*b//gcd(a,b) if a and b else a or b
+    
+def lcm_many(*args):
+    return reduce(lcm, args)
+    
+def lcm_fn(srs):
+    a = srs.pop()
+    if isinstance(a, collections.Iterable):
+        srs.push(lcm_many(*a) if a else a)
+    else:
+        b = srs.pop()
+        srs.push(lcm(a,b))
+    
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x15:lambda x:x.push(sys.stdin.read()),
+        0x1E:lcm_fn,
         0x1F:reduce_fn,
         0x20:lambda x:x.push(len(x.stack)),
         0x21:lambda x:x.push(math.factorial(x.pop())),
@@ -1149,7 +1171,7 @@ fn_table={
         0x2F:div_fn,
         0x3B:dupe_fn,
         0x3C:lambda x:x.push(int(x.pop()<x.pop())),
-        0x3D:lambda x:x.push(int(x.pop()==x.pop())),
+        0x3D:equal_fn,
         0x3E:lambda x:x.push(int(x.pop()>x.pop())),
         0x3F:lambda x:x,
         0x40:rot2_fn,
