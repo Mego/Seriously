@@ -261,18 +261,19 @@ def prime_count_fn(srs):
     if isinstance(a,int):
         global primes, max_tested
         init_primes_up_to(a)
-        if max_tested <= a:
-            return len(primes)
+        if max_tested >= a:
+            srs.push(len(primes))
+        else:
         #binary search
-        lo=0
-        hi=len(primes)-1
-        while lo<hi-1:
-            test = (lo+hi)//2
-            if primes[test]<=n:
-                lo=test
-            else:
-                hi=test
-        srs.push(lo+1)
+            lo=0
+            hi=len(primes)-1
+            while lo<hi-1:
+                test = (lo+hi)//2
+                if primes[test]<=1:
+                    lo=test
+                else:
+                    hi=test
+            srs.push(lo+1)
     else:
         srs.push(a)
 
