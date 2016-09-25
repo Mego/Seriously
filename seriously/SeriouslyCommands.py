@@ -221,7 +221,7 @@ def is_prime(x):
             return 0
         if p*p>x:
             break
-    for test in range(primes[-1]+2,int(rmath.sqrt(x))):
+    for test in range(primes[-1]+2,int(rmath.sqrt(x))+1):
         if x%test==0:
             return 0
     return 1
@@ -260,8 +260,8 @@ def prime_count_fn(srs):
     a=srs.pop()
     if isinstance(a,int):
         global primes, max_tested
-        init_primes_up_to(n)
-        if max_tested >= n >= primes[-1]:
+        init_primes_up_to(a)
+        if max_tested <= a:
             return len(primes)
         #binary search
         lo=0
