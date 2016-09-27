@@ -1153,6 +1153,17 @@ def lcm_fn(srs):
         b = srs.pop()
         srs.push(lcm(a,b))
     
+def slice_fn(srs):
+    a,b = srs.pop(), srs.pop()
+    a = list(a) if (isinstance(a, collections.Iterable) and not isinstance(a, str)) else a
+    if isinstance(b, collections.Iterable):
+        lb = list(b)
+        start, stop, step = (b+[None]*3)[:3]
+        srs.push(a[slice(start, stop, step)])
+    else:
+        c,d = srs.pop(), srs.pop()
+        srs.push(a[b:c:d])
+    
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x15:lambda x:x.push(sys.stdin.read()),
@@ -1338,6 +1349,7 @@ fn_table={
         0xE5:cumsum_fn,
         0xE6:mu_fn,
         0xE7:lambda x:x.push(x.pop()*2),
+        0xE8:slice_fn,
         0xEB:dig_fn,
         0xEC:lambda x:x.toggle_preserve(),
         0xED:lambda x:x.push(phi),
