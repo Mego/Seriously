@@ -171,6 +171,7 @@ Here are the rest of Seriously's numeric operators. ::
     8Γ       The gamma function. This returns 5040.0.
 
     54g      gcd(a,b). This returns the gcd of 4 and 5 (1).
+    68▲      lcm(a,b). This returns the lcm of 8 and 6 (24).
     :12:9▼   Pushes b//gcd(a,b), a//gcd(a,b). This returns 3, 4 (9//3, 12//3).
     5▒       totient(a), the number of integers < a that are coprime with a. This returns 4 (1, 2, 3, and 4).
     68h      The Euclidean norm of a and b, sqrt(a*a+b*b). This returns sqrt(8*8+6*6) = 10.0.
