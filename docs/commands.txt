@@ -230,7 +230,7 @@ E4 (Σ): pop [a]: push sum([a])
 E5 (σ): pop [a]: push cumulative sums of [a]
 E6 (µ): pop [a]: push rms (root-mean-square) of [a]
 E7 (τ): pop a: push 2*a
-E8 (Φ):
+E8 (Φ): pop [a],b,c,d: push a[b:c:d]; pop [a],[b]: push a[b[0]:b[1]:b[2]] (list slicing)
 E9 (Θ):
 EA (Ω):
 EB (δ): pop a: bring the (a mod len(stack))'th item on the stack to the top

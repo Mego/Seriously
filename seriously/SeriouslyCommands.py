@@ -221,7 +221,7 @@ def is_prime(x):
             return 0
         if p*p>x:
             break
-    for test in range(primes[-1]+2,int(rmath.sqrt(x))):
+    for test in range(primes[-1]+2,int(rmath.sqrt(x))+1):
         if x%test==0:
             return 0
     return 1
@@ -260,19 +260,20 @@ def prime_count_fn(srs):
     a=srs.pop()
     if isinstance(a,int):
         global primes, max_tested
-        init_primes_up_to(n)
-        if max_tested >= n >= primes[-1]:
-            return len(primes)
+        init_primes_up_to(a)
+        if max_tested >= a:
+            srs.push(len(primes))
+        else:
         #binary search
-        lo=0
-        hi=len(primes)-1
-        while lo<hi-1:
-            test = (lo+hi)//2
-            if primes[test]<=n:
-                lo=test
-            else:
-                hi=test
-        srs.push(lo+1)
+            lo=0
+            hi=len(primes)-1
+            while lo<hi-1:
+                test = (lo+hi)//2
+                if primes[test]<=1:
+                    lo=test
+                else:
+                    hi=test
+            srs.push(lo+1)
     else:
         srs.push(a)
 
@@ -1152,6 +1153,17 @@ def lcm_fn(srs):
         b = srs.pop()
         srs.push(lcm(a,b))
     
+def slice_fn(srs):
+    a,b = srs.pop(), srs.pop()
+    a = list(a) if (isinstance(a, collections.Iterable) and not isinstance(a, str)) else a
+    if isinstance(b, collections.Iterable):
+        lb = list(b)
+        start, stop, step = (b+[None]*3)[:3]
+        srs.push(a[slice(start, stop, step)])
+    else:
+        c,d = srs.pop(), srs.pop()
+        srs.push(a[b:c:d])
+    
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x15:lambda x:x.push(sys.stdin.read()),
@@ -1337,6 +1349,7 @@ fn_table={
         0xE5:cumsum_fn,
         0xE6:mu_fn,
         0xE7:lambda x:x.push(x.pop()*2),
+        0xE8:slice_fn,
         0xEB:dig_fn,
         0xEC:lambda x:x.toggle_preserve(),
         0xED:lambda x:x.push(phi),
