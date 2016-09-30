@@ -142,7 +142,7 @@ class Seriously:
                     break
             l += code[i]
             i += 1
-        reutrn literal_eval('[{}]'.format(l)), i
+        return literal_eval('[{}]'.format(l)), i
         
     @staticmethod
     def parse_function(code, i):
