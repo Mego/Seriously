@@ -174,14 +174,14 @@ class Seriously:
                     self.push(code[i])
                 elif c == ':':
                     val, i = Seriously.parse_numeric(code, i)
-                    srs.push(val)
+                    self.push(val)
                 elif c == 'W':
                     inner, i = Seriously.parse_while(code, i)
                     while self.peek():
                         self.eval(inner)
                 elif c == '[':
                     l, i = Seriously.parse_list(code, i)
-                    srs.push(l)
+                    self.push(l)
                 elif c == '`':
                     f, i = Seriously.parse_function(code, i)
                     self.push(SeriouslyCommands.SeriousFunction(f))
