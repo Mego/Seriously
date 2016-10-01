@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from collections import deque as _deque
-from collections.abc import Iterable
+from collections import Iterable
 from itertools import islice, zip_longest as izip
 
 def as_list(val, wrap=True):
