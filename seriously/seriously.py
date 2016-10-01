@@ -191,6 +191,12 @@ class Seriously:
                     self.fn_table.get(ord_cp437('Z'))(self)
                     self.push(SeriouslyCommands.SeriousFunction('i'+code[i]))
                     self.fn_table.get(ord_cp437('M'))(self)
+                elif ord_cp437(c) == 0x14:
+                    i += 1
+                    cmd = code[i]
+                    a = self.pop()
+                    for _ in range(a):
+                        self.eval(cmd)
                 else:
                     if self.debug_mode:
                         print("{:2X}".format(ord_cp437(c)))

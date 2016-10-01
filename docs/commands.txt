@@ -18,7 +18,7 @@
 11 (◄):
 12 (↕):
 13 (‼):
-14 (¶):
+14 (¶): pop a: repeat the next command a times
 15 (§): push all data from stdin as a string
 16 (▬):
 17 (↨):

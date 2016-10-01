@@ -188,6 +188,10 @@ class StackTests(SeriousTest):
         self.assert_serious('1'+chr_cp437(0xEC)+'D', [0, 1])
         self.assert_serious('N', [NinetyNineBottles()])
 
+    def test_repeat(self):
+        self.assert_serious('3¶5', [5, 5, 5])
+        self.assert_serious('52¶²', [5**4])
+
 
 class RegisterTests(SeriousTest):
     def test_push_pop(self):
