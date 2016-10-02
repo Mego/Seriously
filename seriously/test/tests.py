@@ -372,7 +372,6 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('`foo`'+chr_cp437(0x8A), ['`foo`'])
         self.assert_serious('"1.23"i', [1.23])
         self.assert_serious('"123"R', ["321"])
-        self.assert_serious('"abcdefg"'+chr_cp437(0xF4)+chr_cp437(0xF5), ["abcdefg"])
         self.assert_serious('"abc"3*', ['abcabcabc'])
         self.assert_serious('3"abc"*', ['abcabcabc'])
         self.assert_serious('3"1234"'+chr_cp437(0xD8), [['4','123']])

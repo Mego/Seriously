@@ -11,7 +11,6 @@ import struct
 from itertools import zip_longest as izip
 from lib.cp437 import CP437
 from lib.iterable import deque, as_list, zip_longest
-import lzma
 
 try:
     from statistics import mean, median, mode, pstdev
@@ -1359,8 +1358,6 @@ fn_table={
         0xF1:lambda x:x.push(-x.pop()),
         0xF2:lambda x:x.push(x.pop()>=x.pop()),
         0xF3:lambda x:x.push(x.pop()<=x.pop()),
-        0xF4:lambda x:x.push(lzma.compress(x.pop().encode('cp437')).decode('cp437')),
-        0xF5:lambda x:x.push(lzma.decompress(x.pop().encode('cp437')).decode('cp437')),
         0xF6:divisors_fn,
         0xF7:lambda x:x.push(int(x.pop())),
         0xF8:lambda x:x.push(math.radians(x.pop())),
