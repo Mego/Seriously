@@ -382,6 +382,7 @@ class StringAndListTests(SeriousTest):
         self.assert_serious("'!D", [' '])
         self.assert_serious('240"abcdef"'+chr_cp437(0xE8), ["ac"])
         self.assert_serious('[0,4,2]"abcdef"'+chr_cp437(0xE8), ["ac"])
+        self.assert_serious("3R'.*", [['.', '..', '...']])
         
     def test_list_methods(self):
         self.assert_serious('[1,2,3][4,5,6]'+chr_cp437(0x9D), [[5, 7, 9]])
