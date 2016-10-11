@@ -6,9 +6,11 @@ if sys.version_info[0] != 3: # pragma: no cover
 
 import argparse
 from ast import literal_eval
+import atexit
 import binascii
 import collections
 import hashlib
+import os
 import random
 import re
 import traceback
@@ -242,6 +244,8 @@ def main(): # pragma: no cover
                         action="store_true")
     parser.add_argument("-i", "--ide",
                         help="disable unsafe commands", action="store_true")
+    parser.add_argument("-N", "--no-input",
+                        help="don't try to read input (equivalent to piping /dev/null)", action="store_true")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-c", "--code", help="run the specified code")
     group.add_argument("-f", "--file", help="specify an input file",
@@ -249,6 +253,9 @@ def main(): # pragma: no cover
     args = parser.parse_args()
     if args.ide:
         ide_mode()
+    if args.no_input:
+        sys.stdin = open(os.devnull, 'r')
+        atexit.register(lambda: sys.stdin.close())
     srs_exec(args.debug, args.file, args.code, args.ide)
     
 if __name__ == '__main__':
