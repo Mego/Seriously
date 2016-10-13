@@ -17,7 +17,6 @@ import traceback
 from . import SeriouslyCommands
 from lib.cp437 import CP437
 from lib.iterable import deque, as_list
-from Crypto.Cipher import AES
 
 anytype = SeriouslyCommands.anytype
 
@@ -224,15 +223,18 @@ class Seriously:
 def srs_exec(debug_mode=False, file_obj=None, code=None, ide_mode=False): # pragma: no cover
     code = code or file_obj.read()
     if (not ide_mode) and hashlib.sha256(code.encode()).hexdigest() == 'e8809dfaff977e1b36210203b7b44e83102263444695c1123799bc43358ae1c2':
-        hidden = binascii.unhexlify(b'f2ac048e406d7244ca202e34841611e115a9c97d554d0681a9ad1bb8f3d7f30b083ae2bae60721228fa5caaa39d205e4e8c61421b9e8fdcbd4b03cafa0e6d726540de6e8bbddf42796a63eb3112c0890bc2f32a435ae304c1bc8d9a463402c9ef1b3fcdbf53743cb737a147bb1aa16e4a71a22adac29d1b310358c40699edf897942e83ff7e1949777eebc02e9ecf24e')
-        cipher = AES.new(code.encode(), AES.MODE_ECB)
-        secret = cipher.decrypt(hidden).decode()
-        exec(secret)
-        exit()
+        try:
+            from Crypto.Cipher import AES
+            hidden = binascii.unhexlify(b'f2ac048e406d7244ca202e34841611e115a9c97d554d0681a9ad1bb8f3d7f30b083ae2bae60721228fa5caaa39d205e4e8c61421b9e8fdcbd4b03cafa0e6d726540de6e8bbddf42796a63eb3112c0890bc2f32a435ae304c1bc8d9a463402c9ef1b3fcdbf53743cb737a147bb1aa16e4a71a22adac29d1b310358c40699edf897942e83ff7e1949777eebc02e9ecf24e')
+            cipher = AES.new(code.encode(), AES.MODE_ECB)
+            secret = cipher.decrypt(hidden).decode()
+            exec(secret)
+            exit()
+        except ImportError:
+            pass
     srs = Seriously(debug_mode=debug_mode)
     for x in srs.eval(code):
         print(x)
-
 
 def ide_mode():
     SeriouslyCommands.fn_table[0xF0] = lambda x: x.push(literal_eval(x.pop()))
@@ -257,6 +259,6 @@ def main(): # pragma: no cover
         sys.stdin = open(os.devnull, 'r')
         atexit.register(lambda: sys.stdin.close())
     srs_exec(args.debug, args.file, args.code, args.ide)
-    
+
 if __name__ == '__main__':
     main()
