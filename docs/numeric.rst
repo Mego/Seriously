@@ -158,7 +158,19 @@ These functions deal with primes and factorization. ::
     :60w      Returns the full positive prime factorization of abs(x). This returns [[2, 2], [3, 1], [5, 1]] (2**2 + 3**1 + 5**1).
     :72y      Returns The positive prime factors of abs(x). This returns [2, 3].
 
-1.10. Miscellaneous Numeric Operators
+1.10. Base Conversion Commands
+------------------------------
+
+These commands deal with conversion to and from other bases. ::
+
+    59¡      For a and b, pushes a string representing a in base b. This returns "14".
+    5"14"¿   For a and b, Interprets [a] or "a" as a base-b int. This returns 9.
+    :64├     bin(a) for ints, binary float data for floats, ascii_to_bin(a) for strings. This returns "1000000".
+    :64─     Same as the bin built-in but to hexadecimal. This returns "40".
+    :64▀     For a, pushes all of the digits in base a. 
+               This returns "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+/".
+
+1.11. Miscellaneous Numeric Operators
 ------------------------------------
 
 Here are the rest of Seriously's numeric operators. ::
@@ -192,7 +204,7 @@ Here are the rest of Seriously's numeric operators. ::
     :256:╘   log2(a). This returns 8.
     TBC
 
-1.11. Important Constants
+1.12. Important Constants
 ------------------------
 
 Here are some important constants. ::
