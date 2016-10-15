@@ -188,6 +188,10 @@ class StackTests(SeriousTest):
         self.assert_serious('1'+chr_cp437(0xEC)+'D', [0, 1])
         self.assert_serious('N', [NinetyNineBottles()])
 
+    def test_repeat(self):
+        self.assert_serious('3¶5', [5, 5, 5])
+        self.assert_serious('52¶²', [5**4])
+
 
 class RegisterTests(SeriousTest):
     def test_push_pop(self):
@@ -368,17 +372,17 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('`foo`'+chr_cp437(0x8A), ['`foo`'])
         self.assert_serious('"1.23"i', [1.23])
         self.assert_serious('"123"R', ["321"])
-        self.assert_serious('"abcdefg"'+chr_cp437(0xF4)+chr_cp437(0xF5), ["abcdefg"])
         self.assert_serious('"abc"3*', ['abcabcabc'])
         self.assert_serious('3"abc"*', ['abcabcabc'])
-        self.assert_serious('3"1234"'+chr_cp437(0xD8), [['4','123']])
-        self.assert_serious('3"1234"'+chr_cp437(0xB5), [['34','2','1']])
+        self.assert_serious('3"1234"'+chr_cp437(0xD8), [['123', '4']])
+        self.assert_serious('3"1234"'+chr_cp437(0xB5), [['1', '2', '34']])
         self.assert_serious('"abc"3'+chr_cp437(0xE0), [["abc", "abc", "abc"]])
         self.assert_serious('53'+chr_cp437(0xE0), [[5, 5, 5]])
         self.assert_serious("' u", ['!'])
         self.assert_serious("'!D", [' '])
         self.assert_serious('240"abcdef"'+chr_cp437(0xE8), ["ac"])
         self.assert_serious('[0,4,2]"abcdef"'+chr_cp437(0xE8), ["ac"])
+        self.assert_serious("3R'.*", [['.', '..', '...']])
         
     def test_list_methods(self):
         self.assert_serious('[1,2,3][4,5,6]'+chr_cp437(0x9D), [[5, 7, 9]])
@@ -448,8 +452,8 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('3RN', [3])
         self.assert_serious('[1,2,3]F', [1])
         self.assert_serious('3RF', [1])
-        self.assert_serious('3[1,2,3,4]'+chr_cp437(0xD8), [[[4],[1,2,3]]])
-        self.assert_serious('34R'+chr_cp437(0xB5), [[[3, 4],[2],[1]]])
+        self.assert_serious('3[1,2,3,4]'+chr_cp437(0xD8), [[[1,2,3], [4]]])
+        self.assert_serious('34R'+chr_cp437(0xB5), [[[1],[2],[3, 4]]])
         self.assert_serious('4#5'+chr_cp437(0xE0), [[4,4,4,4,4]])
         self.assert_serious('[4,5]5'+chr_cp437(0xE0), [[4, 5, 4, 5, 4, 5, 4, 5, 4, 5]])
         self.assert_serious('2R3'+chr_cp437(0xE0), [[1, 2, 1, 2, 1, 2]])
@@ -458,6 +462,8 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('3Rp', [1, [2, 3]])
         self.assert_serious('2406R'+chr_cp437(0xE8), [[1,3]])
         self.assert_serious('[0,4,2]6R'+chr_cp437(0xE8), [[1,3]])
+        self.assert_serious('36R╡', [[[1, 2], [3, 4], [5, 6]]])
+        self.assert_serious('3[1,2,3,4]╡', [[[1], [2], [3, 4]]])
 
 class BaseConversionTests(SeriousTest):
     def test_bases(self):

@@ -10,8 +10,8 @@ python:
 matrix:
   allow_failures:
   - python: pypy3
-before_script:
-- pip install -r requirements.txt
+install:
+- pip install -r ide_requirements.txt
 - pip install coverage
 - pip install codecov
 script:

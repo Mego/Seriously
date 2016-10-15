@@ -11,7 +11,6 @@ import struct
 from itertools import zip_longest as izip
 from lib.cp437 import CP437
 from lib.iterable import deque, as_list, zip_longest
-import lzma
 
 try:
     from statistics import mean, median, mode, pstdev
@@ -564,11 +563,11 @@ def j_fn(srs):
 def star_fn(srs):
     a=srs.pop()
     b=srs.pop()
-    if isinstance(a, str) or isinstance(b, str):
+    if (isinstance(a, str) and not isinstance(b, collections.Iterable)) or (isinstance(b, str) and not isinstance(a, collections.Iterable)):
         srs.push(a*b)
-    elif isinstance(a, collections.Iterable) and not isinstance(b, collections.Iterable):
+    elif isinstance(a, collections.Iterable) and (not isinstance(b, collections.Iterable) or isinstance(b, str)):
         srs.push([x*b for x in a])
-    elif isinstance(b, collections.Iterable) and not isinstance(a, collections.Iterable):
+    elif isinstance(b, collections.Iterable) and (not isinstance(a, collections.Iterable) or isinstance(a, str)):
         srs.push([x*a for x in b])
     elif isinstance(a, collections.Iterable) and isinstance(b, collections.Iterable):
         srs.push(_sum([prod(x) for x in izip(a,b,fillvalue=0)]))
@@ -1018,14 +1017,14 @@ def comp_parts_fn(srs):
     c = complex(a)
     srs.push(c.real)
     srs.push(c.imag)
-    
+
 def pow_fn(srs):
     a,b = srs.pop(), srs.pop()
     if isinstance(a, collections.Iterable):
         srs.push(map(lambda x:x**b, a))
     else:
         srs.push(pow(a,b))
-        
+
 def Y_fn(srs):
     a = srs.pop()
     if isinstance(a, SeriousFunction):
@@ -1035,7 +1034,7 @@ def Y_fn(srs):
             a(srs)
     else:
         srs.push(0 if a else 1)
-        
+
 def mean_fn(srs):
     a = srs.pop()
     srs.push(mean(a))
@@ -1043,24 +1042,24 @@ def mean_fn(srs):
 def mode_fn(srs):
     a = srs.pop()
     srs.push(mode([x for x in a]))
-    
+
 def add_reg0_fn(srs):
     global registers
     a = srs.pop()
     registers[0] += a
-    
+
 def add_reg1_fn(srs):
     global registers
     a = srs.pop()
     registers[1] += a
-    
+
 def cumsum_fn(srs):
     a = srs.pop()
     sums = []
     for i in range(len(a)):
         sums.append(sum(a[:i+1]))
     srs.push(sums)
-    
+
 def u_fn(srs):
     a = srs.pop()
     if isinstance(a, collections.Iterable) and not isinstance(a, str):
@@ -1070,7 +1069,7 @@ def u_fn(srs):
             srs.push(chr_cp437(ord_cp437(a)+1%256))
     else:
         srs.push(a+1)
-        
+
 def caret_fn(srs):
     a,b = srs.pop(),srs.pop()
     isstr = isinstance(a, str)
@@ -1083,11 +1082,11 @@ def caret_fn(srs):
         srs.push(xor)
     else:
         srs.push(a^b)
-        
+
 def divisors_fn(srs):
     a = srs.pop()
     srs.push([x for x in range(1, a+1) if a%x==0])
-    
+
 def chunk_len_fn(srs):
     a = srs.pop()
     a = [x for x in a] if not isinstance(a, str) else a
@@ -1095,21 +1094,22 @@ def chunk_len_fn(srs):
     res = []
     for i in range(0, len(a), b):
         res.append(a[i:i+b])
-    srs.push(res[::-1])
-        
+    srs.push(res)
+
 def chunk_num_fn(srs):
     a = srs.pop()
     a = [x for x in a] if not isinstance(a, str) else a
     b = srs.pop()
     diff = len(a)%b
     chunksize = [len(a)//b+(i<diff) for i in range(b)][::-1]
-    i = 0
+    i,j = 0,0
     res = []
-    while i < len(a):
-        res.append(a[i:i+chunksize[i]])
-        i += chunksize[i]
-    srs.push(res[::-1])
-        
+    while j < len(a):
+        res.append(a[j:j+chunksize[i]])
+        j += chunksize[i]
+        i += 1
+    srs.push(res)
+
 def list_repeat_fn(srs):
     a = srs.pop()
     b = srs.pop()
@@ -1119,7 +1119,7 @@ def list_repeat_fn(srs):
         srs.push([x for x in b]*a)
     else:
         srs.push([b]*a)
-        
+
 def nth_input_fn(srs):
     a = srs.pop() if len(srs.stack) else 0
     try:
@@ -1127,24 +1127,24 @@ def nth_input_fn(srs):
     except:
         srs.push(a)
         srs.push(srs.inputs[0])
-        
+
 def mu_fn(srs):
     a = srs.pop()
     srs.push(math.sqrt(mean(x**2 for x in a)))
-    
+
 def equal_fn(srs):
     a,b = srs.pop(), srs.pop()
     if isinstance(a, collections.Iterable) and isinstance(b, collections.Iterable):
         srs.push(int(as_list(a) == as_list(b)))
     else:
         srs.push(int(a == b))
-        
+
 def lcm(a, b):
     return a*b//gcd(a,b) if a and b else a or b
-    
+
 def lcm_many(*args):
     return reduce(lcm, args)
-    
+
 def lcm_fn(srs):
     a = srs.pop()
     if isinstance(a, collections.Iterable):
@@ -1152,7 +1152,7 @@ def lcm_fn(srs):
     else:
         b = srs.pop()
         srs.push(lcm(a,b))
-    
+
 def slice_fn(srs):
     a,b = srs.pop(), srs.pop()
     a = list(a) if (isinstance(a, collections.Iterable) and not isinstance(a, str)) else a
@@ -1163,7 +1163,7 @@ def slice_fn(srs):
     else:
         c,d = srs.pop(), srs.pop()
         srs.push(a[b:c:d])
-    
+
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x15:lambda x:x.push(sys.stdin.read()),
@@ -1359,8 +1359,6 @@ fn_table={
         0xF1:lambda x:x.push(-x.pop()),
         0xF2:lambda x:x.push(x.pop()>=x.pop()),
         0xF3:lambda x:x.push(x.pop()<=x.pop()),
-        0xF4:lambda x:x.push(lzma.compress(x.pop().encode('cp437')).decode('cp437')),
-        0xF5:lambda x:x.push(lzma.decompress(x.pop().encode('cp437')).decode('cp437')),
         0xF6:divisors_fn,
         0xF7:lambda x:x.push(int(x.pop())),
         0xF8:lambda x:x.push(math.radians(x.pop())),
