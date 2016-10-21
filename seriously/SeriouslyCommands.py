@@ -108,7 +108,10 @@ class MathSelector(object):
         try:
             return getattr(rmath,self.fn)(*args, **kwargs)
         except:
-            return getattr(cmath,self.fn)(*args, **kwargs)
+            if self.fn != 'fsum':
+                return getattr(cmath,self.fn)(*args, **kwargs)
+            else:
+                return sum(*args, **kwargs)
 
 class Math(object):
     def __getattr__(self, fn):
