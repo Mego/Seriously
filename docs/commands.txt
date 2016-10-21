@@ -80,7 +80,7 @@
 4F (O): pop "a" or [a]: push [ord(c) for each c in "a" or [a], starting from the end]. If a list is popped, it is flattened, and if it contains strings of length > 1, the strings are exploded in-place ("ABC" -> [65,66,67], ["A","B","CD"] -> [65,66,67,68])
 50 (P): pop a: push the a-th prime (zero-indexed)
 51 (Q): if stack is empty: push the program's source code
-52 (R): pop f,[a]: call f, using [a] as a temporary stack, push [a] (similar to reduce(f,[a])); pop "a" or [a]: push reversed value ("a".reverse() or [a][::-1]); pop a: push [1,2,...,a] (range(1,a+1))
+52 (R): pop f,[a]: call f, using [a] as a temporary stack, push [a]; pop "a" or [a]: push reversed value ("a".reverse() or [a][::-1]); pop a: push [1,2,...,a] (range(1,a+1))
 53 (S): pop a: push sin(a); pop "a" or [a]: push sorted(a)
 54 (T): pop a: push tan(a); pop [a],b,c: set [a][b] to c, push [a]
 55 (U): pop [a],[b]: push union of [a] and [b]

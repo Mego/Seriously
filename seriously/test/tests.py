@@ -154,6 +154,12 @@ class LiteralTests(SeriousTest):
 class StackTests(SeriousTest):
     def test_count(self):
         self.assert_serious('1 ', [1, 1])
+        
+    def test_dupe(self):
+        self.assert_serious('1;', [1, 1])
+        self.assert_serious('"abc";', ["abc", "abc"])
+        self.assert_serious('3R;', [[1, 2, 3], [1, 2, 3]])
+        self.assert_serious('3R;Z;', [[[1,1], [2,2], [3,3]], [[1,1], [2,2], [3,3]]])
 
     def test_rotations(self):
         self.assert_serious('123(', [1, 3, 2])

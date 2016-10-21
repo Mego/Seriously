@@ -4,10 +4,11 @@ import operator, cmath
 import math as rmath
 import random, itertools, sys, string, binascii, ast
 from base64 import *
-from copy import copy
+from copy import copy as _copy
 import collections
 from functools import reduce, lru_cache
 import struct
+import types
 from itertools import zip_longest as izip
 from lib.cp437 import CP437
 from lib.iterable import deque, as_list, zip_longest
@@ -40,6 +41,11 @@ memoize = lru_cache(maxsize=None)
     # return template_specializer
 
 phi = (1+5**.5)/2
+
+def copy(a):
+    if isinstance(a, collections.Iterable) and not isinstance(a, str):
+        a = as_list(a)
+    return a, _copy(a)
 
 @memoize
 def Lucas(n): # pragma: no cover
@@ -182,7 +188,7 @@ def NinetyNineBottles():
         res += '\n\n'
     return res
 
-def _sum(data, start=None):
+def _sum(data, start=0):
     if any(anytype(x, float, complex) for x in data):
         return math.fsum(data)+start
     if start is None:
@@ -307,8 +313,9 @@ def idiv_fn(srs):
 
 def dupe_fn(srs):
     a=srs.pop()
+    a,b = copy(a)
     srs.push(a)
-    srs.push(copy(a))
+    srs.push(b)
 
 def rot2_fn(srs):
     a,b=srs.pop(),srs.pop()
@@ -399,14 +406,22 @@ def ins_bot_fn(srs):
     srs.stack=deque(srs.stack[:-a]+[b]+srs.stack[-a:])
 
 def dupe_all_fn(srs):
-    srs.stack.extend(copy(x) for x in srs.stack.copy())
+    newstack = []
+    copied = []
+    for value in srs.stack:
+        a,b = copy(value)
+        newstack.append(a)
+        copied.append(b)
+    srs.stack.clear()
+    srs.stack.extend(newstack+copied)
 
 def dupe_each_fn(srs):
     tmp=[]
     while len(srs.stack)>0:
         a=srs.pop()
+        a,b = copy(a)
         tmp.append(a)
-        tmp.append(copy(a))
+        tmp.append(b)
     srs.stack=deque(tmp[::-1])
 
 def lr_fn(srs):
