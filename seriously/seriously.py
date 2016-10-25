@@ -46,6 +46,7 @@ def remove_lists_and_strings(code):
             i += 1
             while i < len(code) and code[i] != '"':
                 i += 1
+            i += 1
         else:
             result += code[i]
             i += 1
