@@ -2,6 +2,7 @@
 import argparse
 import collections
 import contextlib
+import math
 import random
 from io import StringIO
 import sys
@@ -329,6 +330,13 @@ class MathTests(SeriousTest):
                     #skip hyperbolic functions for complex because they don't work right
                     # maybe some time in the future I'll learn enough math to make these tests work
                     self.assert_serious(':1+2j{}{}'.format(*fns), [1+2j], close=True)
+
+    def test_complex(self):
+        self.assert_serious('[1+2j,2+1j]Σ', [3+3j])
+        self.assert_serious('[1+2j,2+1j]π', [5j])
+        self.assert_serious('[1+2j,2+1j]σ', [[1+2j, 3+3j]])
+        self.assert_serious('[1+2j,2+1j]µ', [complex(math.sqrt(2), math.sqrt(2))])
+        self.assert_serious('[1+2j,2+1j]æ', [1.5+1.5j])
 
 
 class StringAndListTests(SeriousTest):

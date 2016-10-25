@@ -14,9 +14,9 @@ from lib.cp437 import CP437
 from lib.iterable import deque, as_list, zip_longest
 
 try:
-    from statistics import mean, median, mode, pstdev
+    from statistics import mean as _mean, median, mode, pstdev
 except ImportError:
-    from stats import mean, median, mode, pstdev
+    from stats import mean as _mean, median, mode, pstdev
 
 from lib.cp437 import CP437
 
@@ -108,10 +108,7 @@ class MathSelector(object):
         try:
             return getattr(rmath,self.fn)(*args, **kwargs)
         except:
-            if self.fn != 'fsum':
-                return getattr(cmath,self.fn)(*args, **kwargs)
-            else:
-                return sum(*args, **kwargs)
+            return getattr(cmath,self.fn)(*args, **kwargs)
 
 class Math(object):
     def __getattr__(self, fn):
@@ -119,6 +116,18 @@ class Math(object):
         return MathSelector(fn) if isinstance(getattr(mathmod,fn), collections.Callable) else getattr(rmath,fn)
 
 math = Math()
+
+def cfsum(args):
+    cargs = [complex(x) for x in args]
+    return complex(math.fsum([x.real for x in cargs]), math.fsum([x.imag for x in cargs]))
+    
+cmath.fsum = cfsum
+
+def mean(args):
+    try:
+        return _mean(args)
+    except:
+        return math.fsum(args)/len(args)
 
 def anytype(x, *types):
     return any(isinstance(x,t) for t in types) if types else False
@@ -1148,7 +1157,7 @@ def nth_input_fn(srs):
 
 def mu_fn(srs):
     a = srs.pop()
-    srs.push(math.sqrt(mean(x**2 for x in a)))
+    srs.push(math.sqrt(mean([x**2 for x in a])))
 
 def equal_fn(srs):
     a,b = srs.pop(), srs.pop()
