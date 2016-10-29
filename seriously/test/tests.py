@@ -335,7 +335,7 @@ class MathTests(SeriousTest):
         self.assert_serious('[1+2j,2+1j]Σ', [3+3j])
         self.assert_serious('[1+2j,2+1j]π', [5j])
         self.assert_serious('[1+2j,2+1j]σ', [[1+2j, 3+3j]])
-        self.assert_serious('[1+2j,2+1j]µ', [complex(math.sqrt(2), math.sqrt(2))])
+        self.assert_serious('[1+2j,2+1j]µ', [complex(math.sqrt(2), math.sqrt(2))], close=True)
         self.assert_serious('[1+2j,2+1j]æ', [1.5+1.5j])
 
 
