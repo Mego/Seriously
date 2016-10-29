@@ -531,6 +531,8 @@ def n_fn(srs):
 
 @memoize
 def full_factor(n):
+    if n < 1:
+        raise ValueError
     global primes
     n=abs(n)
     res=[]
@@ -552,6 +554,7 @@ def full_factor(n):
         res.append([n,1])
     return res
 
+@memoize
 def factor(n):
     return [a for a,b in full_factor(n)]
 
