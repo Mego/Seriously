@@ -3,10 +3,17 @@
 
 from setuptools import setup, find_packages
 
+need_stats = False
+
+try:
+    import statistics
+except:
+    need_stats = True
+
 setup(
     name='seriously',
 
-    version='2.0.65',
+    version='2.0.66',
 
     description='A Python-based golfing language',
     long_description='Seriously is a Python-based golfing language. See the GitHub page for more details.',
@@ -26,7 +33,7 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
     
-    install_requires = ['pycryptodome', 'stats'],
+    install_requires = ['pycryptodome'] + (['stats'] if need_stats else []),
     
     packages = ['seriously', 'lib'],
 
