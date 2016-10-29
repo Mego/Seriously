@@ -231,6 +231,7 @@ class MathTests(SeriousTest):
         self.assert_serious('21'+chr_cp437(0x80), [1+2j])
         self.assert_serious(':12w', [[[2,2],[3,1]]])
         self.assert_serious(':12y', [[2,3]])
+        self.assert_serious(':12o', [[2, 2, 3]])
         self.assert_serious(':-3s', [-1])
         self.assert_serious('3s', [1])
         self.assert_serious('0s', [0])

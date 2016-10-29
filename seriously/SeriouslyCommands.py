@@ -363,14 +363,17 @@ def i_fn(srs):
 def to_list_fn(srs):
     srs.stack = deque([as_list(srs.stack)])
 
-def psh_fn(srs):
+def o_fn(srs):
     a=srs.pop()
-    b=srs.pop()
-    if isinstance(a, str):
-        a = b+a
+    if isinstance(a, int):
+        srs.push(factor_with_multiplicity(a))
     else:
-        a = [b]+a
-    srs.push(a)
+        b=srs.pop()
+        if isinstance(a, str):
+            a = b+a
+        else:
+            a = [b]+a
+        srs.push(a)
 
 def p_fn(srs):
     a=srs.pop()
@@ -557,6 +560,13 @@ def full_factor(n):
 @memoize
 def factor(n):
     return [a for a,b in full_factor(n)]
+
+@memoize
+def factor_with_multiplicity(n):
+    res = []
+    for a,b in full_factor(n):
+        res.extend([a]*b)
+    return res
 
 def mod_fn(srs):
     a=srs.pop()
@@ -1261,7 +1271,7 @@ fn_table={
         0x6C:lambda x:x.push(len(x.pop())),
         0x6D:m_fn,
         0x6E:n_fn,
-        0x6F:psh_fn,
+        0x6F:o_fn,
         0x70:p_fn,
         0x71:enq_fn,
         0x72:lr_fn,
