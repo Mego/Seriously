@@ -2,7 +2,6 @@
 
 import atexit
 import pickle
-import pathlib
 import os
 import operator, cmath
 import math as rmath
@@ -28,8 +27,23 @@ chr_cp437 = CP437.chr
 ord_cp437 = CP437.ord
 
 global_cache = {}
-
-cache_file = pathlib.Path(os.path.expanduser('~'), '.srs', '.cache')
+try:
+    import pathlib
+    cache_file = pathlib.Path(os.path.expanduser('~'), '.srs', '.cache')
+except:
+    import contextlib
+    class Path:
+        def __init__(self, *args):
+            self.path = os.path.join(*args)
+        def exists(self):
+            return os.path.exists(self.path)
+        @contextlib.contextmanager
+        def open(mode):
+            f_obj = open(self.path, mode)
+            yield f_obj
+            f_obj.close()
+    cache_file = Path(os.path.expanduser('~'), '.srs', '.cache')
+        
 if cache_file.exists():
     with cache_file.open('rb') as cache:
         global_cache = pickle.load(cache)
@@ -40,8 +54,6 @@ def save_cache():
     global primes
     global_cache['fib'] = fib_cache
     global_cache['primes'] = primes
-    if not cache_file.exists():
-        cache_file.touch()
     with cache_file.open('wb') as cache:
         pickle.dump(global_cache, cache)
 

@@ -9,12 +9,18 @@ try:
     import statistics
 except:
     need_stats = True
-    
-import pathlib
+
 import os.path
-srs_dir = pathlib.Path(os.path.expanduser('~'), '.srs')
-if not srs_dir.exists():
-    srs_dir.mkdir()
+try:
+    import pathlib
+    srs_dir = pathlib.Path(os.path.expanduser('~'), '.srs')
+    if not srs_dir.exists():
+        srs_dir.mkdir()
+except:
+    import os
+    srs_dir = os.path.expanduser('~/.srs')
+    if not os.path.exists(srs_dir):
+        os.mkdir(srs_dir)
 
 setup(
     name='seriously',
