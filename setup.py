@@ -9,11 +9,17 @@ try:
     import statistics
 except:
     need_stats = True
+    
+import pathlib
+import os.path
+srs_dir = pathlib.Path(os.path.expanduser('~'), '.srs')
+if not srs_dir.exists():
+    srs_dir.mkdir()
 
 setup(
     name='seriously',
 
-    version='2.0.68',
+    version='2.1d',
 
     description='A Python-based golfing language',
     long_description='Seriously is a Python-based golfing language. See the GitHub page for more details.',

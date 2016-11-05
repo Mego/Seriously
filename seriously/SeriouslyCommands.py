@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 
+import atexit
+import pickle
+import pathlib
+import os
 import operator, cmath
 import math as rmath
 import random, itertools, sys, string, binascii, ast
 from base64 import *
 from copy import copy as _copy
 import collections
-from functools import reduce, lru_cache
+from functools import reduce, lru_cache, wraps
 import struct
 import types
 from itertools import zip_longest as izip
@@ -23,7 +27,40 @@ from lib.cp437 import CP437
 chr_cp437 = CP437.chr
 ord_cp437 = CP437.ord
 
-memoize = lru_cache(maxsize=None)
+global_cache = {}
+
+cache_file = pathlib.Path(os.path.expanduser('~'), '.srs', '.cache')
+if cache_file.exists():
+    with cache_file.open('rb') as cache:
+        global_cache = pickle.load(cache)
+
+def save_cache():
+    global global_cache
+    global fib_cache
+    global primes
+    global_cache['fib'] = fib_cache
+    global_cache['primes'] = primes
+    if not cache_file.exists():
+        cache_file.touch()
+    with cache_file.open('wb') as cache:
+        pickle.dump(global_cache, cache)
+
+atexit.register(save_cache)
+
+def memoize(fn):
+    global global_cache
+    fname = fn.__name__
+    if fn.__name__ not in global_cache:
+        global_cache[fname] = {}
+    @wraps(fn)
+    def call_fn(*args):
+        if args in global_cache[fname]:
+            return global_cache[fname][args]
+        else:
+            res = fn(*args)
+            global_cache[fname][args] = res
+            return res
+    return call_fn
 
 ##this will eventually get used hopefully
 # def template_specialize(fname, *args):
@@ -52,7 +89,7 @@ def Lucas(n): # pragma: no cover
     [a,b] = fast_fib(n)
     return (a<<1)+b
 
-fib_cache = {0:0, 1:1, 2:1}
+fib_cache = global_cache['fib'] if 'fib' in global_cache else {0:0, 1:1, 2:1}
 
 def Fib(n):
     global fib_cache
@@ -117,12 +154,14 @@ class Math(object):
 
 math = Math()
 
+@memoize
 def cfsum(args):
     cargs = [complex(x) for x in args]
     return complex(math.fsum([x.real for x in cargs]), math.fsum([x.imag for x in cargs]))
     
 cmath.fsum = cfsum
 
+@memoize
 def mean(args):
     try:
         return _mean(args)
@@ -200,6 +239,7 @@ def NinetyNineBottles():
         res += '\n\n'
     return res
 
+@memoize
 def _sum(data, start=0):
     if any(anytype(x, float, complex) for x in data):
         return math.fsum(data)+start
@@ -224,7 +264,7 @@ def nPr(n, k):
         return 1
     return math.factorial(n)//math.factorial(n-k)
 
-primes = [2,3]
+primes = global_cache['primes'] if 'primes' in global_cache else [2,3]
 max_tested = 4
 
 def is_prime(x):
