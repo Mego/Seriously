@@ -154,14 +154,12 @@ class Math(object):
 
 math = Math()
 
-@memoize
 def cfsum(args):
     cargs = [complex(x) for x in args]
     return complex(math.fsum([x.real for x in cargs]), math.fsum([x.imag for x in cargs]))
     
 cmath.fsum = cfsum
 
-@memoize
 def mean(args):
     try:
         return _mean(args)
@@ -239,7 +237,6 @@ def NinetyNineBottles():
         res += '\n\n'
     return res
 
-@memoize
 def _sum(data, start=0):
     if any(anytype(x, float, complex) for x in data):
         return math.fsum(data)+start
