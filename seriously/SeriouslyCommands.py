@@ -603,7 +603,15 @@ def j_fn(srs):
 def star_fn(srs):
     a=srs.pop()
     b=srs.pop()
-    if (isinstance(a, str) and not isinstance(b, collections.Iterable)) or (isinstance(b, str) and not isinstance(a, collections.Iterable)):
+    if isinstance(a, str) and not isinstance(b, collections.Iterable):
+        if b < 0:
+            b = abs(b)
+            a = a[::-1]
+        srs.push(a*b)
+    elif isinstance(b, str) and not isinstance(a, collections.Iterable):
+        if a < 0:
+            a = abs(a)
+            b = b[::-1]
         srs.push(a*b)
     elif isinstance(a, collections.Iterable) and (not isinstance(b, collections.Iterable) or isinstance(b, str)):
         srs.push([x*b for x in a])

@@ -358,6 +358,8 @@ class StringAndListTests(SeriousTest):
         self.assert_serious("'"+chr_cp437(0x09)+chr_cp437(0xD9), [9])
 
     def test_string_methods(self):
+        self.assert_serious('"ab"2*', ["abab"])
+        self.assert_serious('"ab"0DD*', ["baba"])
         self.assert_serious('" ab c "'+chr_cp437(0x93), ["ab c"])
         self.assert_serious('" ab c "'+chr_cp437(0x94), ["ab c "])
         self.assert_serious('" ab c "'+chr_cp437(0x95), [" ab c"])
