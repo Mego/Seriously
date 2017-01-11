@@ -378,6 +378,8 @@ def o_fn(srs):
 def p_fn(srs):
     a=srs.pop()
     if isinstance(a, int):
+        if srs.debug_mode:
+            print("{} is_prime => {}".format(a, is_prime(a)))
         srs.push(is_prime(a))
     elif isinstance(a, collections.Iterable) and not isinstance(a, str):
         a=[x for x in a]
@@ -540,7 +542,7 @@ def full_factor(n):
     n=abs(n)
     res=[]
     index = 0
-    init_primes_up_to(int(rmath.sqrt(n)))
+    init_primes_up_to(int(rmath.sqrt(n))+1)
     for p in primes:
         a=0
         while n%p==0:

@@ -251,6 +251,8 @@ class MathTests(SeriousTest):
         self.assert_serious('2Ru'+chr_cp437(0x8C), [[2j,3j]])
         self.assert_serious(':1+2j'+chr_cp437(0xD7), [2, 1])
         self.assert_serious('6:21▲', [42])
+        # weird prime bug test
+        self.assert_serious('9uyX9uR`p`░', [[2, 3, 5, 7]])
 
     def test_lists(self):
         self.assert_serious('[1][1,2]-', [[2]])
