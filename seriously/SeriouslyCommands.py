@@ -1214,6 +1214,20 @@ def slice_fn(srs):
         c,d = srs.pop(), srs.pop()
         srs.push(a[b:c:d])
 
+def add_two_fn(srs):
+    a = srs.pop()
+    if isinstance(a, collections.Iterable):
+        srs.push([x+2 for x in a])
+    else:
+        srs.push(a+2)
+
+def sub_two_fn(srs):
+    a = srs.pop()
+    if isinstance(a, collections.Iterable):
+        srs.push([x-2 for x in a])
+    else:
+        srs.push(a-2)
+
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x0A:lambda x:print(x.pop(),end=''),
@@ -1339,8 +1353,8 @@ fn_table={
         0xA5:fil_iter_fn,
         0xA7:lambda x:x.push(math.degrees(x.pop())),
         0xA8:lambda x:x.push(int_base(''.join(map(str,x.pop())),x.pop())),
-        0xA9:lambda x:x.push(x.pop()+2),
-        0xAA:lambda x:x.push(x.pop()-2),
+        0xA9:add_two_fn,
+        0xAA:sub_two_fn,
         0xAB:lambda x:x.push(x.pop()/2),
         0xAC:lambda x:x.push(x.pop()/4),
         0xAD:lambda x:x.push(str_base(x.pop(),x.pop())),

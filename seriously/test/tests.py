@@ -297,6 +297,8 @@ class MathTests(SeriousTest):
         self.assert_serious('[8,9,21]▲', [504])
         self.assert_serious('[42]▲', [42])
         self.assert_serious('[]▲', [[]])
+        self.assert_serious('3R⌐', [[3, 4, 5]])
+        self.assert_serious('3R¬', [[-1, 0, 1]])
 
     def test_filters(self):
         self.assert_serious("[4]12'3k"+chr_cp437(0x8D), [[1, 2]])
