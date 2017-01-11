@@ -1216,6 +1216,7 @@ def slice_fn(srs):
 
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
+        0x0A:lambda x:print(x.pop(),end=''),
         0x15:lambda x:x.push(sys.stdin.read()),
         0x1E:lcm_fn,
         0x1F:reduce_fn,
