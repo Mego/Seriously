@@ -154,7 +154,7 @@ class SeriousFunction:
         return '{}'.format(self.code)
 
     def __repr__(self):
-        return '`{}`'.format(self.code)
+        return '⌠{}⌡'.format(self.code)
 
     def __len__(self):
         return len(self.code)

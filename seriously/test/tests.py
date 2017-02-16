@@ -140,8 +140,10 @@ class LiteralTests(SeriousTest):
         self.assert_serious(':+', [0])
 
     def test_functions(self):
-        self.assert_serious("`foo`", [SeriousFunction("foo")])
-        self.assert_serious("`foo`$", ["foo"])
+        self.assert_serious("`f", [SeriousFunction("f")])
+        self.assert_serious("⌠foo⌡", [SeriousFunction("foo")])
+        self.assert_serious("⌠⌠foo⌡⌡", [SeriousFunction("⌠foo⌡")]),
+        self.assert_serious("⌠foo⌡$", ["foo"])
 
     def test_eval(self):
         self.assert_serious('"len(set([1,2,2,3]))"{}'.format(chr_cp437(0xF0)),
@@ -252,7 +254,7 @@ class MathTests(SeriousTest):
         self.assert_serious(':1+2j'+chr_cp437(0xD7), [2, 1])
         self.assert_serious('6:21▲', [42])
         # weird prime bug test
-        self.assert_serious('9uyX9uR`p`░', [[2, 3, 5, 7]])
+        self.assert_serious('9uyX9uR`p░', [[2, 3, 5, 7]])
 
     def test_lists(self):
         self.assert_serious('[1][1,2]-', [[2]])
@@ -390,7 +392,7 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('"abcd"'+chr_cp437(0x8A), ["'abcd'"])
         self.assert_serious(':123.45'+chr_cp437(0x8A), ['123.45'])
         self.assert_serious(':1+2i'+chr_cp437(0x8A), ['(1+2j)'])
-        self.assert_serious('`foo`'+chr_cp437(0x8A), ['`foo`'])
+        self.assert_serious('⌠foo⌡'+chr_cp437(0x8A), ['⌠foo⌡'])
         self.assert_serious('"1.23"i', [1.23])
         self.assert_serious('"123"R', ["321"])
         self.assert_serious('"abc"3*', ['abcabcabc'])
@@ -467,8 +469,8 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('3R#', [[1,2,3]])
         self.assert_serious('[1,2,3][0,1]'+chr_cp437(0xB0), [[2]])
         self.assert_serious('3R2r'+chr_cp437(0xB0), [[2]])
-        self.assert_serious('[1,2,3]`2>`'+chr_cp437(0xB0), [[1]])
-        self.assert_serious('3R`2>`'+chr_cp437(0xB0), [[1]])
+        self.assert_serious('[1,2,3]⌠2>⌡'+chr_cp437(0xB0), [[1]])
+        self.assert_serious('3R⌠2>⌡'+chr_cp437(0xB0), [[1]])
         self.assert_serious('[1,2,3]N', [3])
         self.assert_serious('3RN', [3])
         self.assert_serious('[1,2,3]F', [1])
@@ -499,22 +501,22 @@ class BaseConversionTests(SeriousTest):
         
 class FunctionTests(SeriousTest):
     def test_function_methods(self):
-        self.assert_serious('`foo`'+chr_cp437(0x9C), ['foo'])
+        self.assert_serious('⌠foo⌡'+chr_cp437(0x9C), ['foo'])
         self.assert_serious('"foo"'+chr_cp437(0x9C), [SeriousFunction('foo')])
         self.assert_serious('5'+chr_cp437(0x9C), [5])
-        self.assert_serious('`foo`l', [3])
-        self.assert_serious('`bar``foo`+', [SeriousFunction('foobar')])
-        self.assert_serious('`foo`3*', [SeriousFunction('foofoofoo')])
-        self.assert_serious('["oo"]`f%s`%', [SeriousFunction('foo')])
-        self.assert_serious('`foo`"foo"=', [1])
-        self.assert_serious('`foo``bar`=', [0])
-        self.assert_serious('`foo`3=', [3, SeriousFunction('foo')])
-        self.assert_serious('[1,2,3]`++`R', [[6]])
-        self.assert_serious('3`1`n', [1,1,1])
-        self.assert_serious('5`2@%Y`'+chr_cp437(0xD6), [[0,2,4,6,8]])
+        self.assert_serious('⌠foo⌡l', [3])
+        self.assert_serious('⌠bar⌡⌠foo⌡+', [SeriousFunction('foobar')])
+        self.assert_serious('⌠foo⌡3*', [SeriousFunction('foofoofoo')])
+        self.assert_serious('["oo"]⌠f%s⌡%', [SeriousFunction('foo')])
+        self.assert_serious('⌠foo⌡"foo"=', [1])
+        self.assert_serious('⌠foo⌡⌠bar⌡=', [0])
+        self.assert_serious('⌠foo⌡3=', [3, SeriousFunction('foo')])
+        self.assert_serious('[1,2,3]⌠++⌡R', [[6]])
+        self.assert_serious('3`1n', [1,1,1])
+        self.assert_serious('5⌠2@%Y⌡'+chr_cp437(0xD6), [[0,2,4,6,8]])
         
     def test_combinators(self):
-        self.assert_serious('3`1kMD`Y', [0])
+        self.assert_serious('3⌠1kMD⌡Y', [0])
         
 class RandomTests(SeriousTest):
     def test_random(self):

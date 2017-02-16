@@ -94,7 +94,7 @@
 5D (]): end list literal
 5E (^): pop a,b: push a XOR b
 5F (_): pop a: push ln(a)
-60 (`): function literal delimiter, pushes function whose body contains all of the commands until the next `. An implied ` is present at EOF if needed.
+60 (`): prefix for function literal of length 1 (`p is the same as ⌠p⌡)
 61 (a): invert the stack ([a,b,c,d] -> [d,c,b,a])
 62 (b): pop a: push 0 if a==0 else 1; pop "a" or [a]: push 0 if len(a)==0 else 1; pop f: push 0 if len(f)==0 else 1
 63 (c): pop a: push character at ordinal a%256; pop [a],b: push [a].count(b); pop "a","b": push "a".count("b")
@@ -242,8 +242,8 @@ F0 (≡): pop a: push eval(a) (Python-style evaluation)
 F1 (±): pop a: push -a (unary negate)
 F2 (≥): pop a,b: push a>=b
 F3 (≤): pop a,b: push a<=b
-F4 (⌠): 
-F5 (⌡): 
+F4 (⌠): begin function literal
+F5 (⌡): end function literal
 F6 (÷): pop a: push a list of all positive divisors of a that are less than or equal to a
 F7 (≈): pop a: push int(a)
 F8 (°): pop a: push radians(a)

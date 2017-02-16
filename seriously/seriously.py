@@ -170,15 +170,26 @@ class Seriously:
                     if self.debug_mode:
                         print("list: [{}]".format(l))
                         print(self.stack)
-                elif c == '`':
-                    f = ''
+                elif c == '⌠':
+                    fn = ''
                     i += 1
-                    while i < len(code) and code[i] != '`':
-                        f += code[i]
+                    nest = 1
+                    while i < len(code):
+                        if code[i] == '⌠':
+                            nest += 1
+                        elif code[i] == '⌡':
+                            nest -= 1
+                            if nest == 0:
+                                break
+                        fn += code[i]
                         i += 1
+                    self.push(SeriouslyCommands.SeriousFunction(fn))
                     if self.debug_mode:
-                        print('fn: {}'.format(f))
-                    self.push(SeriouslyCommands.SeriousFunction(f))
+                        print("fn: {}".format(fn))
+                        print(self.stack)
+                elif c == '`':
+                    i += 1
+                    self.push(SeriouslyCommands.SeriousFunction(code[i]))
                 elif ord(c) in range(48, 58):
                     self.push(int(c))
                 elif ord_cp437(c) == 0x0B:
