@@ -13,7 +13,7 @@ except:
 setup(
     name='seriously',
 
-    version='2.1.0',
+    version='2.1.1',
 
     description='A Python-based golfing language',
     long_description='Seriously is a Python-based golfing language. See the GitHub page for more details.',
