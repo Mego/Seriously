@@ -721,7 +721,7 @@ def S_fn(srs):
     if isinstance(a, str):
         srs.push(''.join(sorted(a)))
     elif isinstance(a, collections.Iterable):
-        srs.push(sorted(a))
+        srs.push(sorted([_ for _ in a]))
     else:
         srs.push(math.sin(a))
 
@@ -748,6 +748,7 @@ def sum_fn(srs):
 
 def index_fn(srs):
     b,a=srs.pop(),srs.pop()
+    b = [_ for _ in b]
     if a in b:
         srs.push(b.index(a))
     else:
@@ -983,7 +984,16 @@ def H_fn(srs):
         srs.push("Hello, World!")
     else:
         a,b = srs.pop(), srs.pop()
-        srs.push(a[:b])
+        try:
+            res = a[:b]
+        except:
+            res = []
+            for i,x in enumerate(a):
+                if i < b:
+                    res.append(x)
+                else:
+                    break
+        srs.push(res)
 
 def t_fn(srs):
     a,b = srs.pop(), srs.pop()
@@ -991,7 +1001,10 @@ def t_fn(srs):
         c = srs.pop()
         srs.push(a.translate(str.maketrans(b, c)))
     else:
-        srs.push(a[b:])
+        try:
+            srs.push(a[b:])
+        except:
+            srs.push([_ for _ in a][b:])
 
 def V_fn(srs):
     a,b = srs.pop(), srs.pop()
