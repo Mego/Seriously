@@ -4,18 +4,19 @@ import operator, cmath
 import math as rmath
 import random, itertools, sys, string, binascii, ast
 from base64 import *
-from copy import copy
+from copy import copy as _copy
 import collections
 from functools import reduce, lru_cache
 import struct
+import types
 from itertools import zip_longest as izip
 from lib.cp437 import CP437
 from lib.iterable import deque, as_list, zip_longest
 
 try:
-    from statistics import mean, median, mode, pstdev
+    from statistics import mean as _mean, median, mode, pstdev
 except ImportError:
-    from stats import mean, median, mode, pstdev
+    from stats import mean as _mean, median, mode, pstdev
 
 from lib.cp437 import CP437
 
@@ -40,6 +41,11 @@ memoize = lru_cache(maxsize=None)
     # return template_specializer
 
 phi = (1+5**.5)/2
+
+def copy(a):
+    if isinstance(a, collections.Iterable) and not isinstance(a, str):
+        a = as_list(a)
+    return a, _copy(a)
 
 @memoize
 def Lucas(n): # pragma: no cover
@@ -111,6 +117,18 @@ class Math(object):
 
 math = Math()
 
+def cfsum(args):
+    cargs = [complex(x) for x in args]
+    return complex(math.fsum([x.real for x in cargs]), math.fsum([x.imag for x in cargs]))
+    
+cmath.fsum = cfsum
+
+def mean(args):
+    try:
+        return _mean(args)
+    except:
+        return math.fsum(args)/len(args)
+
 def anytype(x, *types):
     return any(isinstance(x,t) for t in types) if types else False
 
@@ -136,7 +154,7 @@ class SeriousFunction:
         return '{}'.format(self.code)
 
     def __repr__(self):
-        return '`{}`'.format(self.code)
+        return '⌠{}⌡'.format(self.code)
 
     def __len__(self):
         return len(self.code)
@@ -182,7 +200,7 @@ def NinetyNineBottles():
         res += '\n\n'
     return res
 
-def _sum(data, start=None):
+def _sum(data, start=0):
     if any(anytype(x, float, complex) for x in data):
         return math.fsum(data)+start
     if start is None:
@@ -307,8 +325,9 @@ def idiv_fn(srs):
 
 def dupe_fn(srs):
     a=srs.pop()
+    a,b = copy(a)
     srs.push(a)
-    srs.push(copy(a))
+    srs.push(b)
 
 def rot2_fn(srs):
     a,b=srs.pop(),srs.pop()
@@ -344,18 +363,23 @@ def i_fn(srs):
 def to_list_fn(srs):
     srs.stack = deque([as_list(srs.stack)])
 
-def psh_fn(srs):
+def o_fn(srs):
     a=srs.pop()
-    b=srs.pop()
-    if isinstance(a, str):
-        a = b+a
+    if isinstance(a, int):
+        srs.push(factor_with_multiplicity(a))
     else:
-        a = [b]+a
-    srs.push(a)
+        b=srs.pop()
+        if isinstance(a, str):
+            a = b+a
+        else:
+            a = [b]+a
+        srs.push(a)
 
 def p_fn(srs):
     a=srs.pop()
     if isinstance(a, int):
+        if srs.debug_mode:
+            print("{} is_prime => {}".format(a, is_prime(a)))
         srs.push(is_prime(a))
     elif isinstance(a, collections.Iterable) and not isinstance(a, str):
         a=[x for x in a]
@@ -399,14 +423,22 @@ def ins_bot_fn(srs):
     srs.stack=deque(srs.stack[:-a]+[b]+srs.stack[-a:])
 
 def dupe_all_fn(srs):
-    srs.stack.extend(copy(x) for x in srs.stack.copy())
+    newstack = []
+    copied = []
+    for value in srs.stack:
+        a,b = copy(value)
+        newstack.append(a)
+        copied.append(b)
+    srs.stack.clear()
+    srs.stack.extend(newstack+copied)
 
 def dupe_each_fn(srs):
     tmp=[]
     while len(srs.stack)>0:
         a=srs.pop()
+        a,b = copy(a)
         tmp.append(a)
-        tmp.append(copy(a))
+        tmp.append(b)
     srs.stack=deque(tmp[::-1])
 
 def lr_fn(srs):
@@ -504,11 +536,13 @@ def n_fn(srs):
 
 @memoize
 def full_factor(n):
+    if n < 1:
+        raise ValueError
     global primes
     n=abs(n)
     res=[]
     index = 0
-    init_primes_up_to(int(rmath.sqrt(n)))
+    init_primes_up_to(int(rmath.sqrt(n))+1)
     for p in primes:
         a=0
         while n%p==0:
@@ -525,8 +559,16 @@ def full_factor(n):
         res.append([n,1])
     return res
 
+@memoize
 def factor(n):
     return [a for a,b in full_factor(n)]
+
+@memoize
+def factor_with_multiplicity(n):
+    res = []
+    for a,b in full_factor(n):
+        res.extend([a]*b)
+    return res
 
 def mod_fn(srs):
     a=srs.pop()
@@ -563,7 +605,15 @@ def j_fn(srs):
 def star_fn(srs):
     a=srs.pop()
     b=srs.pop()
-    if (isinstance(a, str) and not isinstance(b, collections.Iterable)) or (isinstance(b, str) and not isinstance(a, collections.Iterable)):
+    if isinstance(a, str) and not isinstance(b, collections.Iterable):
+        if b < 0:
+            b = abs(b)
+            a = a[::-1]
+        srs.push(a*b)
+    elif isinstance(b, str) and not isinstance(a, collections.Iterable):
+        if a < 0:
+            a = abs(a)
+            b = b[::-1]
         srs.push(a*b)
     elif isinstance(a, collections.Iterable) and (not isinstance(b, collections.Iterable) or isinstance(b, str)):
         srs.push([x*b for x in a])
@@ -671,7 +721,7 @@ def S_fn(srs):
     if isinstance(a, str):
         srs.push(''.join(sorted(a)))
     elif isinstance(a, collections.Iterable):
-        srs.push(sorted(a))
+        srs.push(sorted([_ for _ in a]))
     else:
         srs.push(math.sin(a))
 
@@ -698,6 +748,7 @@ def sum_fn(srs):
 
 def index_fn(srs):
     b,a=srs.pop(),srs.pop()
+    b = [_ for _ in b]
     if a in b:
         srs.push(b.index(a))
     else:
@@ -933,7 +984,16 @@ def H_fn(srs):
         srs.push("Hello, World!")
     else:
         a,b = srs.pop(), srs.pop()
-        srs.push(a[:b])
+        try:
+            res = a[:b]
+        except:
+            res = []
+            for i,x in enumerate(a):
+                if i < b:
+                    res.append(x)
+                else:
+                    break
+        srs.push(res)
 
 def t_fn(srs):
     a,b = srs.pop(), srs.pop()
@@ -941,7 +1001,10 @@ def t_fn(srs):
         c = srs.pop()
         srs.push(a.translate(str.maketrans(b, c)))
     else:
-        srs.push(a[b:])
+        try:
+            srs.push(a[b:])
+        except:
+            srs.push([_ for _ in a][b:])
 
 def V_fn(srs):
     a,b = srs.pop(), srs.pop()
@@ -1130,7 +1193,7 @@ def nth_input_fn(srs):
 
 def mu_fn(srs):
     a = srs.pop()
-    srs.push(math.sqrt(mean(x**2 for x in a)))
+    srs.push(math.sqrt(mean([x**2 for x in a])))
 
 def equal_fn(srs):
     a,b = srs.pop(), srs.pop()
@@ -1164,8 +1227,23 @@ def slice_fn(srs):
         c,d = srs.pop(), srs.pop()
         srs.push(a[b:c:d])
 
+def add_two_fn(srs):
+    a = srs.pop()
+    if isinstance(a, collections.Iterable):
+        srs.push([x+2 for x in a])
+    else:
+        srs.push(a+2)
+
+def sub_two_fn(srs):
+    a = srs.pop()
+    if isinstance(a, collections.Iterable):
+        srs.push([x-2 for x in a])
+    else:
+        srs.push(a-2)
+
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
+        0x0A:lambda x:print(x.pop(),end=''),
         0x15:lambda x:x.push(sys.stdin.read()),
         0x1E:lcm_fn,
         0x1F:reduce_fn,
@@ -1231,7 +1309,7 @@ fn_table={
         0x6C:lambda x:x.push(len(x.pop())),
         0x6D:m_fn,
         0x6E:n_fn,
-        0x6F:psh_fn,
+        0x6F:o_fn,
         0x70:p_fn,
         0x71:enq_fn,
         0x72:lr_fn,
@@ -1288,8 +1366,8 @@ fn_table={
         0xA5:fil_iter_fn,
         0xA7:lambda x:x.push(math.degrees(x.pop())),
         0xA8:lambda x:x.push(int_base(''.join(map(str,x.pop())),x.pop())),
-        0xA9:lambda x:x.push(x.pop()+2),
-        0xAA:lambda x:x.push(x.pop()-2),
+        0xA9:add_two_fn,
+        0xAA:sub_two_fn,
         0xAB:lambda x:x.push(x.pop()/2),
         0xAC:lambda x:x.push(x.pop()/4),
         0xAD:lambda x:x.push(str_base(x.pop(),x.pop())),

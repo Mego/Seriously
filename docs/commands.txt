@@ -8,7 +8,7 @@
 07 (•):
 08 (◘):
 09 (○): push a single byte of unformatted input from STDIN (push sys.stdin.read(1))
-0A (◙):
+0A (◙): pop a: print a without a trailing newline
 0B (♂): take the next command and map it over the top of the stack (for example, ♂A is equivalent to `A`M)
 0C (♀): take the next command and map it over the top 2 stack elements (like ♂ but for binary commands - ♀* is equivalent to Z`i*`M). If either of the top two stack elements are scalars (i.e. not iterables), it is reused for every element in the other iterable.
 0D (♪):
@@ -80,7 +80,7 @@
 4F (O): pop "a" or [a]: push [ord(c) for each c in "a" or [a], starting from the end]. If a list is popped, it is flattened, and if it contains strings of length > 1, the strings are exploded in-place ("ABC" -> [65,66,67], ["A","B","CD"] -> [65,66,67,68])
 50 (P): pop a: push the a-th prime (zero-indexed)
 51 (Q): if stack is empty: push the program's source code
-52 (R): pop f,[a]: call f, using [a] as a temporary stack, push [a] (similar to reduce(f,[a])); pop "a" or [a]: push reversed value ("a".reverse() or [a][::-1]); pop a: push [1,2,...,a] (range(1,a+1))
+52 (R): pop f,[a]: call f, using [a] as a temporary stack, push [a]; pop "a" or [a]: push reversed value ("a".reverse() or [a][::-1]); pop a: push [1,2,...,a] (range(1,a+1))
 53 (S): pop a: push sin(a); pop "a" or [a]: push sorted(a)
 54 (T): pop a: push tan(a); pop [a],b,c: set [a][b] to c, push [a]
 55 (U): pop [a],[b]: push union of [a] and [b]
@@ -94,7 +94,7 @@
 5D (]): end list literal
 5E (^): pop a,b: push a XOR b
 5F (_): pop a: push ln(a)
-60 (`): function literal delimiter, pushes function whose body contains all of the commands until the next `. An implied ` is present at EOF if needed.
+60 (`): prefix for function literal of length 1 (`p is the same as ⌠p⌡)
 61 (a): invert the stack ([a,b,c,d] -> [d,c,b,a])
 62 (b): pop a: push 0 if a==0 else 1; pop "a" or [a]: push 0 if len(a)==0 else 1; pop f: push 0 if len(f)==0 else 1
 63 (c): pop a: push character at ordinal a%256; pop [a],b: push [a].count(b); pop "a","b": push "a".count("b")
@@ -109,7 +109,7 @@
 6C (l): pop "a" or [a] or f: push len(a) (or len(f))
 6D (m): pop a: push int(a),frac(a) (modf(a)); pop [a]: push min([a])
 6E (n): pop a,b: push a b times; pop f,b: call f b times
-6F (o): pop [a],b: push b to [a], push [a]
+6F (o): pop [a],b: push b to [a], push [a]; pop a: push the prime factorization of |a| with multiplicity (18 -> [2, 3, 3], -5 -> [5])
 70 (p): pop a: push 1 if a is prime else 0; pop [a]: pop b from [a], push [a],b
 71 (q): pop [a],b: enqueue b in [a], push [a]
 72 (r): pop a: push [0,1,...,a-1] (range(0,a))
@@ -242,8 +242,8 @@ F0 (≡): pop a: push eval(a) (Python-style evaluation)
 F1 (±): pop a: push -a (unary negate)
 F2 (≥): pop a,b: push a>=b
 F3 (≤): pop a,b: push a<=b
-F4 (⌠): 
-F5 (⌡): 
+F4 (⌠): begin function literal
+F5 (⌡): end function literal
 F6 (÷): pop a: push a list of all positive divisors of a that are less than or equal to a
 F7 (≈): pop a: push int(a)
 F8 (°): pop a: push radians(a)
