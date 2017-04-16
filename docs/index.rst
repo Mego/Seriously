@@ -1,17 +1,11 @@
 Welcome to Seriously's documentation!
 =====================================
 
-Seriously is an esoteric programming language used for `codegolf`_. You can try the language online at `seriously.herokuapp.com`_.
+Seriously is an esoteric programming language used for [codegolf](http://codegolf.stackexchange.com). You can try the language online at http://seriously.herokuapp.com
 
 Contents:
 
-.. toctree::
-   :maxdepth: 3
-
-    numeric
-    string
-    list
-    function
-
-.. _code-golf: http://codegolf.stackexchange.com
-.. _seriously.herokuapp.com: http://seriously.herokuapp.com
+-numeric
+-string
+-list
+-function
