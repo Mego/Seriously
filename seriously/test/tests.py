@@ -201,6 +201,10 @@ class StackTests(SeriousTest):
         self.assert_serious('3¶5', [5, 5, 5])
         self.assert_serious('52¶²', [5**4])
 
+    def test_fork(self):
+        self.assert_serious('23♫+-', [[5, 1]])
+        self.assert_serious('23♫k*', [[[2, 3], 6]])
+
 
 class RegisterTests(SeriousTest):
     def test_push_pop(self):
