@@ -443,7 +443,10 @@ def dupe_each_fn(srs):
 
 def lr_fn(srs):
     a=srs.pop()
-    srs.push(range(a))
+    if isinstance(a, int):
+        srs.push(range(a))
+    else:
+        srs.push(range(len(a)))
 
 def s_fn(srs):
     a=srs.pop()
