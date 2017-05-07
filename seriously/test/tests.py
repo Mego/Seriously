@@ -491,6 +491,12 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('[0,4,2]6R'+chr_cp437(0xE8), [[1,3]])
         self.assert_serious('36R╡', [[[1, 2], [3, 4], [5, 6]]])
         self.assert_serious('3[1,2,3,4]╡', [[[1], [2], [3, 4]]])
+        self.assert_serious('[[1,2],"ab",3]r', [[0,1,2]])
+        self.assert_serious('[]r', [[]])
+        self.assert_serious('"abc"r', [[0,1,2]])
+        self.assert_serious('""r', [[]])
+        self.assert_serious('⌠foo⌡r', [[0,1,2]])
+        self.assert_serious('⌠⌡r', [[]])
 
 class BaseConversionTests(SeriousTest):
     def test_bases(self):
