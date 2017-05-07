@@ -112,7 +112,7 @@
 6F (o): pop [a],b: push b to [a], push [a]; pop a: push the prime factorization of |a| with multiplicity (18 -> [2, 3, 3], -5 -> [5])
 70 (p): pop a: push 1 if a is prime else 0; pop [a]: pop b from [a], push [a],b
 71 (q): pop [a],b: enqueue b in [a], push [a]
-72 (r): pop a: push [0,1,...,a-1] (range(0,a))
+72 (r): pop a: push [0,1,...,a-1] (range(0,a)); pop "a" or [a] or f: push [0,1,...,len(a)-1] (range(0,len(a))) (or range(0,len(f)))
 73 (s): pop a: push sgn(a); pop [a],[b]: push a list of sublists of [a] split by any occurrences of elements of [b] (with "a", the sublists are strings)
 74 (t): pop "a" or [a],b: push a[b:]; pop "a","b","c": push a.translate(str.maketrans(b,c))
 75 (u): pop a: push a+1
