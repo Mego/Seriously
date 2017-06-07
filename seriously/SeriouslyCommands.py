@@ -49,7 +49,7 @@ def copy(a):
 
 @memoize
 def Lucas(n): # pragma: no cover
-    [a,b] = fast_fib(n)
+    a,b = fast_fib(n)
     return (a<<1)+b
 
 fib_cache = {0:0, 1:1, 2:1}
@@ -74,21 +74,21 @@ def Fib(n):
 # fast_fib(1000)[1]
 def fast_fib(n):
     global fib_cache
-    if n==0: return [1,0]
+    if n==0: return 1,0
     shift = n>>1
     if shift in fib_cache and shift-1 in fib_cache:
-        [a,b] = [fib_cache[shift-1],fib_cache[shift]]
+        a,b = fib_cache[shift-1],fib_cache[shift]
     else:
-        [a,b] = fast_fib(shift)
+        a,b = fast_fib(shift)
         fib_cache[shift-1] = a
         fib_cache[shift] = b
     b2 = b*b
     a,b = a*a+b2, (a<<1)*b+b2
     if n%2 == 1:
         fib_cache[n-1] = b
-        return [b,a+b]
+        return b,a+b
     fib_cache[n-1] = a
-    return [a,b]
+    return a,b
 
 def prod(iter):
     return reduce(operator.mul, iter, 1)
@@ -296,15 +296,27 @@ def prime_count_fn(srs):
 
 @memoize
 def Fib_index(n):
-    i=0
-    while Fib(i)<n:
-        i+=1
-    return i if Fib(i) == n else -1
+    lo = 0
+    hi = 1
+    while Fib(hi) < n:
+        hi <<= 1
+    if Fib(hi) == n:
+        return hi
+    while lo <= hi:
+        mi = (lo+hi)>>1
+        test = Fib(mi)
+        if test == n:
+            return mi
+        if test < n:
+            lo = mi + 1
+        if test > n:
+            hi = mi - 1
+    return -1
 
 def div_fn(srs):
     a=srs.pop()
     if isinstance(a, collections.Iterable):
-        a = [x for x in a]
+        a = list(a)
         srs.push(a[-1:]+a[:-1])
     elif anytype(a, int, float, complex):
         b=srs.pop()
@@ -315,7 +327,7 @@ def div_fn(srs):
 def idiv_fn(srs):
     a=srs.pop()
     if isinstance(a, collections.Iterable):
-        a = [x for x in a]
+        a = list(a)
         srs.push(a[1:]+a[:1])
     elif anytype(a, int, float, complex):
         b=srs.pop()
@@ -337,7 +349,7 @@ def rot2_fn(srs):
 def d_fn(srs):
     a=srs.pop()
     if isinstance(a, collections.Iterable) and not isinstance(a, str):
-        a=[x for x in a]
+        a=list(a)
         b=a.pop(-1)
         srs.push(a)
         srs.push(b)
@@ -355,7 +367,7 @@ def i_fn(srs):
     if isinstance(a, str) and (all([c.isdigit() or c=='.' for c in a]) and a.count('.')<2):
         srs.push(float(a))
     elif isinstance(a, collections.Iterable):
-        for x in [y for y in a][::-1]:
+        for x in list(a)[::-1]:
             srs.push(x)
     else:
         srs.push(a)
@@ -382,7 +394,7 @@ def p_fn(srs):
             print("{} is_prime => {}".format(a, is_prime(a)))
         srs.push(is_prime(a))
     elif isinstance(a, collections.Iterable) and not isinstance(a, str):
-        a=[x for x in a]
+        a=list(a)
         b=a.pop(0)
         srs.push(a)
         srs.push(b)
@@ -491,7 +503,7 @@ def invert_fn(srs):
 def comp_fn(srs):
     a=srs.pop()
     if isinstance(a, collections.Iterable):
-        a = [x for x in a]
+        a = list(a)
         a = a+[0] if len(a)%2 else a
         while len(a) > 0:
             r,i = a.pop(0),a.pop(0)
@@ -701,7 +713,7 @@ def E_fn(srs):
         b=srs.pop()
         if srs.debug_mode:
             print("islice indices:",b,b+1)
-        srs.push([x for x in itertools.islice(a,b,b+1)][0])
+        srs.push(list(itertools.islice(a,b,b+1))[0])
 
 def peek_print_fn(srs):
     print(' '.join(map(repr, srs.stack[::-1])))
@@ -716,15 +728,15 @@ def dupe_each_n_fn(srs):
     tmp = []
     while srs.stack:
         b = srs.pop()
-        tmp+=[b for i in range(a)]
-    srs.stack=deque(tmp[::-1])
+        tmp = [b]*a + tmp
+    srs.stack=deque(tmp)
 
 def S_fn(srs):
     a=srs.pop()
     if isinstance(a, str):
         srs.push(''.join(sorted(a)))
     elif isinstance(a, collections.Iterable):
-        srs.push(sorted([_ for _ in a]))
+        srs.push(sorted(a))
     else:
         srs.push(math.sin(a))
 
@@ -742,7 +754,7 @@ def zip_fn(srs):
         srs.push(zip_longest(*lists))
 
 def sum_fn(srs):
-    a=[x for x in srs.pop()]
+    a=list(srs.pop())
     if len(a) == 0:
         srs.push(0)
     else:
@@ -751,7 +763,7 @@ def sum_fn(srs):
 
 def index_fn(srs):
     b,a=srs.pop(),srs.pop()
-    b = [_ for _ in b]
+    b = list(b)
     if a in b:
         srs.push(b.index(a))
     else:
@@ -765,7 +777,7 @@ def cond_quit_fn(srs):
         exit()
 
 def median_fn(srs):
-    a=[x for x in srs.pop()]
+    a=list(srs.pop())
     if len(a)%2:
         srs.push(a[len(a)//2])
     else:
@@ -855,7 +867,7 @@ def T_fn(srs):
         if isinstance(a, str):
             a = a[:b] + str(c) + a[b+1:]
         else:
-            a = [x for x in a]
+            a = list(a)
             a[b] = c
         srs.push(a)
 
@@ -892,7 +904,7 @@ def reg_all_input_fn(srs):
 def range_ab_fn(srs):
     a = srs.pop()
     if isinstance(a, collections.Iterable):
-        srs.push(range(*[x for x in a]))
+        srs.push(range(*list(a)))
     else:
         b = srs.pop()
         srs.push(range(a,b))
@@ -927,7 +939,7 @@ def N_fn(srs):
 def shuffle_fn(srs):
     a = srs.pop()
     isstr = isinstance(a, str)
-    a = [x for x in a]
+    a = list(a)
     random.shuffle(a)
     if isstr:
         a = ''.join(a)
@@ -956,7 +968,10 @@ def is_unique_fn(srs):
 
 def uniquify_fn(srs):
     a = srs.pop()
-    unique = [x for i,x in enumerate(a) if i==a.index(x)]
+    unique = []
+    for x in a:
+        if x not in unique:
+            unique.append(x)
     if isinstance(a, str):
         srs.push(''.join(unique))
     else:
@@ -1007,7 +1022,7 @@ def t_fn(srs):
         try:
             srs.push(a[b:])
         except:
-            srs.push([_ for _ in a][b:])
+            srs.push(list(a)[b:])
 
 def V_fn(srs):
     a,b = srs.pop(), srs.pop()
@@ -1107,7 +1122,7 @@ def mean_fn(srs):
 
 def mode_fn(srs):
     a = srs.pop()
-    srs.push(mode([x for x in a]))
+    srs.push(mode(list(a)))
 
 def add_reg0_fn(srs):
     global registers
@@ -1140,8 +1155,8 @@ def caret_fn(srs):
     a,b = srs.pop(),srs.pop()
     isstr = isinstance(a, str)
     if isinstance(a, collections.Iterable):
-        a = [x for x in a]
-        b = [x for x in b]
+        a = list(a)
+        b = list(b)
         xor = [x for x in a+b if (x in a) ^ (x in b)]
         if isstr:
             xor = ''.join(xor)
@@ -1155,7 +1170,7 @@ def divisors_fn(srs):
 
 def chunk_len_fn(srs):
     a = srs.pop()
-    a = [x for x in a] if not isinstance(a, str) else a
+    a = list(a) if not isinstance(a, str) else a
     b = srs.pop()
     res = []
     for i in range(0, len(a), b):
@@ -1164,7 +1179,7 @@ def chunk_len_fn(srs):
 
 def chunk_num_fn(srs):
     a = srs.pop()
-    a = [x for x in a] if not isinstance(a, str) else a
+    a = list(a) if not isinstance(a, str) else a
     b = srs.pop()
     diff = len(a)%b
     chunksize = [len(a)//b+(i<diff) for i in range(b)][::-1]
@@ -1182,7 +1197,7 @@ def list_repeat_fn(srs):
     if isinstance(b, str):
         srs.push([b]*a)
     elif isinstance(b, collections.Iterable):
-        srs.push([x for x in b]*a)
+        srs.push(list(b)*a)
     else:
         srs.push([b]*a)
 
