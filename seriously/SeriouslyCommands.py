@@ -74,21 +74,21 @@ def Fib(n):
 # fast_fib(1000)[1]
 def fast_fib(n):
     global fib_cache
-    if n==0: return [1,0]
+    if n==0: return 1,0
     shift = n>>1
     if shift in fib_cache and shift-1 in fib_cache:
-        [a,b] = [fib_cache[shift-1],fib_cache[shift]]
+        a,b = fib_cache[shift-1],fib_cache[shift]
     else:
-        [a,b] = fast_fib(shift)
+        a,b = fast_fib(shift)
         fib_cache[shift-1] = a
         fib_cache[shift] = b
     b2 = b*b
     a,b = a*a+b2, (a<<1)*b+b2
     if n%2 == 1:
         fib_cache[n-1] = b
-        return [b,a+b]
+        return b,a+b
     fib_cache[n-1] = a
-    return [a,b]
+    return a,b
 
 def prod(iter):
     return reduce(operator.mul, iter, 1)
@@ -296,10 +296,22 @@ def prime_count_fn(srs):
 
 @memoize
 def Fib_index(n):
-    i=0
-    while Fib(i)<n:
-        i+=1
-    return i if Fib(i) == n else -1
+    lo = 0
+    hi = 1
+    while Fib(hi) < n:
+        hi <<= 1
+    if Fib(hi) == n:
+        return hi
+    while lo <= hi:
+        mi = (lo+hi)>>1
+        test = Fib(mi)
+        if test == n:
+            return mi
+        if test < n:
+            lo = mi + 1
+        if test > n:
+            hi = mi - 1
+    return -1
 
 def div_fn(srs):
     a=srs.pop()
