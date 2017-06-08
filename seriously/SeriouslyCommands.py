@@ -4,7 +4,7 @@ import operator, cmath
 import math as rmath
 import random, itertools, sys, string, binascii, ast
 from base64 import *
-from copy import copy as _copy
+from copy import deepcopy as _copy
 import collections
 from functools import reduce, lru_cache
 import struct
@@ -728,7 +728,7 @@ def dupe_each_n_fn(srs):
     tmp = []
     while srs.stack:
         b = srs.pop()
-        tmp = [b]*a + tmp
+        tmp = [copy.deepcopy(b) for _ in range(a)] + tmp
     srs.stack=deque(tmp)
 
 def S_fn(srs):
