@@ -728,7 +728,7 @@ def dupe_each_n_fn(srs):
     tmp = []
     while srs.stack:
         b = srs.pop()
-        tmp = [copy.deepcopy(b) for _ in range(a)] + tmp
+        tmp = [copy(b)[1] for _ in range(a)] + tmp
     srs.stack=deque(tmp)
 
 def S_fn(srs):
