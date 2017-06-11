@@ -792,6 +792,15 @@ def c_fn(srs):
     if anytype(a, collections.Iterable):
         b=srs.pop()
         srs.push(a.count(b))
+    elif isinstance(a, SeriouslyFunction):
+        b = srs.pop()
+        res = 0
+        for x in b:
+            s2 = srs.make_new(x)
+            aout = a(s2)
+            if aout and aout[0]:
+                res += 1
+        srs.push(res)
     else:
         srs.push(chr(a%256))
 
