@@ -792,7 +792,7 @@ def c_fn(srs):
     if anytype(a, collections.Iterable):
         b=srs.pop()
         srs.push(a.count(b))
-    elif isinstance(a, SeriouslyFunction):
+    elif isinstance(a, SeriousFunction):
         b = srs.pop()
         res = 0
         for x in b:

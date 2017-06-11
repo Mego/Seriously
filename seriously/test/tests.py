@@ -524,6 +524,8 @@ class FunctionTests(SeriousTest):
         self.assert_serious('[1,2,3]⌠++⌡R', [[6]])
         self.assert_serious('3`1n', [1,1,1])
         self.assert_serious('5⌠2@%Y⌡'+chr_cp437(0xD6), [[0,2,4,6,8]])
+        self.assert_serious('[1,2,3,4,5]`pc', [3])
+        self.assert_serious('[2,4,6,8]⌠5>⌡c', [2])
         
     def test_combinators(self):
         self.assert_serious('3⌠1kMD⌡Y', [0])
