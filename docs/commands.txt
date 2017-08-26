@@ -239,7 +239,7 @@ ED (φ): push phi (golden ratio)
 EE (ε): push "" (empty string)
 EF (∩): pop [a],[b]: push intersection of [a] and [b]
 F0 (≡): pop a: push eval(a) (Python-style evaluation)
-F1 (±): pop a: push -a (unary negate)
+F1 (±): pop a: push -a (unary negate); pop "a": push "a" with all single-quotes replaced with double quotes and vice-versa
 F2 (≥): pop a,b: push a>=b
 F3 (≤): pop a,b: push a<=b
 F4 (⌠): begin function literal

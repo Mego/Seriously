@@ -1268,6 +1268,13 @@ def sub_two_fn(srs):
     else:
         srs.push(a-2)
 
+def sign_swap_fn(srs):
+    a = srs.pop()
+    try:
+        srs.push(a.translate(str.maketrans({'"':"'", "'":'"'})))
+    except:
+        srs.push(-a)
+
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x0A:lambda x:print(x.pop(),end=''),
@@ -1461,7 +1468,7 @@ fn_table={
         0xEE:lambda x:x.push(""),
         0xEF:lambda x:x.push(list(set(x.pop()).intersection(x.pop()))),
         0xF0:lambda x:x.push(eval(x.pop())),
-        0xF1:lambda x:x.push(-x.pop()),
+        0xF1:sign_swap_fn,
         0xF2:lambda x:x.push(x.pop()>=x.pop()),
         0xF3:lambda x:x.push(x.pop()<=x.pop()),
         0xF6:divisors_fn,
