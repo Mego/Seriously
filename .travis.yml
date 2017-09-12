@@ -1,32 +1,28 @@
 sudo: false
-language: python
-python:
-- '3.3'
-- '3.4'
-- '3.5'
-- '3.6'
-- nightly
-- pypy3
+branches: cxx
+language: cpp
+compiler:
+  - clang
+  - gcc
 matrix:
-  allow_failures:
-  - python: pypy3
-  - python: nightly
-install:
-- pip install -r ide_requirements.txt
-- pip install coverage
-- pip install codecov
-script:
-- coverage run tests.py
-after_success:
-- codecov
-cache:
-- pip
-deploy:
-  provider: pypi
-  user: "Mego"
-  password:
-    secure: CyAVaQf6laQExCGLvCQbdSdOI6hK08RqaUo8P1lCrTSr/iM2BHqd11VyBCackdIl1Y1DhjZ17I35AsQzrBV6TdnwKWz5j+W4uFD9kzkX5Gkic0UHoxtU3LNMWGXHCePWtzwo/7kz3WMx+F05ijCXfROLQk8iXOJQfPWh9LKLCiownjJTkB+IRlTggZoqZNh3nrW76j9+OtuGVz224v49Yw+H+xncHjMzSoemBAbofvhn4daKZ9h0HC6R1TzZ9qIpBzMvLGnO0KdksGTFQtRYU/pidJaoVBJy3Wou9a74HDkwBLWWMRMFjpnFF0OlxYmmmAwcomVWAFSYN6ZMafxs/hS00hGz3JgcLS4Qya6Zm/r2yg8MdViKPUXSLPSfktwOPB254Hn+VukUmDpS8EKf38bIXzluZyhHrjKOvP3JwcBgiqef8HdTQyTfmunZ9929NcfBumNLPK9+rWTe91tlKw3DV2TUYrnXwB96oWjkAeODaGFWkqnu5b04EeLaXJV95QEfcfx6ppuPmQoHh4huRcFpunH/iQXfDj5rP+GFK+hBy0z/db+l95bkYHsKRnI3cH0RjcoNKuNjQBIgUeWXgwc+n/umI5GcPQSWOD5kw8R0e2cfuOt3OAmlyj2rOU+rIrQr0DK2DoQLn/kcVZiOWwn5XKkl9hcaF9KhyODxCTE=
-  distributions: "sdist bdist_wheel"
-  on:
-    python: 3.5
-    branch: master
+  include:
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-6
+            - libboost-all-dev
+      env:
+        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - llvm-toolchain-trusty-5.0
+          packages:
+            - clang-5.0
+            - libboost-all-dev
+      env:
+        - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
