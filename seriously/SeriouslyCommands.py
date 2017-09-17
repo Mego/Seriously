@@ -1275,6 +1275,19 @@ def sign_swap_fn(srs):
     except:
         srs.push(-a)
 
+def rindex_fn(srs):
+    b,a=srs.pop(),srs.pop()
+    b = list(b) if not isinstance(b, str) else b
+    if a in b:
+        try:
+            srs.push(b.rindex(a))
+        except:
+            # modified from https://stackoverflow.com/a/23816108/2508324
+            srs.push(max(loc for loc, val in enumerate(b) if val == a))
+    else:
+        srs.push(-1)
+    
+
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x0A:lambda x:print(x.pop(),end=''),
@@ -1413,6 +1426,7 @@ fn_table={
         0xB3:dupe_all_fn,
         0xB4:lambda x:x.push(1 if gcd(x.pop(),x.pop())==1 else 0),
         0xB5:chunk_num_fn,
+        0xB6:rindex_fn,
         0xB7:add_reg0_fn,
         0xB8:add_reg1_fn,
         0xB9:lambda x:x.push((lambda y:[nCr(y,k) for k in range(y+1)])(x.pop())),
