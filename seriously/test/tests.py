@@ -412,6 +412,7 @@ class StringAndListTests(SeriousTest):
         self.assert_serious("3R'.*", [['.', '..', '...']])
         self.assert_serious("{}±".format('''"'foo'"'''), ['"foo"'])
         self.assert_serious("{}±±".format('''"'foo'"'''), ["'foo'"])
+        self.assert_serious('"45""12345"í', [3])
         
     def test_list_methods(self):
         self.assert_serious('[1,2,3][4,5,6]'+chr_cp437(0x9D), [[5, 7, 9]])

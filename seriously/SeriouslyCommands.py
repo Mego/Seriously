@@ -763,7 +763,7 @@ def sum_fn(srs):
 
 def index_fn(srs):
     b,a=srs.pop(),srs.pop()
-    b = list(b)
+    b = list(b) if not isinstance(b, str) else b
     if a in b:
         srs.push(b.index(a))
     else:
