@@ -27,8 +27,5 @@ matrix:
       env:
         - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
 
-install:
-  - export BOOST_ROOT="$TRAVIS_BUILD_DIR/../boost-trunk"
-
 script:
   - make
