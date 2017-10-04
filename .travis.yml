@@ -10,7 +10,7 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
-            - libboost-dev
+            - libboost1.55-dev
       install:
         - export CC=gcc-6
         - export CXX=g++-6
@@ -21,7 +21,7 @@ matrix:
             - llvm-toolchain-trusty-5.0
           packages:
             - clang-5.0
-            - libboost-dev
+            - libboost1.55-dev
       install:
         - export CC=clang-5.0
         - export CXX=clang++-5.0
