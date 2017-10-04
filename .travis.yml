@@ -1,29 +1,28 @@
 sudo: false
 branches: cxx
 language: cpp
-compiler:
-  - clang
-  - gcc
 matrix:
   include:
     - os: linux
+      compiler: gcc
       addons:
         apt:
           sources:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
-            - libboost-all-dev
+            - libboost-dev
       env:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
     - os: linux
+      compiler: clang
       addons:
         apt:
           sources:
             - llvm-toolchain-trusty-5.0
           packages:
             - clang-5.0
-            - libboost-all-dev
+            - libboost-dev
       env:
         - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
 
