@@ -26,5 +26,9 @@ matrix:
         - export CC=clang-5.0
         - export CXX=clang++-5.0
 
+install:
+  - wget https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.tar.bz2
+  - tar -xjf boost_1_65.tar.bz2
+  - export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$(cd boost_1_65; pwd)
 script:
   - make
