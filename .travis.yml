@@ -14,7 +14,7 @@ matrix:
         - export CC=gcc-6
         - export CXX=g++-6
 
-install:
+before_script:
   - wget https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.tar.bz2
   - tar -xjf boost_1_65.tar.bz2
   - export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:$(cd boost_1_65; pwd)
