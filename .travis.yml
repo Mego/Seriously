@@ -10,21 +10,9 @@ matrix:
             - ubuntu-toolchain-r-test
           packages:
             - g++-6
-            - libboost1.55-dev
       install:
         - export CC=gcc-6
         - export CXX=g++-6
-    - os: linux
-      addons:
-        apt:
-          sources:
-            - llvm-toolchain-trusty-5.0
-          packages:
-            - clang-5.0
-            - libboost1.55-dev
-      install:
-        - export CC=clang-5.0
-        - export CXX=clang++-5.0
 
 install:
   - wget https://dl.bintray.com/boostorg/release/1.65.1/source/boost_1_65_1.tar.bz2
