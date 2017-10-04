@@ -9,6 +9,8 @@ class SeriousFunction;
 
 class SeriousObject;
 
+class SeriousStack;
+
 class Seriously;
 
 #endif // SERIOUSFWD_H_INCLUDED

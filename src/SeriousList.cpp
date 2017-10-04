@@ -1,13 +1,6 @@
 #include "SeriousList.h"
+#include "SeriousObject.h"
 
-SeriousList::SeriousList() {
-    //ctor
-}
-
-SeriousList::~SeriousList() {
-    //dtor
-}
-
-SeriousList::List SeriousList::value() const {
+const SeriousList::List SeriousList::value() const {
     return this->_value;
 }

@@ -6,13 +6,13 @@
 class SeriousFloat {
 public:
     SeriousFloat();
-    virtual ~SeriousFloat();
-    double value() const;
+    SeriousFloat(double value): _value(value) {}
+    const double value() const;
 
 protected:
 
 private:
-    double _value;
+    const double _value;
 };
 
 #endif // SERIOUSFLOAT_H

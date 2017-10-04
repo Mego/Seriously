@@ -6,9 +6,10 @@
 
 class SeriousString {
 public:
-    SeriousString();
-    virtual ~SeriousString();
-    std::string value() const;
+    SeriousString(): _value("") {}
+    SeriousString(const std::string str): _value(str) {}
+    SeriousString(const char* str): _value(str) {}
+    const std::string value() const;
 
 protected:
 
