@@ -26,3 +26,6 @@ matrix:
             - libboost-all-dev
       env:
         - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+
+script:
+  - make
