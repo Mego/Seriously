@@ -4,7 +4,6 @@ language: cpp
 matrix:
   include:
     - os: linux
-      compiler: gcc
       addons:
         apt:
           sources:
@@ -15,7 +14,6 @@ matrix:
       env:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
     - os: linux
-      compiler: clang
       addons:
         apt:
           sources:
