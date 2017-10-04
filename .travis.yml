@@ -13,6 +13,8 @@ matrix:
             - libboost-dev
       env:
         - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
+      install:
+        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
     - os: linux
       addons:
         apt:
@@ -22,6 +24,8 @@ matrix:
             - clang-5.0
             - libboost-dev
       env:
+        - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+      install:
         - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
 
 script:
