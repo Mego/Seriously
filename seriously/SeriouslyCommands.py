@@ -671,6 +671,10 @@ def char_to_digit(char, base):
 
 @memoize
 def str_base(number,base):
+    if base == 0:
+        return ""
+    if base == 1:
+        return "0"*number
     if number < 0:
         return '-' + str_base(-number, base)
     if isinstance(number, float): return str_base_float(number,base,0)
