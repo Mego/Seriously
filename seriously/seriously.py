@@ -214,6 +214,17 @@ class Seriously:
                     a = self.pop()
                     for _ in range(a):
                         self.eval(cmd)
+                elif ord_cp437(c) == 0x0E:
+                    cmd1, cmd2 = code[i+1], code[i+2]
+                    temp_stack = self.stack.copy()
+                    self.eval(cmd1)
+                    res1 = self.stack.copy()
+                    self.stack = temp_stack
+                    self.eval(cmd2)
+                    res2 = self.stack.copy()
+                    self.stack = deque()
+                    self.push([res1 if len(res1) > 1 else res1[0], res2 if len(res2) > 1 else res2[0]])
+                    i += 2
                 else:
                     if self.debug_mode:
                         print("{:2X}".format(ord_cp437(c)))

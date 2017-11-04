@@ -4,14 +4,13 @@ python:
 - '3.3'
 - '3.4'
 - '3.5'
-- '3.5-dev'
 - '3.6'
-- '3.6-dev'
 - nightly
 - pypy3
 matrix:
   allow_failures:
   - python: pypy3
+  - python: nightly
 install:
 - pip install -r ide_requirements.txt
 - pip install coverage

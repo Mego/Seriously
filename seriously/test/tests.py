@@ -11,6 +11,7 @@ from lib.cp437 import CP437
 from lib.iterable import as_list
 from ..seriously import Seriously
 from ..SeriouslyCommands import SeriousFunction
+from ..probably_prime import probably_prime
 
 ord_cp437 = CP437.ord
 chr_cp437 = CP437.chr
@@ -200,6 +201,10 @@ class StackTests(SeriousTest):
     def test_repeat(self):
         self.assert_serious('3¶5', [5, 5, 5])
         self.assert_serious('52¶²', [5**4])
+
+    def test_fork(self):
+        self.assert_serious('23♫+-', [[5, 1]])
+        self.assert_serious('23♫k*', [[[2, 3], 6]])
 
 
 class RegisterTests(SeriousTest):
@@ -406,6 +411,10 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('240"abcdef"'+chr_cp437(0xE8), ["ac"])
         self.assert_serious('[0,4,2]"abcdef"'+chr_cp437(0xE8), ["ac"])
         self.assert_serious("3R'.*", [['.', '..', '...']])
+        self.assert_serious("{}±".format('''"'foo'"'''), ['"foo"'])
+        self.assert_serious("{}±±".format('''"'foo'"'''), ["'foo'"])
+        self.assert_serious('"45""12345"í', [3])
+        self.assert_serious('"1""0101010"╢', [5])
         
     def test_list_methods(self):
         self.assert_serious('[1,2,3][4,5,6]'+chr_cp437(0x9D), [[5, 7, 9]])
@@ -487,6 +496,13 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('[0,4,2]6R'+chr_cp437(0xE8), [[1,3]])
         self.assert_serious('36R╡', [[[1, 2], [3, 4], [5, 6]]])
         self.assert_serious('3[1,2,3,4]╡', [[[1], [2], [3, 4]]])
+        self.assert_serious('[[1,2],"ab",3]r', [[0,1,2]])
+        self.assert_serious('[]r', [[]])
+        self.assert_serious('"abc"r', [[0,1,2]])
+        self.assert_serious('""r', [[]])
+        self.assert_serious('⌠foo⌡r', [[0,1,2]])
+        self.assert_serious('⌠⌡r', [[]])
+        self.assert_serious('1[0,1,0,1,0,1,0]╢', [5])
 
 class BaseConversionTests(SeriousTest):
     def test_bases(self):
@@ -514,6 +530,8 @@ class FunctionTests(SeriousTest):
         self.assert_serious('[1,2,3]⌠++⌡R', [[6]])
         self.assert_serious('3`1n', [1,1,1])
         self.assert_serious('5⌠2@%Y⌡'+chr_cp437(0xD6), [[0,2,4,6,8]])
+        self.assert_serious('[1,2,3,4,5]`pc', [3])
+        self.assert_serious('[2,4,6,8]⌠5>⌡c', [2])
         
     def test_combinators(self):
         self.assert_serious('3⌠1kMD⌡Y', [0])
@@ -522,3 +540,24 @@ class RandomTests(SeriousTest):
     def test_random(self):
         random.seed(0)
         self.assert_serious('2v52BG52V6J"abcd"J"abcd"'+chr_cp437(0xC8), ['badc', 'c', 1, 3.0831724219508216, 0.09158478740507359, 2])
+
+
+class TestProbablyPrime(unittest.TestCase):
+    def test_simple(self):
+        self.assertTrue(probably_prime(13))
+
+    def test_first_1000(self):
+        for num in [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101,
+                    103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199,
+                    211, 223, 227, 229, 233, 239, 241, 251, 257, 263, 269, 271, 277, 281, 283, 293, 307, 311, 313, 317,
+                    331, 337, 347, 349, 353, 359, 367, 373, 379, 383, 389, 397, 401, 409, 419, 421, 431, 433, 439, 443,
+                    449, 457, 461, 463, 467, 479, 487, 491, 499, 503, 509, 521, 523, 541, 547, 557, 563, 569, 571, 577,
+                    587, 593, 599, 601, 607, 613, 617, 619, 631, 641, 643, 647, 653, 659, 661, 673, 677, 683, 691, 701,
+                    709, 719, 727, 733, 739, 743, 751, 757, 761, 769, 773, 787, 797, 809, 811, 821, 823, 827, 829, 839,
+                    853, 857, 859, 863, 877, 881, 883, 887, 907, 911, 919, 929, 937, 941, 947, 953, 967, 971, 977, 983,
+                    991, 997]:
+            self.assertTrue(probably_prime(num))
+    def test_large(self):
+        large_primes = [19823931826121, 21718972014737, 2866953310097]
+        for num in large_primes:
+            self.assertTrue(probably_prime(num))

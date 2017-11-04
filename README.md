@@ -46,7 +46,7 @@ g1=
 ## Counting the divisors of a number
 
 ```
-w`iXu`Mπ
+w⌠iXu⌡Mπ
 ```
 
 or
