@@ -42,6 +42,10 @@ class UtilTests(unittest.TestCase):
         # fix for Python < 3.4
         if not hasattr(self, 'subTest'):
             self.subTest = self.dummy_manager
+    
+    @contextlib.contextmanager
+    def dummy_manager(*args, **kwargs):
+        yield
 
     def test_utils(self):
         self.assertEqual(as_list(range(5)), [0, 1, 2, 3, 4])
