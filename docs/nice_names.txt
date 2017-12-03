@@ -44,7 +44,7 @@ multiply
 add concat
 read_line
 subtract asymmetric_difference
-write_line write_fn
+print write_line write_fn
 divide list_rrot
 
 
