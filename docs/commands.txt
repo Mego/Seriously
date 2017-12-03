@@ -66,7 +66,7 @@
 41 (A): pop a: push abs(a)
 42 (B): pop a,b: push a random integer in [a,b) (randrange(a,b))
 43 (C): pop a: push cos(a)
-44 (D): pop a: push a-1; pop [a]: push stdddev([a])
+44 (D): pop a: push a-1; pop [a]: push stddev([a])
 45 (E): pop a: push erf(a); pop [a],b: push [a][b] (bth item in [a]) (also works for strings)
 46 (F): pop a: push Fib(a) (Fib(0)=0, Fib(1)=Fib(2)=1); pop [a]: push a[0]
 47 (G): push a random float in the range [0,1) (push random())
