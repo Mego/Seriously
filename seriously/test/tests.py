@@ -37,6 +37,12 @@ def NinetyNineBottles():
 
 
 class UtilTests(unittest.TestCase):
+    def __init__(self, *args):
+        super().__init__(*args)
+        # fix for Python < 3.4
+        if not hasattr(self, 'subTest'):
+            self.subTest = self.dummy_manager
+
     def test_utils(self):
         self.assertEqual(as_list(range(5)), [0, 1, 2, 3, 4])
         self.assertEqual(as_list((1,2,3,4) for x in range(3)), [[1, 2, 3, 4]]*3)
