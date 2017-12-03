@@ -9,7 +9,8 @@ import sys
 import unittest
 from lib.cp437 import CP437
 from lib.iterable import as_list
-from ..seriously import Seriously
+from lib.nicenames import nice_names
+from ..seriously import Seriously, minimize
 from ..SeriouslyCommands import SeriousFunction
 from ..probably_prime import probably_prime
 
@@ -51,6 +52,12 @@ class UtilTests(unittest.TestCase):
         srs.push(1)
         srs.prepend(0)
         self.assertEqual(srs.stack, collections.deque([0, 1]))
+    
+    def test_nice_names(self):
+        for i, nice_name in enumerate(nice_names):
+            with self.subTest(i=i):
+                self.assertEqual(minimize(nice_name), chr_cp437(nice_names[nice_name]))
+        self.assertEqual(minimize("3 copy add square half"), "3;+²½")
 
 
 class SeriousTest(unittest.TestCase):

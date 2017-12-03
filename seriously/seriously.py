@@ -17,6 +17,7 @@ import traceback
 from . import SeriouslyCommands
 from lib.cp437 import CP437
 from lib.iterable import deque, as_list
+from lib.nicenames import nice_names
 
 anytype = SeriouslyCommands.anytype
 
@@ -262,6 +263,15 @@ def srs_exec(debug_mode=False, file_obj=None, code=None, ide_mode=False): # prag
 def ide_mode():
     SeriouslyCommands.fn_table[0xF0] = lambda x: x.push(literal_eval(x.pop()))
 
+def minimize(code):
+    mini_code = ""
+    for cmd in code.split():
+        if cmd in nice_names:
+            mini_code += chr_cp437(nice_names[cmd])
+        else:
+            mini_code += cmd
+    return mini_code
+
 def main(): # pragma: no cover
     parser = argparse.ArgumentParser(
                 description="Run the Seriously interpreter")
@@ -271,6 +281,7 @@ def main(): # pragma: no cover
                         help="disable unsafe commands", action="store_true")
     parser.add_argument("-N", "--no-input",
                         help="don't try to read input (equivalent to piping /dev/null)", action="store_true")
+    parser.add_argument("-n", "--nice-names", help="use nice names for readable code", action="store_true")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("-c", "--code", help="run the specified code")
     group.add_argument("-f", "--file", help="specify an input file",
@@ -281,6 +292,8 @@ def main(): # pragma: no cover
     if args.no_input:
         sys.stdin = open(os.devnull, 'r')
         atexit.register(lambda: sys.stdin.close())
+    if args.nice_names:
+        args.code = minimize(args.code)
     srs_exec(args.debug, args.file, args.code, args.ide)
 
 if __name__ == '__main__':

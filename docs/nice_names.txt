@@ -1,0 +1,255 @@
+
+
+
+
+
+
+
+
+
+read_byte
+write
+unary_map
+binary_map
+
+parallel_map
+
+
+
+
+
+iterate
+read_all
+
+
+
+
+
+
+
+
+lcm
+gcd_reduce
+stack_size
+factorial
+
+list
+str
+mod
+bitwise_and
+
+stack_rrot
+stack_lrot
+multiply
+add concat
+read_line
+subtract asymmetric_difference
+write_line write_fn
+divide list_rrot
+
+
+
+
+
+
+
+
+
+
+
+copy
+less_than
+equal
+greater_than
+
+swap
+abs
+binary_randrange
+cos
+decrement stddev
+erf element
+fib first
+random
+hello_world head
+conditional
+unary_randrange random_choice
+ceil
+floor
+map max
+nnbb last
+ord ords
+nth_prime
+quine
+scoped_call reverse upper_range
+sin sort
+tangent set_element
+union
+random_uniform slices
+while_begin while_end
+discard
+logical_negate fixed_point
+zip zip_n
+
+floor_divide list_lrot
+
+xor
+ln
+
+stack_invert
+bool
+chr count
+dequeue divmod
+exp
+fib_index format
+gcd
+l2_norm
+float flatten
+join
+nest_all
+len
+modf min
+repeat_n iterate_n
+append prime_factorization
+is_prime pop
+enqueue
+lower_range
+sgn split
+tail translate
+increment
+random_seed
+prime_factors_exp
+binary_range splat_range
+prime_factors
+write_many
+stack_rrot_n
+bitwise_or
+stack_lrot_n
+bitwise_negate
+exit
+complex
+write_all
+discard_all
+asin
+acos
+atan
+atan2
+asinh
+acosh
+atanh
+repr
+imag_unit
+imag_mult
+inverse numerics
+sinh
+cosh
+tanh
+mean
+replace strings
+strip
+lstrip
+rstrip
+upper
+lower
+title
+swapcase
+mode
+take_sign
+function functions
+pair_add
+phase
+call
+complex_conjugate
+find
+conditional_exit
+alpha_lower
+enumerate
+lists
+
+degrees
+int_base
+add_two
+subtract_two
+half
+quarter
+str_base
+stack_insert_up
+stack_insert_down
+filter
+totient
+prime_pi
+stack_dup
+coprime
+chunk_number
+rindex
+reg0_add
+reg1_add
+pascal_row
+middle
+reg0_save
+reg1_save
+reg0_load
+reg1_load
+regn_save
+regn_load
+
+transpose
+bin
+hex
+stack_dup_each
+stack_dup_each_n
+nest_n
+shuffle
+uniquify
+reg_input
+pi
+e
+is_unique
+while_call
+combinations
+permutations
+pow10
+log10 log
+pow2
+log2 lg
+ln2
+first_n_truthy
+re_im
+chunk_length
+ord_cp437
+chr_cp437
+nCr
+nPr
+b64decode
+b64encode
+base_digits
+repeat_each
+nth_input
+gamma
+product
+sum
+cumulative_sums
+rms
+double
+slice
+
+
+dig
+toggle_preserve preserve_on preserve_off
+phi
+empty_string
+intersection
+eval
+unary_negate swap_quotes
+gte
+lte
+func_begin
+func_end
+divisors
+int
+radians
+cartesian_product cartesian_power
+
+sqrt
+pow
+square
+write_all_safe
