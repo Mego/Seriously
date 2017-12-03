@@ -244,8 +244,10 @@ class Seriously:
                 i += 1
         return as_list(self.stack)[::-1]
 
-def srs_exec(debug_mode=False, file_obj=None, code=None, ide_mode=False): # pragma: no cover
+def srs_exec(debug_mode=False, file_obj=None, code=None, ide_mode=False, nice_names=False): # pragma: no cover
     code = code or file_obj.read()
+    if nice_names:
+        code = minimize(code)
     if (not ide_mode) and hashlib.sha256(code.encode()).hexdigest() == 'e8809dfaff977e1b36210203b7b44e83102263444695c1123799bc43358ae1c2':
         try:
             from Crypto.Cipher import AES
@@ -292,9 +294,7 @@ def main(): # pragma: no cover
     if args.no_input:
         sys.stdin = open(os.devnull, 'r')
         atexit.register(lambda: sys.stdin.close())
-    if args.nice_names:
-        args.code = minimize(args.code)
-    srs_exec(args.debug, args.file, args.code, args.ide)
+    srs_exec(args.debug, args.file, args.code, args.ide, args.nice_names)
 
 if __name__ == '__main__':
     main()
