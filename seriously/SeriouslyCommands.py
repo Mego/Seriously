@@ -276,21 +276,9 @@ def nth_prime(n):
 def prime_count_fn(srs):
     a=srs.pop()
     if isinstance(a,int):
-        global primes, max_tested
+        global primes
         init_primes_up_to(a)
-        if max_tested >= a:
-            srs.push(len(primes))
-        else:
-        #binary search
-            lo=0
-            hi=len(primes)-1
-            while lo<hi-1:
-                test = (lo+hi)//2
-                if primes[test]<=1:
-                    lo=test
-                else:
-                    hi=test
-            srs.push(lo+1)
+        srs.push(sum(1 for x in itertools.takewhile(lambda n: n<=a, primes)))
     else:
         srs.push(a)
 
