@@ -809,6 +809,8 @@ def get_reg(i):
 
 def set_reg(i, val):
     global registers
+    if isinstance(val, collections.Iterable):
+        val = as_list(val)
     registers[i] = val
 
 def diff_fn(srs):

@@ -232,6 +232,9 @@ class RegisterTests(SeriousTest):
         self.assert_serious('53{}3{}'.format(chr_cp437(0xBF),
                                              chr_cp437(0xC0)), [5])
 
+    def test_push_iterable(self):
+        self.assert_serious('"abc"O╗3R⌠╜@⌡M', [[1, [97, 98, 99], 2, [97, 98, 99], 3, [97, 98, 99]]])
+
     def test_input(self):
         self.assert_serious(chr_cp437(0xCA)+chr_cp437(0xBD)+chr_cp437(0xBE),
                             [2, 'b'],
