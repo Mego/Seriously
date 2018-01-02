@@ -232,8 +232,8 @@ class Seriously:
                     self.fn_table.get(ord_cp437(c), lambda x: x)(self)
                     if self.debug_mode:
                         print(self.stack)
-            except SystemExit:
-                exit()
+            except SystemExit as err:
+                exit(err.code)
             except KeyboardInterrupt: # pragma: no cover
                 exit()
             except:
