@@ -809,7 +809,7 @@ def get_reg(i):
 
 def set_reg(i, val):
     global registers
-    if isinstance(val, collections.Iterable):
+    if isinstance(val, collections.Iterable) and not isinstance(val, str):
         val = as_list(val)
     registers[i] = val
 
