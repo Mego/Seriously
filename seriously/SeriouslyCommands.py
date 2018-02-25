@@ -177,7 +177,7 @@ class SeriousFunction:
     def __eq__(self, other):
         if not isinstance(other, SeriousFunction):
             if not isinstance(other, str):
-                raise NotImplemented
+                raise NotImplementedError
             else:
                 return self.code == other
         else:
@@ -1280,7 +1280,21 @@ def rindex_fn(srs):
             srs.push(max(loc for loc, val in enumerate(b) if val == a))
     else:
         srs.push(-1)
-    
+
+def underscore_fn(srs):
+    a = srs.pop()
+    try:
+        srs.push(math.log(a))
+    except:
+        b = srs.pop()
+        accum = b[0]
+        for x in b[1:]:
+            srs2 = srs.make_new()
+            srs2.push(accum)
+            srs2.push(x)
+            accum = a(srs2)[0]
+        srs.push(accum)
+
 
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -1335,7 +1349,7 @@ fn_table={
         0x5A:zip_fn,
         0x5C:idiv_fn,
         0x5E:caret_fn,
-        0x5F:lambda x:x.push(math.log(x.pop())),
+        0x5F:underscore_fn,
         0x61:invert_fn,
         0x62:lambda x:x.push(int(bool(x.pop()))),
         0x63:c_fn,
