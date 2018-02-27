@@ -526,6 +526,7 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('⌠⌡r', [[]])
         self.assert_serious('1[0,1,0,1,0,1,0]╢', [5])
         self.assert_serious('3R`+_', [6])
+        self.assert_serious('3R`+┴', [[1, 3, 6]])
 
 class BaseConversionTests(SeriousTest):
     def test_bases(self):

@@ -1295,6 +1295,16 @@ def underscore_fn(srs):
             accum = a(srs2)[0]
         srs.push(accum)
 
+def cumulative_reduce(srs):
+    f = srs.pop()
+    a = srs.pop()
+    accum = [a[0]]
+    for x in a[1:]:
+        srs2 = srs.make_new()
+        srs2.push(accum[-1])
+        srs2.push(x)
+        accum.append(f(srs2)[0])
+    srs.push(accum)
 
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -1445,6 +1455,7 @@ fn_table={
         0xBE:lambda x:x.push(get_reg(1)),
         0xBF:lambda x:set_reg(x.pop(),x.pop()),
         0xC0:lambda x:x.push(get_reg(x.pop())),
+        0xC1:cumulative_reduce,
         0xC2:lambda x:x.push(list(zip(*x.pop()))),
         0xC3:lambda x:x.push(binrep(x.pop())),
         0xC4:lambda x:x.push(hexrep(x.pop())),
