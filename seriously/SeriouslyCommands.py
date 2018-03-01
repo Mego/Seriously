@@ -10,15 +10,13 @@ from functools import reduce, lru_cache
 import struct
 import types
 from itertools import zip_longest as izip
-from lib.cp437 import CP437
-from lib.iterable import deque, as_list, zip_longest
+from seriouslylib.cp437 import CP437
+from seriouslylib.iterable import deque, as_list, zip_longest
 
 try:
     from statistics import mean as _mean, median, mode, pstdev
 except ImportError:
     from stats import mean as _mean, median, mode, pstdev
-
-from lib.cp437 import CP437
 
 chr_cp437 = CP437.chr
 ord_cp437 = CP437.ord

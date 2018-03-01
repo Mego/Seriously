@@ -7,9 +7,9 @@ import random
 from io import StringIO
 import sys
 import unittest
-from lib.cp437 import CP437
-from lib.iterable import as_list
-from lib.nicenames import nice_names
+from seriouslylib.cp437 import CP437
+from seriouslylib.iterable import as_list
+from seriouslylib.nicenames import nice_names
 from ..seriously import Seriously, minimize
 from ..SeriouslyCommands import SeriousFunction
 from ..probably_prime import probably_prime

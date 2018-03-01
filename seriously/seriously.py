@@ -15,9 +15,9 @@ import random
 import re
 import traceback
 from . import SeriouslyCommands
-from lib.cp437 import CP437
-from lib.iterable import deque, as_list
-from lib.nicenames import nice_names
+from seriouslylib.cp437 import CP437
+from seriouslylib.iterable import deque, as_list
+from seriouslylib.nicenames import nice_names
 
 anytype = SeriouslyCommands.anytype
 
