@@ -13,7 +13,7 @@ except:
 setup(
     name='seriously',
 
-    version='2.1.20',
+    version='2.1.21',
 
     description='A Python-based golfing language',
     long_description='Seriously is a Python-based golfing language. See the GitHub page for more details.',
@@ -34,7 +34,7 @@ setup(
         'Programming Language :: Python :: 3.6',
     ],
     
-    install_requires = ['pycryptodome'] + (['stats'] if need_stats else []),
+    install_requires = ['stats'] if need_stats else [],
     
     packages = ['seriously', 'seriouslylib'],
 
