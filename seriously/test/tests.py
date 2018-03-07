@@ -280,6 +280,7 @@ class MathTests(SeriousTest):
         self.assert_serious('6:21▲', [42])
         # weird prime bug test
         self.assert_serious('9uyX9uR`p░', [[2, 3, 5, 7]])
+        self.assert_serious(':2.7!', [4.170651783796603], close=True)
 
     def test_lists(self):
         self.assert_serious('[1][1,2]-', [[2]])

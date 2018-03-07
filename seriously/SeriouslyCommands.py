@@ -108,7 +108,16 @@ class MathSelector(object):
         except:
             return getattr(cmath,self.fn)(*args, **kwargs)
 
+def _factorial(n):
+    try:
+        return rmath.factorial(n)
+    except ValueError:
+        return rmath.gamma(n+1)
+
 class Math(object):
+    def factorial(self, n):
+        return _factorial(n)
+
     def __getattr__(self, fn):
         mathmod = cmath if hasattr(cmath,fn) else rmath
         return MathSelector(fn) if isinstance(getattr(mathmod,fn), collections.Callable) else getattr(rmath,fn)
