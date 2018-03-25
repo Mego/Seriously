@@ -54,12 +54,8 @@ def remove_lists_and_strings(code):
     return result
 
 class Seriously:
-    @classmethod
-    def _make_new(cls, init=None, debug_mode=False):
-        return cls([] if init is None else init, debug_mode)
-
     def make_new(self, *stack):
-        return self._make_new(init=list(stack), debug_mode=self.debug_mode)
+        return self.__class__(list(stack), self.debug_mode)
 
     def __init__(self, init_stack=None, debug_mode=False):
         self.stack = deque(init_stack if init_stack is not None else [])
