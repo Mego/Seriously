@@ -10,15 +10,13 @@ from functools import reduce, lru_cache
 import struct
 import types
 from itertools import zip_longest as izip
-from lib.cp437 import CP437
-from lib.iterable import deque, as_list, zip_longest
+from seriouslylib.cp437 import CP437
+from seriouslylib.iterable import deque, as_list, zip_longest
 
 try:
     from statistics import mean as _mean, median, mode, pstdev
 except ImportError:
     from stats import mean as _mean, median, mode, pstdev
-
-from lib.cp437 import CP437
 
 chr_cp437 = CP437.chr
 ord_cp437 = CP437.ord
@@ -110,7 +108,16 @@ class MathSelector(object):
         except:
             return getattr(cmath,self.fn)(*args, **kwargs)
 
+def _factorial(n):
+    try:
+        return rmath.factorial(n)
+    except ValueError:
+        return rmath.gamma(n+1)
+
 class Math(object):
+    def factorial(self, n):
+        return _factorial(n)
+
     def __getattr__(self, fn):
         mathmod = cmath if hasattr(cmath,fn) else rmath
         return MathSelector(fn) if isinstance(getattr(mathmod,fn), collections.Callable) else getattr(rmath,fn)
@@ -177,7 +184,7 @@ class SeriousFunction:
     def __eq__(self, other):
         if not isinstance(other, SeriousFunction):
             if not isinstance(other, str):
-                raise NotImplemented
+                raise NotImplementedError
             else:
                 return self.code == other
         else:
@@ -1281,10 +1288,36 @@ def rindex_fn(srs):
     else:
         srs.push(-1)
 
+
+def underscore_fn(srs):
+    a = srs.pop()
+    try:
+        srs.push(math.log(a))
+    except:
+        b = srs.pop()
+        accum = b[0]
+        for x in b[1:]:
+            srs2 = srs.make_new()
+            srs2.push(accum)
+            srs2.push(x)
+            accum = a(srs2)[0]
+        srs.push(accum)
+
+def cumulative_reduce(srs):
+    f = srs.pop()
+    a = srs.pop()
+    accum = [a[0]]
+    for x in a[1:]:
+        srs2 = srs.make_new()
+        srs2.push(accum[-1])
+        srs2.push(x)
+        accum.append(f(srs2)[0])
+    srs.push(accum)
+
 def eval_fn(srs):
     print("Cheater!")
     exit(1)
-    
+
 
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -1339,7 +1372,7 @@ fn_table={
         0x5A:zip_fn,
         0x5C:idiv_fn,
         0x5E:caret_fn,
-        0x5F:lambda x:x.push(math.log(x.pop())),
+        0x5F:underscore_fn,
         0x61:invert_fn,
         0x62:lambda x:x.push(int(bool(x.pop()))),
         0x63:c_fn,
@@ -1435,6 +1468,7 @@ fn_table={
         0xBE:lambda x:x.push(get_reg(1)),
         0xBF:lambda x:set_reg(x.pop(),x.pop()),
         0xC0:lambda x:x.push(get_reg(x.pop())),
+        0xC1:cumulative_reduce,
         0xC2:lambda x:x.push(list(zip(*x.pop()))),
         0xC3:lambda x:x.push(binrep(x.pop())),
         0xC4:lambda x:x.push(hexrep(x.pop())),
@@ -1479,7 +1513,7 @@ fn_table={
         0xED:lambda x:x.push(phi),
         0xEE:lambda x:x.push(""),
         0xEF:lambda x:x.push(list(set(x.pop()).intersection(x.pop()))),
-        0xF0:eval_fn,
+        0xF0:lambda x:x.push(eval(x.pop())),
         0xF1:sign_swap_fn,
         0xF2:lambda x:x.push(x.pop()>=x.pop()),
         0xF3:lambda x:x.push(x.pop()<=x.pop()),

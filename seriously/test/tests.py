@@ -7,9 +7,9 @@ import random
 from io import StringIO
 import sys
 import unittest
-from lib.cp437 import CP437
-from lib.iterable import as_list
-from lib.nicenames import nice_names
+from seriouslylib.cp437 import CP437
+from seriouslylib.iterable import as_list
+from seriouslylib.nicenames import nice_names
 from ..seriously import Seriously, minimize
 from ..SeriouslyCommands import SeriousFunction
 from ..probably_prime import probably_prime
@@ -163,7 +163,6 @@ class LiteralTests(SeriousTest):
         self.assert_serious("⌠⌠foo⌡⌡", [SeriousFunction("⌠foo⌡")]),
         self.assert_serious("⌠foo⌡$", ["foo"])
 
-    @unittest.skip("eval is banned on this branch")
     def test_eval(self):
         self.assert_serious('"len(set([1,2,2,3]))"{}'.format(chr_cp437(0xF0)),
                             [3])
@@ -281,6 +280,7 @@ class MathTests(SeriousTest):
         self.assert_serious('6:21▲', [42])
         # weird prime bug test
         self.assert_serious('9uyX9uR`p░', [[2, 3, 5, 7]])
+        self.assert_serious(':2.7!', [4.170651783796603], close=True)
 
     def test_lists(self):
         self.assert_serious('[1][1,2]-', [[2]])
@@ -526,6 +526,8 @@ class StringAndListTests(SeriousTest):
         self.assert_serious('⌠foo⌡r', [[0,1,2]])
         self.assert_serious('⌠⌡r', [[]])
         self.assert_serious('1[0,1,0,1,0,1,0]╢', [5])
+        self.assert_serious('3R`+_', [6])
+        self.assert_serious('3R`+┴', [[1, 3, 6]])
 
 class BaseConversionTests(SeriousTest):
     def test_bases(self):

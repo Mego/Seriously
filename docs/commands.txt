@@ -93,7 +93,7 @@
 5C (\): pop a,b: push a/b (integer division); pop [a]: rotate [a] left by 1, push [a]
 5D (]): end list literal
 5E (^): pop a,b: push a XOR b
-5F (_): pop a: push ln(a)
+5F (_): pop a: push ln(a); pop f, [a]: fold f over [a] (reduce)
 60 (`): prefix for function literal of length 1 (`p is the same as ⌠p⌡)
 61 (a): invert the stack ([a,b,c,d] -> [d,c,b,a])
 62 (b): pop a: push 0 if a==0 else 1; pop "a" or [a]: push 0 if len(a)==0 else 1; pop f: push 0 if len(f)==0 else 1
@@ -191,7 +191,7 @@ BD (╜): push the value in register 0 (initially a 0)
 BE (╛): push the value in register 1 (initially the empty string)
 BF (┐): pop a,b: push b to register a
 C0 (└): pop a: push the value in register a
-C1 (┴):
+C1 (┴): pop f,[a]: push cumulative reduce of f over [a]
 C2 (┬): pop a: push transpose(a) ([[1,2,3],[4,5,6]] -> [[1,4],[2,5],[3,6]])
 C3 (├): pop a: push big-endian binary representation of a (bin(a) for ints, binary float data for floats, ascii_to_bin(a) for strings)
 C4 (─): pop a: push big-endian hexadecimal representation of a (same as 0xC3 but with hex)
