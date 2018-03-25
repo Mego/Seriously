@@ -1288,6 +1288,7 @@ def rindex_fn(srs):
     else:
         srs.push(-1)
 
+
 def underscore_fn(srs):
     a = srs.pop()
     try:
@@ -1312,6 +1313,11 @@ def cumulative_reduce(srs):
         srs2.push(x)
         accum.append(f(srs2)[0])
     srs.push(accum)
+
+def eval_fn(srs):
+    print("Cheater!")
+    exit(1)
+
 
 fn_table={
         0x09:lambda x:x.push(sys.stdin.read(1)),
@@ -1507,7 +1513,7 @@ fn_table={
         0xED:lambda x:x.push(phi),
         0xEE:lambda x:x.push(""),
         0xEF:lambda x:x.push(list(set(x.pop()).intersection(x.pop()))),
-        0xF0:lambda x:x.push(eval(x.pop())),
+        0xF0:eval_fn,
         0xF1:sign_swap_fn,
         0xF2:lambda x:x.push(x.pop()>=x.pop()),
         0xF3:lambda x:x.push(x.pop()<=x.pop()),

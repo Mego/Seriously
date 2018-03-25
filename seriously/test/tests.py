@@ -163,6 +163,7 @@ class LiteralTests(SeriousTest):
         self.assert_serious("⌠⌠foo⌡⌡", [SeriousFunction("⌠foo⌡")]),
         self.assert_serious("⌠foo⌡$", ["foo"])
 
+    @unittest.skip("eval is banned on this branch")
     def test_eval(self):
         self.assert_serious('"len(set([1,2,2,3]))"{}'.format(chr_cp437(0xF0)),
                             [3])
