@@ -1513,7 +1513,7 @@ fn_table={
         0xED:lambda x:x.push(phi),
         0xEE:lambda x:x.push(""),
         0xEF:lambda x:x.push(list(set(x.pop()).intersection(x.pop()))),
-        0xF0:eval_fn,
+        0xF0:lambda x:x.push(eval(x.pop())),
         0xF1:sign_swap_fn,
         0xF2:lambda x:x.push(x.pop()>=x.pop()),
         0xF3:lambda x:x.push(x.pop()<=x.pop()),
