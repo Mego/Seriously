@@ -5,6 +5,7 @@ import contextlib
 import math
 import random
 from io import StringIO
+import os
 import sys
 import unittest
 from seriouslylib.cp437 import CP437
@@ -129,6 +130,11 @@ class IOTests(SeriousTest):
         self.assert_serious(chr_cp437(0xE1), ['a','a'], '"a"\n')
         self.assert_serious('0'+chr_cp437(0xE1), ['a','b','a'], '"a"\n"b"\n')
         self.assert_serious("'r"+chr_cp437(0xE1), ['a', 'r', 'a'], '"a"\n')
+        
+    def test_file_io(self):
+        self.assert_serious("'b'a"+chr_cp437(0x01), [])
+        self.assert_serious("'a"+chr_cp437(0x02), ['b'])
+        os.remove("a")
 
 
 class LiteralTests(SeriousTest):

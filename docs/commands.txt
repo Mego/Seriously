@@ -1,6 +1,6 @@
 00 (NUL):
-01 (☺):
-02 (☻):
+01 (☺): pop a, b: write b to file named a
+02 (☻): pop a: open file named a and push contents
 03 (♥):
 04 (♦):
 05 (♣):
@@ -179,8 +179,8 @@ B1 (▒): pop a: push totient(a) (# of integers <= a that are coprime with a)
 B2 (▓): pop a: push pi(a) (# of primes <= a)
 B3 (│): duplicate stack ([a,b,c] => [a,b,c,a,b,c])
 B4 (┤): pop a,b: push 1 if a and b are coprime else 0
-B5 (╡): pop [a],b: push a list containing b non-overlapping sublists of [a] (chunk by number)
 B6 (╢): pop [a] or "a", b: push a.rindex(b) (last index of b in a)
+B5 (╡): pop [a],b: push a list containing b non-overlapping sublists of [a] (chunk by number)
 B7 (╖): pop a: add a to the value in register 0 (equivalent to ╜+╗)
 B8 (╕): pop a: add a to the value in register 1 (equivalent to ╛+╝)
 B9 (╣): pop a: push the ath row in Pascal's triangle

@@ -1318,8 +1318,20 @@ def eval_fn(srs):
     print("Cheater!")
     exit(1)
 
-
+def write_file(srs):
+	a, b = srs.pop(), srs.pop()
+	with open(a, 'w') as a_file:
+		a_file.write(b)
+		
+def read_file(srs):
+	a = srs.pop()
+	with open(a, 'r') as a_file:
+		srs.push(a_file.read())
+	
+	
 fn_table={
+		0x01:write_file,
+		0x02:read_file,
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x0A:lambda x:print(x.pop(),end=''),
         0x15:lambda x:x.push(sys.stdin.read()),
