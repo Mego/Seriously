@@ -1332,6 +1332,7 @@ def read_file(srs):
 fn_table={
 		0x01:write_file,
 		0x02:read_file,
+		0x03:lambda x:x.push(x.VERSION),
         0x09:lambda x:x.push(sys.stdin.read(1)),
         0x0A:lambda x:print(x.pop(),end=''),
         0x15:lambda x:x.push(sys.stdin.read()),

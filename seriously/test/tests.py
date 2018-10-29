@@ -592,3 +592,8 @@ class TestProbablyPrime(unittest.TestCase):
         large_primes = [19823931826121, 21718972014737, 2866953310097]
         for num in large_primes:
             self.assertTrue(probably_prime(num))
+
+
+class MetaTests(SeriousTest):
+	def test_meta(self):
+		self.assert_serious(chr_cp437(0x03), [Seriously.VERSION])
