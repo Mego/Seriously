@@ -1,7 +1,7 @@
 00 (NUL):
 01 (☺): pop a, b: write b to file named a
 02 (☻): pop a: open file named a and push contents
-03 (♥):
+03 (♥): push version number
 04 (♦):
 05 (♣):
 06 (♠):

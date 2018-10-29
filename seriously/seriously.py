@@ -54,6 +54,8 @@ def remove_lists_and_strings(code):
     return result
 
 class Seriously:
+    VERSION = "2.1.26"
+
     def make_new(self, *stack):
         return self.__class__(list(stack), self.debug_mode)
 
