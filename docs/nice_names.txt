@@ -1,7 +1,7 @@
 
-
-
-
+file_write
+file_read
+version
 
 
 
@@ -46,16 +46,16 @@ read_line
 subtract asymmetric_difference
 print write_line write_fn
 divide list_rrot
-
-
-
-
-
-
-
-
-
-
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
 
 copy
 less_than
@@ -191,7 +191,7 @@ reg0_load
 reg1_load
 regn_save
 regn_load
-
+cumulative_reduce
 transpose
 bin
 hex
