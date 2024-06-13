@@ -2,13 +2,12 @@
 
 import operator, cmath
 import math as rmath
-import random, itertools, sys, string, binascii, ast
+import random, itertools, sys, string, ast
 from base64 import *
 from copy import deepcopy as _copy
 import collections
 from functools import reduce, lru_cache
 import struct
-import types
 from itertools import zip_longest as izip
 from seriouslylib.cp437 import CP437
 from seriouslylib.iterable import deque, as_list, zip_longest
