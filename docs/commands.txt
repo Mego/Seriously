@@ -14,10 +14,10 @@
 0D (♪):
 0E (♫): take the next two commands and apply them each to the stack in parallel, and return the results as a list. If multiple values are output from a command, that output is nested in a list.
 0F (☼):
-10 (►):
-11 (◄):
-12 (↕):
-13 (‼):
+10 (►): push 10
+11 (◄): pop a: push 10*a
+12 (↕): pop a: push 3*a
+13 (‼): pop a: push 4*a
 14 (¶): pop a: repeat the next command a times
 15 (§): push all data from stdin as a string
 16 (▬):

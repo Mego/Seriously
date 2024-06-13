@@ -11,37 +11,28 @@ except:
     need_stats = True
 
 setup(
-    name='seriously',
-
-    version='2.1.26',
-
-    description='A Python-based golfing language',
-    long_description='Seriously is a Python-based golfing language. See the GitHub page for more details.',
-
-    url='https://github.com/Mego/Seriously',
-
-    author='Mego',
-
-    license='MIT',
-
+    name="seriously",
+    version="2.1.27",
+    description="A Python-based golfing language",
+    long_description="Seriously is a Python-based golfing language. See the GitHub page for more details.",
+    url="https://github.com/Mego/Seriously",
+    author="Mego",
+    license="MIT",
     classifiers=[
-        'Development Status :: 5 - Production/Stable',
-        'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
+        "Development Status :: 5 - Production/Stable",
+        "License :: OSI Approved :: MIT License",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.3",
+        "Programming Language :: Python :: 3.4",
+        "Programming Language :: Python :: 3.5",
+        "Programming Language :: Python :: 3.6",
     ],
-    
-    install_requires = ['stats'] if need_stats else [],
-    
-    packages = ['seriously', 'seriouslylib'],
-
-    keywords='codegolf recreational',
+    install_requires=["stats"] if need_stats else [],
+    packages=["seriously", "seriouslylib"],
+    keywords="codegolf recreational",
     entry_points={
-        'console_scripts': [
-            'seriously=seriously:main',
+        "console_scripts": [
+            "seriously=seriously:main",
         ],
     },
 )
