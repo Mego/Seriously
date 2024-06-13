@@ -1,4 +1,5 @@
 codecov:
+  token: 6d0d3f24-9591-4d98-8dd7-dfe2337b473
   notify:
     require_ci_to_pass: yes
 
@@ -21,12 +22,12 @@ coverage:
     changes: no
 
   parsers:
-     gcov:
-       branch_detection:
-         conditional: yes
-         loop: yes
-         method: no
-         macro: no
+    gcov:
+      branch_detection:
+        conditional: yes
+        loop: yes
+        method: no
+        macro: no
 
 comment:
   layout: "header, diff"
