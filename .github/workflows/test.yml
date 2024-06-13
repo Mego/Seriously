@@ -10,13 +10,17 @@ on:
     branches: ["master"]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11"]
+        python-version: ["3.12"]
 
     steps:
       - uses: actions/checkout@v4
