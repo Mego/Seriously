@@ -13,10 +13,7 @@ from itertools import zip_longest as izip
 from seriouslylib.cp437 import CP437
 from seriouslylib.iterable import deque, as_list, zip_longest
 
-try:
-    from statistics import mean as _mean, median, mode, pstdev
-except ImportError:
-    from stats import mean as _mean, median, mode, pstdev
+from statistics import mean as _mean, median, mode, pstdev
 
 chr_cp437 = CP437.chr
 ord_cp437 = CP437.ord
