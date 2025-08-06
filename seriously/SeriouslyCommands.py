@@ -6,6 +6,7 @@ import random, itertools, sys, string, ast
 from base64 import *
 from copy import deepcopy as _copy
 import collections
+import collections.abc
 from functools import reduce, lru_cache
 import struct
 from itertools import zip_longest as izip
@@ -41,7 +42,7 @@ phi = (1 + 5**0.5) / 2
 
 
 def copy(a):
-    if isinstance(a, collections.Iterable) and not isinstance(a, str):
+    if isinstance(a, collections.abc.Iterable) and not isinstance(a, str):
         a = as_list(a)
     return a, _copy(a)
 
@@ -135,7 +136,7 @@ class Math(object):
         mathmod = cmath if hasattr(cmath, fn) else rmath
         return (
             MathSelector(fn)
-            if isinstance(getattr(mathmod, fn), collections.Callable)
+            if isinstance(getattr(mathmod, fn), collections.abc.Callable)
             else getattr(rmath, fn)
         )
 
@@ -318,7 +319,7 @@ def init_primes_up_to(n):
             if temp[p]:
                 for q in range(p + p + max_tested, n - max_tested, p + max_tested):
                     temp[q] = 0
-        primes += [x + max_tested for x in range(n - max_tested + 1) if temp[x]]
+        primes += [x + max_tested for x in range(n - max_tested) if temp[x]]
         max_tested = n
 
 
@@ -360,7 +361,7 @@ def Fib_index(n):
 
 def div_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable):
         a = list(a)
         srs.push(a[-1:] + a[:-1])
     elif anytype(a, int, float, complex):
@@ -372,7 +373,7 @@ def div_fn(srs):
 
 def idiv_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable):
         a = list(a)
         srs.push(a[1:] + a[:1])
     elif anytype(a, int, float, complex):
@@ -397,7 +398,7 @@ def rot2_fn(srs):
 
 def d_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable) and not isinstance(a, str):
+    if isinstance(a, collections.abc.Iterable) and not isinstance(a, str):
         a = list(a)
         b = a.pop(-1)
         srs.push(a)
@@ -418,7 +419,7 @@ def i_fn(srs):
         all([c.isdigit() or c == "." for c in a]) and a.count(".") < 2
     ):
         srs.push(float(a))
-    elif isinstance(a, collections.Iterable):
+    elif isinstance(a, collections.abc.Iterable):
         for x in list(a)[::-1]:
             srs.push(x)
     else:
@@ -448,7 +449,7 @@ def p_fn(srs):
         if srs.debug_mode:
             print("{} is_prime => {}".format(a, is_prime(a)))
         srs.push(is_prime(a))
-    elif isinstance(a, collections.Iterable) and not isinstance(a, str):
+    elif isinstance(a, collections.abc.Iterable) and not isinstance(a, str):
         a = list(a)
         b = a.pop(0)
         srs.push(a)
@@ -475,7 +476,7 @@ def flatten(lst):
         (
             (
                 [x]
-                if not isinstance(x, collections.Iterable) or isinstance(x, str)
+                if not isinstance(x, collections.abc.Iterable) or isinstance(x, str)
                 else flatten(x)
             )
             for x in lst
@@ -539,12 +540,12 @@ def s_fn(srs):
     a = srs.pop()
     if isinstance(a, str):
         b = srs.pop()
-        if isinstance(b, collections.Iterable):
+        if isinstance(b, collections.abc.Iterable):
             try:
                 b = "".join(b)
             except TypeError:
                 b = "".join(map(repr, b))
-        if not anytype(b, collections.Iterable):
+        if not anytype(b, collections.abc.Iterable):
             b = repr(b)
         res = [
             "".join(list(g)) for k, g in itertools.groupby(a, lambda x: x in b) if not k
@@ -554,9 +555,9 @@ def s_fn(srs):
         if a.endswith(b):
             res = res + [""]
         srs.push(res)
-    elif isinstance(a, collections.Iterable):
+    elif isinstance(a, collections.abc.Iterable):
         b = srs.pop()
-        if not anytype(b, collections.Iterable):
+        if not anytype(b, collections.abc.Iterable):
             b = [b]
         res = [list(g) for k, g in itertools.groupby(a, lambda x: x in b) if not k]
         splitter = b
@@ -582,7 +583,7 @@ def invert_fn(srs):
 
 def comp_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable):
         a = list(a)
         a = a + [0] if len(a) % 2 else a
         while len(a) > 0:
@@ -597,7 +598,7 @@ def comp_fn(srs):
 
 def M_fn(srs):
     a = srs.pop()
-    if anytype(a, collections.Iterable):
+    if anytype(a, collections.abc.Iterable):
         srs.push(max(a))
     else:
         b = srs.pop()
@@ -618,7 +619,7 @@ def R_fn(srs):
         s = srs.make_new(*b)
         a(s)
         srs.push(s.stack)
-    elif anytype(a, collections.Iterable):
+    elif anytype(a, collections.abc.Iterable):
         srs.push(a[::-1])
     else:
         srs.push(range(1, a + 1))
@@ -702,7 +703,7 @@ def make_list_fn(srs):
 
 def j_fn(srs):
     a = srs.pop()
-    if anytype(a, collections.Iterable):
+    if anytype(a, collections.abc.Iterable):
         srs.push(random.choice(a))
     else:
         srs.push(random.randrange(a))
@@ -711,25 +712,27 @@ def j_fn(srs):
 def star_fn(srs):
     a = srs.pop()
     b = srs.pop()
-    if isinstance(a, str) and not isinstance(b, collections.Iterable):
+    if isinstance(a, str) and not isinstance(b, collections.abc.Iterable):
         if b < 0:
             b = abs(b)
             a = a[::-1]
         srs.push(a * b)
-    elif isinstance(b, str) and not isinstance(a, collections.Iterable):
+    elif isinstance(b, str) and not isinstance(a, collections.abc.Iterable):
         if a < 0:
             a = abs(a)
             b = b[::-1]
         srs.push(a * b)
-    elif isinstance(a, collections.Iterable) and (
-        not isinstance(b, collections.Iterable) or isinstance(b, str)
+    elif isinstance(a, collections.abc.Iterable) and (
+        not isinstance(b, collections.abc.Iterable) or isinstance(b, str)
     ):
         srs.push([x * b for x in a])
-    elif isinstance(b, collections.Iterable) and (
-        not isinstance(a, collections.Iterable) or isinstance(a, str)
+    elif isinstance(b, collections.abc.Iterable) and (
+        not isinstance(a, collections.abc.Iterable) or isinstance(a, str)
     ):
         srs.push([x * a for x in b])
-    elif isinstance(a, collections.Iterable) and isinstance(b, collections.Iterable):
+    elif isinstance(a, collections.abc.Iterable) and isinstance(
+        b, collections.abc.Iterable
+    ):
         srs.push(_sum([prod(x) for x in izip(a, b, fillvalue=0)]))
     else:
         srs.push(a * b)
@@ -738,12 +741,16 @@ def star_fn(srs):
 def plus_fn(srs):
     a = srs.pop()
     b = srs.pop()
-    if isinstance(a, collections.Iterable) ^ isinstance(b, collections.Iterable):
-        if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable) ^ isinstance(
+        b, collections.abc.Iterable
+    ):
+        if isinstance(a, collections.abc.Iterable):
             srs.push([x + b for x in a])
-        elif isinstance(b, collections.Iterable):
+        elif isinstance(b, collections.abc.Iterable):
             srs.push([x + a for x in b])
-    elif isinstance(a, collections.Iterable) and isinstance(b, collections.Iterable):
+    elif isinstance(a, collections.abc.Iterable) and isinstance(
+        b, collections.abc.Iterable
+    ):
         if isinstance(a, str) and isinstance(b, str):
             srs.push(a + b)
         elif isinstance(a, str):
@@ -816,7 +823,7 @@ def int_base(number, base):
 
 def i_mul_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable):
         srs.push([complex(0, x) for x in a])
     else:
         srs.push(complex(0, a))
@@ -864,7 +871,7 @@ def S_fn(srs):
     a = srs.pop()
     if isinstance(a, str):
         srs.push("".join(sorted(a)))
-    elif isinstance(a, collections.Iterable):
+    elif isinstance(a, collections.abc.Iterable):
         srs.push(sorted(a))
     else:
         srs.push(math.sin(a))
@@ -877,7 +884,7 @@ def print_all_fn(srs):
 
 def zip_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable):
         b = srs.pop()
         srs.push(zip_longest(a, b))
     else:
@@ -929,7 +936,7 @@ def median_fn(srs):
 
 def c_fn(srs):
     a = srs.pop()
-    if anytype(a, collections.Iterable):
+    if anytype(a, collections.abc.Iterable):
         b = srs.pop()
         srs.push(a.count(b))
     elif isinstance(a, SeriousFunction):
@@ -961,18 +968,18 @@ def get_reg(i):
 
 def set_reg(i, val):
     global registers
-    if isinstance(val, collections.Iterable) and not isinstance(val, str):
+    if isinstance(val, collections.abc.Iterable) and not isinstance(val, str):
         val = as_list(val)
     registers[i] = val
 
 
 def diff_fn(srs):
     a, b = srs.pop(), srs.pop()
-    if all([isinstance(x, collections.Iterable) for x in (a, b)]):
+    if all([isinstance(x, collections.abc.Iterable) for x in (a, b)]):
         srs.push([x for x in a if x not in b])
-    elif isinstance(a, collections.Iterable):
+    elif isinstance(a, collections.abc.Iterable):
         srs.push(map(lambda x: x - b, a))
-    elif isinstance(b, collections.Iterable):
+    elif isinstance(b, collections.abc.Iterable):
         srs.push(map(lambda x: a - x, b))
     else:
         srs.push(a - b)
@@ -980,7 +987,7 @@ def diff_fn(srs):
 
 def m_fn(srs):
     a = srs.pop()
-    if anytype(a, collections.Iterable):
+    if anytype(a, collections.abc.Iterable):
         srs.push(min(a))
     else:
         srs.push(list(math.modf(a)))
@@ -990,7 +997,7 @@ def inv_fil_fn(srs):
     a = srs.pop()
     if srs.debug_mode:
         print("numeric filter on:", a)
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable):
         srs.push(filter_types(a, int, float, complex))
     else:
         srs.push(1 / a)
@@ -1007,7 +1014,7 @@ def AE_fn(srs):
 
 def fn_fil_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable) and not isinstance(a, str):
+    if isinstance(a, collections.abc.Iterable) and not isinstance(a, str):
         srs.push([x for x in a if isinstance(x, SeriousFunction)])
     else:
         srs.push(SeriousFunction(a))
@@ -1036,7 +1043,7 @@ def T_fn(srs):
 
 def O_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable):
         a = "".join(flatten(a))
     srs.push(map(ord, a))
 
@@ -1050,7 +1057,7 @@ def dig_fn(srs):
 
 def D_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable) and not isinstance(a, str):
+    if isinstance(a, collections.abc.Iterable) and not isinstance(a, str):
         srs.push(pstdev(a))
     elif isinstance(a, str):
         if len(a) == 1:
@@ -1069,7 +1076,7 @@ def reg_all_input_fn(srs):
 
 def range_ab_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable):
         srs.push(range(*list(a)))
     else:
         b = srs.pop()
@@ -1119,7 +1126,7 @@ def shuffle_fn(srs):
 
 def g_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable):
         srs.push(gcd_list(*a))
     else:
         b = srs.pop()
@@ -1128,7 +1135,7 @@ def g_fn(srs):
 
 def reduce_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable):
         srs.push([x // gcd_list(*a) for x in a])
     else:
         b = srs.pop()
@@ -1206,7 +1213,7 @@ def t_fn(srs):
 
 def V_fn(srs):
     a, b = srs.pop(), srs.pop()
-    if anytype(a, collections.Iterable):
+    if anytype(a, collections.abc.Iterable):
         res = []
         # get small head lists
         for i in range(1, b):
@@ -1227,7 +1234,9 @@ def V_fn(srs):
 def xor(a, b):
     if isinstance(a, str) and isinstance(b, str):
         return "".join(x for x in a + b if (x in a) ^ (x in b))
-    elif isinstance(a, collections.Iterable) and isinstance(b, collections.Iterable):
+    elif isinstance(a, collections.abc.Iterable) and isinstance(
+        b, collections.abc.Iterable
+    ):
         return [x for x in a + b if (x in a) ^ (x in b)]
     else:
         return a ^ b
@@ -1243,7 +1252,7 @@ def lrot_fn(srs):
 
 def fil_iter_fn(srs):
     a = srs.pop()
-    srs.push(filter_types(a, collections.Iterable, exclude=[str]))
+    srs.push(filter_types(a, collections.abc.Iterable, exclude=[str]))
 
 
 def filter_true_fn(srs):
@@ -1275,7 +1284,7 @@ def first_n_fn(srs):
 
 def F_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable):
         srs.push(next(iter(a)))
     else:
         srs.push(Fib(a))
@@ -1290,7 +1299,7 @@ def comp_parts_fn(srs):
 
 def pow_fn(srs):
     a, b = srs.pop(), srs.pop()
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable):
         srs.push(map(lambda x: x**b, a))
     else:
         srs.push(pow(a, b))
@@ -1339,7 +1348,7 @@ def cumsum_fn(srs):
 
 def u_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable) and not isinstance(a, str):
+    if isinstance(a, collections.abc.Iterable) and not isinstance(a, str):
         srs.push(map(lambda x: x + 1, a))
     elif isinstance(a, str):
         if len(a) == 1:
@@ -1351,7 +1360,7 @@ def u_fn(srs):
 def caret_fn(srs):
     a, b = srs.pop(), srs.pop()
     isstr = isinstance(a, str)
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable):
         a = list(a)
         b = list(b)
         xor = [x for x in a + b if (x in a) ^ (x in b)]
@@ -1397,7 +1406,7 @@ def list_repeat_fn(srs):
     b = srs.pop()
     if isinstance(b, str):
         srs.push([b] * a)
-    elif isinstance(b, collections.Iterable):
+    elif isinstance(b, collections.abc.Iterable):
         srs.push(list(b) * a)
     else:
         srs.push([b] * a)
@@ -1419,7 +1428,9 @@ def mu_fn(srs):
 
 def equal_fn(srs):
     a, b = srs.pop(), srs.pop()
-    if isinstance(a, collections.Iterable) and isinstance(b, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable) and isinstance(
+        b, collections.abc.Iterable
+    ):
         srs.push(int(as_list(a) == as_list(b)))
     else:
         srs.push(int(a == b))
@@ -1435,7 +1446,7 @@ def lcm_many(*args):
 
 def lcm_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable):
         srs.push(lcm_many(*a) if a else a)
     else:
         b = srs.pop()
@@ -1446,10 +1457,10 @@ def slice_fn(srs):
     a, b = srs.pop(), srs.pop()
     a = (
         list(a)
-        if (isinstance(a, collections.Iterable) and not isinstance(a, str))
+        if (isinstance(a, collections.abc.Iterable) and not isinstance(a, str))
         else a
     )
-    if isinstance(b, collections.Iterable):
+    if isinstance(b, collections.abc.Iterable):
         lb = list(b)
         start, stop, step = (b + [None] * 3)[:3]
         srs.push(a[slice(start, stop, step)])
@@ -1460,7 +1471,7 @@ def slice_fn(srs):
 
 def add_two_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable):
         srs.push([x + 2 for x in a])
     else:
         srs.push(a + 2)
@@ -1468,7 +1479,7 @@ def add_two_fn(srs):
 
 def sub_two_fn(srs):
     a = srs.pop()
-    if isinstance(a, collections.Iterable):
+    if isinstance(a, collections.abc.Iterable):
         srs.push([x - 2 for x in a])
     else:
         srs.push(a - 2)

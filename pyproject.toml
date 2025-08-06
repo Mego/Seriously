@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "seriously"
+version = "2.1.31"
+description = "A Python-based golfing language"
+authors = ["Mego"]
+license = "MIT"
+packages = [{ include = "seriously" }, { include = "seriouslylib" }]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pycryptodome = "^3.21.0"
+
+[build-system]
+requires = ["poetry>=2.0.1"]
+build-backend = "poetry.masonry.api"
