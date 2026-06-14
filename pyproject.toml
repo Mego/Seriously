@@ -10,6 +10,21 @@ packages = [{ include = "seriously" }, { include = "seriouslylib" }]
 python = "^3.12"
 pycryptodome = "^3.21.0"
 
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+autoflake = "^2.3.3"
+
+[tool.poetry.group.test]
+optional = true
+
+[tool.poetry.group.test.dependencies]
+pytest = "^9.1.0"
+flake8 = "^7.3.0"
+codecov = "^2.1.13"
+coverage = "^7.14.1"
+
 [build-system]
 requires = ["poetry>=2.0.1"]
 build-backend = "poetry.masonry.api"

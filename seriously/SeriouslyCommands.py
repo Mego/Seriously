@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 
+from base64 import b64decode, b64encode
 import operator, cmath
 import math as rmath
 import random, itertools, sys, string, ast
-from base64 import *
 from copy import deepcopy as _copy
 import collections
 import collections.abc
@@ -58,9 +58,10 @@ def Fib(n):
     if n in fib_cache:
         return fib_cache[n]
     else:
-        result = fast_fib(n)[1]
-        fib_cache[n] = result
-        return result
+        result = fast_fib(n)
+        fib_cache[n - 1] = result[0]
+        fib_cache[n] = result[1]
+        return result[1]
 
 
 # F(2n) = (F(n-1) + F(n+1)) * F(n)
@@ -148,7 +149,7 @@ def cfsum(args):
     )
 
 
-cmath.fsum = cfsum
+cmath.fsum = cfsum  # type: ignore
 
 
 def mean(args):
@@ -790,7 +791,7 @@ def str_base(number, base):
         return "-" + str_base(-number, base)
     if isinstance(number, float):
         return str_base_float(number, base, 0)
-    (d, m) = divmod(number, base)
+    d, m = divmod(number, base)
     if d > 0:
         return str_base(d, base) + digit_to_char(m, base)
     return digit_to_char(m, base)

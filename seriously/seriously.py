@@ -10,10 +10,8 @@ from ast import literal_eval
 import atexit
 import binascii
 import collections
-import hashlib
+import collections.abc
 import os
-import random
-import re
 import traceback
 from . import SeriouslyCommands
 from seriouslylib.cp437 import CP437
@@ -208,12 +206,14 @@ class Seriously:
                 elif ord_cp437(c) == 0x0C:
                     i += 1
                     a, b = self.pop(), self.pop()
-                    if not isinstance(a, collections.Iterable):
+                    if not isinstance(a, collections.abc.Iterable):
                         a = [
                             a
-                            for _ in (b if isinstance(b, collections.Iterable) else [1])
+                            for _ in (
+                                b if isinstance(b, collections.abc.Iterable) else [1]
+                            )
                         ]
-                    if not isinstance(b, collections.Iterable):
+                    if not isinstance(b, collections.abc.Iterable):
                         b = [b for _ in a]
                     self.push(b)
                     self.push(a)
